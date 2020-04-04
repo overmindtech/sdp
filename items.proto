@@ -74,6 +74,11 @@ message Item {
   // TODO: Do I need the ID field? Or will this be regenerated? (For graphs)
 }
 
+// This is a list of items, like a Find() would return
+message Items {
+  repeated Item items = 1;
+}
+
 // Mirrors link.definition
 message LinkDefinition {
   string attribute = 1;
