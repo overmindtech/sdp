@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+// ItemRequest represents a request for an item from the coordinator. This is a
+// non-blocking request and the item will either be returned within the
+// currently open stream, or an error will be sent to the
+// ItemRequestErrors rpc
+message ItemRequest {
+  // The type of item to search for
+  string type = 1;
+
+  // The method to use
+  enum Method {
+    GET = 0;
+    FIND = 1;
+    SEARCH = 2;
+  }
+  Method method = 2;
+
+  // What query should be passed to that method
+  string query = 3;
+
+  // If we are requesting an item we need to supply a request ID so that we
+  // know which item in the stream is the response to the request
+  bytes requestID = 4;
+}
+
+// ItemRequestError is sent back when an item request fails
+message ItemRequestError {
+  // The 128 but UUID if the request
+  bytes requestID = 1;
+
+  // The error type. Any types in here will be gracefully handled unless the
+  // type os "OTHER"
+  enum ErrorType {
+    NOTFOUND = 0;
+    OTHER = 1;
+  }
+  ErrorType type = 2;
+
+  // The string contents of the error
+  string error = 3;
+}
+
+// This is the same as Item within the package with a couple of exceptions, no
+// real reason why this whole thing couldn't be modelled in protobuf though if
+// required. Just need to decide what if anything should remain private
+message Item {
+  string type = 1;
+  string uniqueAttribute = 2;
+  map<string, google.protobuf.Any> attributes = 3;
+
+  // --- Optional ---
+
+  // Not all items will have LinkDefinitions we are are using a two byte
+  // integer to save one byte integers for more common things
+  repeated LinkDefinition linkDefinitions = 16;
+
+  // Most items won't be as a result of a request, but when they are we need to
+  // include the ID so that they can be sorted out at the other end
+  bytes requestID = 17;
+
+  // If an item needs to return a socket it will do the following:
+  //
+  // 1. Call the sockert RPC on the server with the socketID as metadata
+  // 2. Respond with the item and include a socket ID. This should by a UUID
+  //    represented as a string of 128 bytes
+  //
+  bytes socketID = 18;
+
+  // TODO: Do I need the ID field? Or will this be regenerated? (For graphs)
+}
+
+// Mirrors link.definition
+message LinkDefinition {
+  string attribute = 1;
+  string type      = 2;
+
+  // --- Optional ---
+  string method    = 16;
+}
