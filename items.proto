@@ -2,6 +2,8 @@ syntax = "proto3";
 
 import "google/protobuf/any.proto";
 
+option go_package = "protocol";
+
 // ItemRequest represents a request for an item from the coordinator. This is a
 // non-blocking request and the item will either be returned within the
 // currently open stream, or an error will be sent to the
