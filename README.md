@@ -1,15 +1,5 @@
-# REDACTED Protocols
+# State Description Protocol
 
-This repo contains the protocol buffers used in the redacted project. These will be shared between components
+State Description Protocol is designed to allow for the serialization of the description of the current state of a computer system for the purposes of auditing, monitoring etc. It is deliberately simplistic and is designed to transmit the details of things that we don't know the importance of. For this reason it doesn't contain dedicated ways of describing files, packages etc. since it doesn't presume to know what it is describing, other than the fact that it is "state".
 
-## Generating Libraries
-
-Do not commit generated libraries to this repo!
-
-### Golang
-
-From the current directory run:
-
-```shell
-protoc -I .  --go_out=./ items.proto
-```
+This has been somewhat inspired by [Z Notation](https://en.wikipedia.org/wiki/Z_notation)

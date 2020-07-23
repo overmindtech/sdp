@@ -4,22 +4,45 @@ import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
 
-option go_package = "protocol";
 
-// RequestMethod represents the available request methods
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___        
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_       
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_      
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__     
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____    
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________   
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________  
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________ 
+//         ___\///////////_____\////////////_____\///______________
+option go_package = "sdp";
+
+// RequestMethod represents the available request methods. The details of these
+// methods are:
+//
+// GET: This takes a single unique query and should only return a single item.
+//      If an item matching th paramter passed doesn't exist the server should
+//      fail
+//
+// FIND: This takes no query (or ignores it) and should return all items that it
+//       can find
+//
+// SEARCH: This takes a non-unique query which is designed to be used as a
+//         search term. It should return some number of items (or zero) which
+//         match the query
 enum RequestMethod {
   GET = 0;
   FIND = 1;
   SEARCH = 2;
 }
 
-// ItemRequest represents a request for an item from the coordinator. This is a
-// non-blocking request and the item will either be returned within the
-// currently open stream, or an error will be sent to the
-// ItemRequestErrors rpc
+// ItemRequest represents a request for an item. "type" and "method" are
+// required, but "query" is notrequired if the method is FIND since a FIND
+// doesn't take parameters
 message ItemRequest {
   // The type of item to search for
   string type = 1;
+
+  // Which method to use when looking for it
   RequestMethod method = 2;
 
   // What query should be passed to that method
@@ -31,7 +54,12 @@ message ItemRequestError {
   // The error type. Any types in here will be gracefully handled unless the
   // type os "OTHER"
   enum ErrorType {
+    // NOTFOUND means that the item was not found. This is only returned as the
+    // result of a GET request since all other requests would return an empty
+    // list instead
     NOTFOUND = 0;
+
+    // This should be used of all other failure modes
     OTHER = 1;
   }
   ErrorType type = 2;
@@ -40,20 +68,12 @@ message ItemRequestError {
   string error = 3;
 }
 
+// ItemAttributes represents the known attributes for an item. These are likely
+// to be common to a given type, but even this is not guaranteed. All items must
+// have at least one attribute however as it needs something to uniquely
+// identify it
 message ItemAttributes {
   google.protobuf.Struct attrStruct = 1;
-}
-
-// Metadata about the item. Where it came from, how long it took, etc.
-message Metadata {
-  string context = 1;
-  string backendName = 2;
-
-  RequestMethod requestMethod = 3;
-
-  google.protobuf.Timestamp timestamp = 4;
-  google.protobuf.Duration backendDuration = 5;
-  google.protobuf.Duration backendDurationPerItem = 6;
 }
 
 // This is the same as Item within the package with a couple of exceptions, no
@@ -88,4 +108,30 @@ message Item {
 // This is a list of items, like a Find() would return
 message Items {
   repeated Item items = 1;
+}
+
+// Metadata about the item. Where it came from, how long it took, etc.
+message Metadata {
+  // The context within which the item is unique. Item uniqueness is determined
+  // by the combination of type and uniqueAttribue value. However it is possible
+  // for the same item to exist in many contexts. There is not formal definition
+  // for what a context should be other than the fact that it should be somehwat
+  // descriptive and should ensure item uniqueness
+  string context = 1;
+
+  // This is the name of the backend that was used to find the item.
+  string backendName = 2;
+
+  RequestMethod requestMethod = 3;
+
+  // The time that the item was found
+  google.protobuf.Timestamp timestamp = 4;
+
+  // How long the backend took to execute in total when processing the
+  // ItemRequest
+  google.protobuf.Duration backendDuration = 5;
+
+  // How long the backend took to execute per item when processing the
+  // ItemRequest
+  google.protobuf.Duration backendDurationPerItem = 6;
 }
