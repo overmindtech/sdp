@@ -69,7 +69,10 @@ message Item {
 
   // Not all items will have relatedItems we are are using a two byte
   // integer to save one byte integers for more common things
-  repeated ItemRequest linkedItemRequests= 16;
+  repeated ItemRequest linkedItemRequests = 16;
+
+  // Linked items
+  repeated Item linkedItems = 17;
 
   // If an item needs to return a socket it will do the following:
   //
