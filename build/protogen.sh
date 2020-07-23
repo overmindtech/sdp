@@ -8,7 +8,10 @@ SCRIPTPATH=$(dirname "$SCRIPT")
 REPOPATH=$(dirname "$SCRIPTPATH")
 
 # Golang build
-GO_SDP_BUILD_PATH=${REPOPATH}/go
+GO_SDP_BUILD_PATH=${REPOPATH}/go/sdp
+
+# Clean slate
+rm -rf GO_SDP_BUILD_PATH
 mkdir -p $GO_SDP_BUILD_PATH
 
 protoc -I $REPOPATH --go_out $GO_SDP_BUILD_PATH items.proto 
