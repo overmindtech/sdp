@@ -20,7 +20,7 @@ option go_package = "sdp";
 // methods are:
 //
 // GET: This takes a single unique query and should only return a single item.
-//      If an item matching th paramter passed doesn't exist the server should
+//      If an item matching th parameter passed doesn't exist the server should
 //      fail
 //
 // FIND: This takes no query (or ignores it) and should return all items that it
@@ -38,7 +38,7 @@ enum RequestMethod {
 // ItemRequest represents a request for an item.
 //
 // Type: (Optional) The type of item that you are looking for, is this is not
-// provided then the request will be for all types that the reviever knows
+// provided then the request will be for all types that the receiver knows
 // about.
 //
 // Method: (Required) The request method to use
@@ -53,6 +53,24 @@ message ItemRequest {
 
   // What query should be passed to that method
   string query = 3;
+
+  // Whether or not to resolve linked items
+  // TODO: This will require a fair amount of refactoring in redacted_cli
+  bool link = 4;
+
+  // The below fields are used when a request is made over the NATS network and
+  // the requester needs to specify where the results of that request should be
+  // sent. These subjects will be used in addition to the defaults and are
+  // usually just dynamically generated inboxes
+
+  // Subject that items resulting from the request should be sent to
+  string itemSubject = 16;
+
+  // Subject that both interim and final responses should be sent to
+  string responseSubject = 17;
+
+  // Subject that errors should be sent to
+  string errorSubject = 18;
 }
 
 // ItemRequestError is sent back when an item request fails
@@ -102,7 +120,7 @@ message Item {
 
   // If an item needs to return a socket it will do the following:
   //
-  // 1. Call the sockert RPC on the server with the socketID as metadata
+  // 1. Call the socket RPC on the server with the socketID as metadata
   // 2. Respond with the item and include a socket ID. This should by a UUID
   //    represented as a string of 128 bytes
   //
@@ -119,10 +137,10 @@ message Items {
 // Metadata about the item. Where it came from, how long it took, etc.
 message Metadata {
   // The context within which the item is unique. Item uniqueness is determined
-  // by the combination of type and uniqueAttribue value. However it is possible
-  // for the same item to exist in many contexts. There is not formal definition
-  // for what a context should be other than the fact that it should be somehwat
-  // descriptive and should ensure item uniqueness
+  // by the combination of type and uniqueAttribute value. However it is
+  // possible for the same item to exist in many contexts. There is not formal
+  // definition for what a context should be other than the fact that it should
+  // be somewhat descriptive and should ensure item uniqueness
   string context = 1;
 
   // This is the name of the backend that was used to find the item.
