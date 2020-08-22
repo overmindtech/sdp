@@ -4,6 +4,30 @@ State Description Protocol is designed to allow for the serialization of the des
 
 This has been somewhat inspired by [Z Notation](https://en.wikipedia.org/wiki/Z_notation)
 
+## Querying State
+
+SDP is designed to be usable over a message queue infrastructure where a single request may be responded to by many, many respondents. In order to have this process work efficiently and provide a reasonable amount of feedback to the user about how the query is going and how much longer it might be expected to take, interim responses are used.
+
+An interim response is designed to give the requester the following information:
+
+* How many responders are currently working on the request
+* If responders have stopped responding or whether they are just taking a long time to execute the query
+* When things have finished
+
+The communication looks as follows:
+
+```sequence {theme="hand"}
+requester->>responder: Initial Request
+Note right of responder: The initial request will include\nthe following subjects for the\nresponders to send responses on:\n* Items\n* InterimResponses\n* Errors
+responder->>requester: Interim Response: WORKING
+Note right of responder: While the responder works\nit will keep sending interim\nresponses so that the requester\nknows it's still working
+responder->>requester: Interim Response: WORKING
+responder->>requester: Item
+responder->>requester: Item
+responder->>requester: Item
+responder->>requester: Final Response: DONE
+```
+
 ## Libraries
 
 ### Golang

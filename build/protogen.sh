@@ -14,4 +14,4 @@ GO_SDP_BUILD_PATH=${REPOPATH}/go/sdp
 rm -rf GO_SDP_BUILD_PATH
 mkdir -p $GO_SDP_BUILD_PATH
 
-protoc -I $REPOPATH --go_out $GO_SDP_BUILD_PATH items.proto 
+protoc -I $REPOPATH --go_out $GO_SDP_BUILD_PATH *.proto 

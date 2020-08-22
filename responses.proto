@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+import "google/protobuf/duration.proto";
+
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___        
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_       
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_      
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__     
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____    
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________   
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________  
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________ 
+//         ___\///////////_____\////////////_____\///______________
+option go_package = "sdp";
+
+// Response is returned when a query is made
+message Response {
+  // The context that is working on a response
+  string context = 1;
+
+  // ResponseState represents the state of the responder, is it still working on
+  // its response or is it done?
+  enum ResponseState {
+    WORKING = 0;
+    COMPLETE = 1;
+  }
+
+  // The state of the responder, either WORKING or COMPLETE
+  ResponseState state = 2;
+
+  // The timespan within which to expect the next update. (e.g. 10s) If no
+  // further interim responses are recieved within this time the connection
+  // can be considered stale and the requester may give up
+  google.protobuf.Duration nextUpdateIn = 3;
+}

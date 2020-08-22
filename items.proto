@@ -35,9 +35,15 @@ enum RequestMethod {
   SEARCH = 2;
 }
 
-// ItemRequest represents a request for an item. "type" and "method" are
-// required, but "query" is notrequired if the method is FIND since a FIND
-// doesn't take parameters
+// ItemRequest represents a request for an item.
+//
+// Type: (Optional) The type of item that you are looking for, is this is not
+// provided then the request will be for all types that the reviever knows
+// about.
+//
+// Method: (Required) The request method to use
+//
+// Query: (Optional) The query to pass
 message ItemRequest {
   // The type of item to search for
   string type = 1;

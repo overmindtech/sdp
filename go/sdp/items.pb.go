@@ -95,9 +95,15 @@ func (ItemRequestError_ErrorType) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_f8bad7296e45e12f, []int{1, 0}
 }
 
-// ItemRequest represents a request for an item. "type" and "method" are
-// required, but "query" is notrequired if the method is FIND since a FIND
-// doesn't take parameters
+// ItemRequest represents a request for an item.
+//
+// Type: (Optional) The type of item that you are looking for, is this is not
+// provided then the request will be for all types that the reviever knows
+// about.
+//
+// Method: (Required) The request method to use
+//
+// Query: (Optional) The query to pass
 type ItemRequest struct {
 	// The type of item to search for
 	Type string `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
