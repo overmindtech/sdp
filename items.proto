@@ -90,6 +90,9 @@ message ItemRequestError {
 
   // The string contents of the error
   string error = 3;
+
+  // The context from whihc the error was raised
+  string context = 4;
 }
 
 // ItemAttributes represents the known attributes for an item. These are likely
