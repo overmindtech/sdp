@@ -55,7 +55,7 @@ type Response struct {
 	// The state of the responder, either WORKING or COMPLETE
 	State Response_ResponseState `protobuf:"varint,2,opt,name=state,proto3,enum=Response_ResponseState" json:"state,omitempty"`
 	// The timespan within which to expect the next update. (e.g. 10s) If no
-	// further interim responses are recieved within this time the connection
+	// further interim responses are received within this time the connection
 	// can be considered stale and the requester may give up
 	NextUpdateIn         *duration.Duration `protobuf:"bytes,3,opt,name=nextUpdateIn,proto3" json:"nextUpdateIn,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}           `json:"-"`

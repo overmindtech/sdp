@@ -29,7 +29,7 @@ message Response {
   ResponseState state = 2;
 
   // The timespan within which to expect the next update. (e.g. 10s) If no
-  // further interim responses are recieved within this time the connection
+  // further interim responses are received within this time the connection
   // can be considered stale and the requester may give up
   google.protobuf.Duration nextUpdateIn = 3;
 }
