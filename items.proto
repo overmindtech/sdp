@@ -86,7 +86,7 @@ message ItemRequestError {
     // This should be used of all other failure modes
     OTHER = 1;
   }
-  ErrorType type = 2;
+  ErrorType errorType = 2;
 
   // The string contents of the error
   string error = 3;
