@@ -111,6 +111,7 @@ message Item {
   string uniqueAttribute = 2;
   ItemAttributes attributes = 3;
   Metadata metadata = 4;
+  string context = 5;
 
   // --- Optional ---
 
