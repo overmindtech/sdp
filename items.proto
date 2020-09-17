@@ -45,7 +45,7 @@ enum RequestMethod {
 //
 // Query: (Optional) The query to pass
 message ItemRequest {
-  // The type of item to search for
+  // The type of item to search for. If blank we assume all types
   string type = 1;
 
   // Which method to use when looking for it
@@ -57,6 +57,9 @@ message ItemRequest {
   // Whether or not to resolve linked items
   // TODO: This will require a fair amount of refactoring in redacted_cli
   bool link = 4;
+
+  // The context for which we are requesting. If blank we assume all contexts
+  string context = 5;
 
   // The below fields are used when a request is made over the NATS network and
   // the requester needs to specify where the results of that request should be
