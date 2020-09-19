@@ -114,7 +114,14 @@ message Item {
   string uniqueAttribute = 2;
   ItemAttributes attributes = 3;
   Metadata metadata = 4;
+
+  // The context within which the item is unique. Item uniqueness is determined
+  // by the combination of type and uniqueAttribute value. However it is
+  // possible for the same item to exist in many contexts. There is not formal
+  // definition for what a context should be other than the fact that it should
+  // be somewhat descriptive and should ensure item uniqueness
   string context = 5;
+
 
   // --- Optional ---
 
@@ -143,13 +150,6 @@ message Items {
 
 // Metadata about the item. Where it came from, how long it took, etc.
 message Metadata {
-  // The context within which the item is unique. Item uniqueness is determined
-  // by the combination of type and uniqueAttribute value. However it is
-  // possible for the same item to exist in many contexts. There is not formal
-  // definition for what a context should be other than the fact that it should
-  // be somewhat descriptive and should ensure item uniqueness
-  string context = 1;
-
   // This is the name of the backend that was used to find the item.
   string backendName = 2;
 
