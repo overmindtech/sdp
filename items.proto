@@ -58,7 +58,8 @@ message ItemRequest {
   // TODO: This will require a fair amount of refactoring in redacted_cli
   bool link = 4;
 
-  // The context for which we are requesting. If blank we assume all contexts
+  // The context for which we are requesting. To query all contexts use the the
+  // wildcard '*'
   string context = 5;
 
   // The below fields are used when a request is made over the NATS network and
