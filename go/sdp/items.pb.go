@@ -114,7 +114,8 @@ type ItemRequest struct {
 	// Whether or not to resolve linked items
 	// TODO: This will require a fair amount of refactoring in redacted_cli
 	Link bool `protobuf:"varint,4,opt,name=link,proto3" json:"link,omitempty"`
-	// The context for which we are requesting. If blank we assume all contexts
+	// The context for which we are requesting. To query all contexts use the the
+	// wildcard '*'
 	Context string `protobuf:"bytes,5,opt,name=context,proto3" json:"context,omitempty"`
 	// Subject that items resulting from the request should be sent to
 	ItemSubject string `protobuf:"bytes,16,opt,name=itemSubject,proto3" json:"itemSubject,omitempty"`
