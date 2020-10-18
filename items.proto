@@ -166,4 +166,7 @@ message Metadata {
   // How long the backend took to execute per item when processing the
   // ItemRequest
   google.protobuf.Duration backendDurationPerItem = 6;
+
+  // Name of the backend package
+  string backendPackage = 7;
 }
