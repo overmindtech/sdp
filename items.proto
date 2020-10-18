@@ -45,7 +45,7 @@ enum RequestMethod {
 //
 // Query: (Optional) The query to pass
 message ItemRequest {
-  // The type of item to search for. If blank we assume all types
+  // The type of item to search for. "*" means all types
   string type = 1;
 
   // Which method to use when looking for it

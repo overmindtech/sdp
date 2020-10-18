@@ -156,7 +156,7 @@ type ItemRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// The type of item to search for. If blank we assume all types
+	// The type of item to search for. "*" means all types
 	Type string `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
 	// Which method to use when looking for it
 	Method RequestMethod `protobuf:"varint,2,opt,name=method,proto3,enum=RequestMethod" json:"method,omitempty"`
