@@ -28,6 +28,16 @@ responder->>requester: Item
 responder->>requester: Final Response: DONE
 ```
 
+## Item Uniqueness
+
+An item is considered unique with a unique combination of:
+
+* Type
+* UniqueAttributeValue
+* Context
+
+While the UniqueAttributeValue will always be unique for a given type, this same item may exist in many contexts. AN example could be the same package installed on many servers, or the same deployment in many Kubernetes namespaces. Hence context is required to ensure uniqueness globally.
+
 ## Libraries
 
 ### Golang
