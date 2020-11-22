@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___        
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_       
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_      
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__     
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____    
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________   
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________  
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________ 
+//         ___\///////////_____\////////////_____\///______________
+option go_package = "github.com/dylanratcliffe/sdp/go/sdp";
+
+// ItemRequestError is sent back when an item request fails
+message ItemRequestError {
+    // The error type. Any types in here will be gracefully handled unless the
+    // type os "OTHER"
+    enum ErrorType {
+      // NOTFOUND means that the item was not found. This is only returned as the
+      // result of a GET request since all other requests would return an empty
+      // list instead
+      NOTFOUND = 0;
+  
+      // This should be used of all other failure modes
+      OTHER = 1;
+
+      // NOCONTEXT means that the item was not found because we don't have
+      // access to the requested context. This should not be interpreted as "The
+      // item doesn't exist" (as with a NOTFOUND error) but rather as "We can't
+      // tell you whether or not the item exists"
+      NOCONTEXT = 2;
+    }
+    ErrorType errorType = 2;
+  
+    // The string contents of the error
+    string error = 3;
+  
+    // The context from whihc the error was raised
+    string context = 4;
+  }
