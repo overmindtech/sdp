@@ -110,7 +110,7 @@ message Item {
   repeated ItemRequest linkedItemRequests = 16;
 
   // Linked items
-  repeated Item linkedItems = 17;
+  repeated Reference linkedItems = 17;
 
   // If an item needs to return a socket it will do the following:
   //
@@ -126,6 +126,20 @@ message Item {
 // This is a list of items, like a Find() would return
 message Items {
   repeated Item items = 1;
+}
+
+// Reference to an item
+//
+// The uniqueness of an item is determined by the combination of:
+//
+//   * Type
+//   * UniqueAttributeValue
+//   * Context
+//
+message Reference {
+  string type = 1;
+  string UniqueAttributeValue = 2;
+  string context = 3;
 }
 
 // Metadata about the item. Where it came from, how long it took, etc.
