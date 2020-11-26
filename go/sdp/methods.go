@@ -21,6 +21,15 @@ func (i *Item) UniqueAttributeValue() string {
 	return ""
 }
 
+// Reference returns an SDP reference for the item
+func (i *Item) Reference() Reference {
+	return Reference{
+		Context:              i.Context,
+		Type:                 i.Type,
+		UniqueAttributeValue: i.UniqueAttributeValue(),
+	}
+}
+
 // Get Returns the value of a given attribute by name. If the attribute is
 // a nested hash, nested values can be referenced using dot notation e.g.
 // location.country
