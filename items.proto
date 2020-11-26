@@ -119,8 +119,6 @@ message Item {
   //    represented as a string of 128 bytes
   //
   // bytes socketID = 18;
-
-  // TODO: Do I need the ID field? Or will this be regenerated? (For graphs)
 }
 
 // This is a list of items, like a Find() would return
