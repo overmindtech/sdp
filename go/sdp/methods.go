@@ -66,9 +66,27 @@ func (a *ItemAttributes) Get(name string) (interface{}, error) {
 
 // ToAttributes Convers a map[string]interface{} to an ItemAttributes object
 func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
+	newMap := make(map[string]interface{})
+
+	for k, v := range m {
+		newMap[k] = sanitizeInterface(v)
+	}
+
 	attrStruct, err := structpb.NewStruct(m)
 
 	return &ItemAttributes{
 		AttrStruct: attrStruct,
 	}, err
+}
+
+func sanitizeInterface(i interface{}) interface{} {
+	// Test to see if this is going to be able to convert to struct value
+	_, err := structpb.NewValue(i)
+
+	// If there was an error this means there is some sanitising we need to do
+	if err != nil {
+		return fmt.Sprint(i)
+	}
+
+	return i
 }
