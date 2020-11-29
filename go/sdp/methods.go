@@ -72,7 +72,7 @@ func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
 		newMap[k] = sanitizeInterface(v)
 	}
 
-	attrStruct, err := structpb.NewStruct(m)
+	attrStruct, err := structpb.NewStruct(newMap)
 
 	return &ItemAttributes{
 		AttrStruct: attrStruct,
