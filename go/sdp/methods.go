@@ -2,6 +2,7 @@ package sdp
 
 import (
 	"fmt"
+	"strings"
 
 	"google.golang.org/protobuf/types/known/structpb"
 )
@@ -28,6 +29,24 @@ func (i *Item) Reference() Reference {
 		Type:                 i.Type,
 		UniqueAttributeValue: i.UniqueAttributeValue(),
 	}
+}
+
+// GloballyUniqueName Returns a string that defines the Item globally. This a
+// combination of the following values:
+//
+//  * context
+//  * type
+//  * uniqueAttributeValue
+//
+// They are concatenated with dots (.)
+func (i *Item) GloballyUniqueName() string {
+	return strings.Join([]string{
+		i.GetContext(),
+		i.GetType(),
+		i.UniqueAttributeValue(),
+	},
+		".",
+	)
 }
 
 // Get Returns the value of a given attribute by name. If the attribute is
