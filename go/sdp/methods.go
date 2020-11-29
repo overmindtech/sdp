@@ -46,10 +46,10 @@ func (a *ItemAttributes) Get(name string) (interface{}, error) {
 }
 
 // ToAttributes Convers a map[string]interface{} to an ItemAttributes object
-func ToAttributes(m map[string]interface{}) *ItemAttributes {
-	attrStruct, _ := structpb.NewStruct(m)
+func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
+	attrStruct, err := structpb.NewStruct(m)
 
 	return &ItemAttributes{
 		AttrStruct: attrStruct,
-	}
+	}, err
 }
