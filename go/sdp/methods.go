@@ -49,6 +49,24 @@ func (i *Item) GloballyUniqueName() string {
 	)
 }
 
+// GloballyUniqueName Returns a string that defines the Item globally. This a
+// combination of the following values:
+//
+//  * context
+//  * type
+//  * uniqueAttributeValue
+//
+// They are concatenated with dots (.)
+func (r *Reference) GloballyUniqueName() string {
+	return strings.Join([]string{
+		r.GetContext(),
+		r.GetType(),
+		r.GetUniqueAttributeValue(),
+	},
+		".",
+	)
+}
+
 // Get Returns the value of a given attribute by name. If the attribute is
 // a nested hash, nested values can be referenced using dot notation e.g.
 // location.country
