@@ -1,6 +1,8 @@
 package sdp
 
 import (
+	"crypto/sha1"
+	"encoding/base32"
 	"fmt"
 	"strings"
 
@@ -47,6 +49,21 @@ func (i *Item) GloballyUniqueName() string {
 	},
 		".",
 	)
+}
+
+// Hash Returns a 12 character hash for the item. This is unlikely but not
+// guaranteed to be unique. The hash is calculated using the GloballyUniqueName
+// and timestamp. Therefore newer versions of the same item will have a
+// different hash
+func (i *Item) Hash() string {
+	return hashSum(([]byte(fmt.Sprint(i.GloballyUniqueName(), i.GetMetadata().GetTimestamp()))))
+}
+
+// Hash Returns a 12 character hash for the item. This is unlikely but not
+// guaranteed to be unique. The hash is calculated using the GloballyUniqueName
+// for references which means that all references will have the same hash
+func (r *Reference) Hash() string {
+	return hashSum(([]byte(fmt.Sprint(r.GloballyUniqueName()))))
 }
 
 // GloballyUniqueName Returns a string that defines the Item globally. This a
@@ -107,4 +124,21 @@ func sanitizeInterface(i interface{}) interface{} {
 	}
 
 	return i
+}
+
+func hashSum(b []byte) string {
+	var shaSum [20]byte
+	var paddedEncoding *base32.Encoding
+	var unpaddedEncoding *base32.Encoding
+
+	shaSum = sha1.Sum(b)
+
+	// We need to specify a custom encoding here since dGraph has fairly struct
+	// requirements aboout what name a variable
+	paddedEncoding = base32.NewEncoding("abcdefghijklmnopqrstuvwxyzABCDEF")
+
+	// We also can't have padding since "=" is not allowed in variable names
+	unpaddedEncoding = paddedEncoding.WithPadding(base32.NoPadding)
+
+	return unpaddedEncoding.EncodeToString(shaSum[:11])
 }
