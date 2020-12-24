@@ -53,15 +53,12 @@ func (i *Item) GloballyUniqueName() string {
 
 // Hash Returns a 12 character hash for the item. This is unlikely but not
 // guaranteed to be unique. The hash is calculated using the GloballyUniqueName
-// and timestamp. Therefore newer versions of the same item will have a
-// different hash
 func (i *Item) Hash() string {
-	return hashSum(([]byte(fmt.Sprint(i.GloballyUniqueName(), i.GetMetadata().GetTimestamp()))))
+	return hashSum(([]byte(fmt.Sprint(i.GloballyUniqueName()))))
 }
 
 // Hash Returns a 12 character hash for the item. This is unlikely but not
 // guaranteed to be unique. The hash is calculated using the GloballyUniqueName
-// for references which means that all references will have the same hash
 func (r *Reference) Hash() string {
 	return hashSum(([]byte(fmt.Sprint(r.GloballyUniqueName()))))
 }
