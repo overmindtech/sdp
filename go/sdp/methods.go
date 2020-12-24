@@ -1,8 +1,8 @@
 package sdp
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
+	"crypto/sha1"
+	"encoding/base32"
 	"fmt"
 	"strings"
 
@@ -51,22 +51,16 @@ func (i *Item) GloballyUniqueName() string {
 	)
 }
 
-// Hash Returns sha256 (hex) hash for the item calculated using the
-// GloballyUniqueName
+// Hash Returns a 12 character hash for the item. This is unlikely but not
+// guaranteed to be unique. The hash is calculated using the GloballyUniqueName
 func (i *Item) Hash() string {
-	return gunHash(i.GloballyUniqueName())
+	return hashSum(([]byte(fmt.Sprint(i.GloballyUniqueName()))))
 }
 
-// Hash Returns sha256 (hex) hash for the item calculated using the
-// GloballyUniqueName
+// Hash Returns a 12 character hash for the item. This is unlikely but not
+// guaranteed to be unique. The hash is calculated using the GloballyUniqueName
 func (r *Reference) Hash() string {
-	return gunHash(r.GloballyUniqueName())
-}
-
-func gunHash(globallyUniqueName string) string {
-	h := sha256.New()
-	h.Write([]byte(globallyUniqueName))
-	return hex.EncodeToString(h.Sum(nil))
+	return hashSum(([]byte(fmt.Sprint(r.GloballyUniqueName()))))
 }
 
 // GloballyUniqueName Returns a string that defines the Item globally. This a
@@ -127,4 +121,21 @@ func sanitizeInterface(i interface{}) interface{} {
 	}
 
 	return i
+}
+
+func hashSum(b []byte) string {
+	var shaSum [20]byte
+	var paddedEncoding *base32.Encoding
+	var unpaddedEncoding *base32.Encoding
+
+	shaSum = sha1.Sum(b)
+
+	// We need to specify a custom encoding here since dGraph has fairly struct
+	// requirements aboout what name a variable
+	paddedEncoding = base32.NewEncoding("abcdefghijklmnopqrstuvwxyzABCDEF")
+
+	// We also can't have padding since "=" is not allowed in variable names
+	unpaddedEncoding = paddedEncoding.WithPadding(base32.NoPadding)
+
+	return unpaddedEncoding.EncodeToString(shaSum[:11])
 }
