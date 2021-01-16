@@ -110,7 +110,10 @@ type ItemRequest struct {
 	Method RequestMethod `protobuf:"varint,2,opt,name=method,proto3,enum=RequestMethod" json:"method,omitempty"`
 	// What query should be passed to that method
 	Query string `protobuf:"bytes,3,opt,name=query,proto3" json:"query,omitempty"`
-	// How deeply to link items. A value of 0 will mean that items are not linked
+	// How deeply to link items. A value of 0 will mean that items are not linked.
+	// To resolve linked items "infinitely" simply set this to a high number, with
+	// the highest being 4,294,967,295. While this isn't truly *infinite*, chances
+	// are that it is effectively the same, think six degrees of separation etc.
 	LinkDepth uint32 `protobuf:"varint,4,opt,name=linkDepth,proto3" json:"linkDepth,omitempty"`
 	// The context for which we are requesting. To query all contexts use the the
 	// wildcard '*'

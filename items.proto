@@ -54,7 +54,10 @@ message ItemRequest {
   // What query should be passed to that method
   string query = 3;
 
-  // How deeply to link items. A value of 0 will mean that items are not linked
+  // How deeply to link items. A value of 0 will mean that items are not linked.
+  // To resolve linked items "infinitely" simply set this to a high number, with
+  // the highest being 4,294,967,295. While this isn't truly *infinite*, chances
+  // are that it is effectively the same, think six degrees of separation etc.
   uint32 linkDepth = 4;
 
   // The context for which we are requesting. To query all contexts use the the
