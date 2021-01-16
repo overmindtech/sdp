@@ -38,6 +38,15 @@ An item is considered unique with a unique combination of:
 
 While the UniqueAttributeValue will always be unique for a given type, this same item may exist in many contexts. AN example could be the same package installed on many servers, or the same deployment in many Kubernetes namespaces. Hence context is required to ensure uniqueness globally.
 
+## Building
+
+To build, run the following command:
+
+
+```shell
+./build/protogen.sh
+```
+
 ## Libraries
 
 ### Golang
