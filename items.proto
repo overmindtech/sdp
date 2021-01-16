@@ -54,9 +54,8 @@ message ItemRequest {
   // What query should be passed to that method
   string query = 3;
 
-  // Whether or not to resolve linked items
-  // TODO: This will require a fair amount of refactoring in redacted_cli
-  bool link = 4;
+  // How deeply to link items. A value of 0 will mean that items are not linked
+  uint32 linkDepth = 4;
 
   // The context for which we are requesting. To query all contexts use the the
   // wildcard '*'
