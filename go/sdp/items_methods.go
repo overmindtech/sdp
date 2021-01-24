@@ -83,7 +83,7 @@ func (i *Item) Copy(dest *Item) {
 
 		r.Copy(newItemRequest)
 
-		dest.LinkedItemRequests = append(i.LinkedItemRequests, newItemRequest)
+		dest.LinkedItemRequests = append(dest.LinkedItemRequests, newItemRequest)
 	}
 
 	for _, r := range i.LinkedItems {
@@ -91,7 +91,7 @@ func (i *Item) Copy(dest *Item) {
 
 		r.Copy(newLinkedItem)
 
-		dest.LinkedItems = append(i.LinkedItems, newLinkedItem)
+		dest.LinkedItems = append(dest.LinkedItems, newLinkedItem)
 	}
 }
 
