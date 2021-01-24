@@ -3,6 +3,7 @@ package sdp
 import (
 	"crypto/sha1"
 	"encoding/base32"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -96,6 +97,29 @@ func (a *ItemAttributes) Get(name string) (interface{}, error) {
 	return "", fmt.Errorf("Attribute %v not found", name)
 }
 
+// Set sets an attribute. Values are converted to structpb versions and an
+// errort will be return if this fails
+func (a *ItemAttributes) Set(name string, value interface{}) error {
+	// Check to make sure that the pointer is not nil
+	if a == nil {
+		return errors.New("Set called on nil pointer")
+	}
+
+	// Ensure that this interface will be able to be converted to a struct value
+	sanitizedValue := sanitizeInterface(value)
+	structValue, err := structpb.NewValue(sanitizedValue)
+
+	if err != nil {
+		return err
+	}
+
+	fields := a.GetAttrStruct().GetFields()
+
+	fields[name] = structValue
+
+	return nil
+}
+
 // ToAttributes Convers a map[string]interface{} to an ItemAttributes object
 func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
 	newMap := make(map[string]interface{})
@@ -115,7 +139,7 @@ func sanitizeInterface(i interface{}) interface{} {
 	// Test to see if this is going to be able to convert to struct value
 	_, err := structpb.NewValue(i)
 
-	// If there was an error this means there is some sanitising we need to do
+	// If there was an error this means there is some sanitizing we need to do
 	if err != nil {
 		return fmt.Sprint(i)
 	}
