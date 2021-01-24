@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"strings"
 
+	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/structpb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // UniqueAttributeValue return the value of whatever the Unique Attribute if
@@ -52,6 +54,40 @@ func (i *Item) GloballyUniqueName() string {
 	)
 }
 
+// Copy copies all information from one item pointer to another
+func (i *Item) Copy(dest *Item) {
+	if dest == nil {
+		dest = &Item{}
+	}
+
+	// Values can be copied directly
+	dest.Type = i.Type
+	dest.UniqueAttribute = i.UniqueAttribute
+	dest.Context = i.Context
+
+	i.Metadata.Copy(dest.Metadata)
+	i.Attributes.Copy(dest.Attributes)
+
+	i.LinkedItemRequests = make([]*ItemRequest, 0)
+	i.LinkedItems = make([]*Reference, 0)
+
+	for _, r := range i.LinkedItemRequests {
+		var newItemRequest *ItemRequest
+
+		r.Copy(newItemRequest)
+
+		i.LinkedItemRequests = append(i.LinkedItemRequests, newItemRequest)
+	}
+
+	for _, r := range i.LinkedItems {
+		var newLinkedItem *Reference
+
+		r.Copy(newLinkedItem)
+
+		i.LinkedItems = append(i.LinkedItems, newLinkedItem)
+	}
+}
+
 // Hash Returns a 12 character hash for the item. This is unlikely but not
 // guaranteed to be unique. The hash is calculated using the GloballyUniqueName
 func (i *Item) Hash() string {
@@ -82,6 +118,39 @@ func (r *Reference) GloballyUniqueName() string {
 	)
 }
 
+// Copy copies all information from one Reference pointer to another
+func (r *Reference) Copy(dest *Reference) {
+	dest.Type = r.Type
+	dest.UniqueAttributeValue = r.UniqueAttributeValue
+	dest.Context = r.Context
+}
+
+// Copy copies all information from one Metadata pointer to another
+func (m *Metadata) Copy(dest *Metadata) {
+	if dest == nil {
+		dest = &Metadata{}
+	}
+
+	dest.BackendName = m.BackendName
+	dest.RequestMethod = m.RequestMethod
+	dest.BackendPackage = m.BackendPackage
+
+	dest.Timestamp = &timestamppb.Timestamp{
+		Seconds: m.Timestamp.GetSeconds(),
+		Nanos:   m.Timestamp.GetNanos(),
+	}
+
+	dest.BackendDuration = &durationpb.Duration{
+		Seconds: m.BackendDuration.GetSeconds(),
+		Nanos:   m.BackendDuration.GetNanos(),
+	}
+
+	dest.BackendDurationPerItem = &durationpb.Duration{
+		Seconds: m.BackendDurationPerItem.GetSeconds(),
+		Nanos:   m.BackendDurationPerItem.GetNanos(),
+	}
+}
+
 // Get Returns the value of a given attribute by name. If the attribute is
 // a nested hash, nested values can be referenced using dot notation e.g.
 // location.country
@@ -107,7 +176,7 @@ func (a *ItemAttributes) Set(name string, value interface{}) error {
 
 	// Ensure that this interface will be able to be converted to a struct value
 	sanitizedValue := sanitizeInterface(value)
-	structValue, err := structpb.NewValue(sanitizedValue)
+	structValue, err := ToValue(sanitizedValue)
 
 	if err != nil {
 		return err
@@ -118,6 +187,30 @@ func (a *ItemAttributes) Set(name string, value interface{}) error {
 	fields[name] = structValue
 
 	return nil
+}
+
+// Copy copies all information from one ItemAttributes pointer to another
+func (a *ItemAttributes) Copy(dest *ItemAttributes) {
+	if dest == nil {
+		dest = &ItemAttributes{}
+	}
+
+	m := a.GetAttrStruct().AsMap()
+
+	dest.AttrStruct, _ = structpb.NewStruct(m)
+}
+
+// Copy copies all information from one ItemRequest pointer to another
+func (r *ItemRequest) Copy(dest *ItemRequest) {
+	dest.Type = r.Type
+	dest.Method = r.Method
+	dest.Query = r.Query
+	dest.LinkDepth = r.LinkDepth
+	dest.Context = r.Context
+	dest.ItemSubject = r.ItemSubject
+	dest.LinkedItemSubject = r.LinkedItemSubject
+	dest.ResponseSubject = r.ResponseSubject
+	dest.ErrorSubject = r.ErrorSubject
 }
 
 // ToAttributes Convers a map[string]interface{} to an ItemAttributes object
