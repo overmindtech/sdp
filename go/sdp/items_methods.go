@@ -75,23 +75,23 @@ func (i *Item) Copy(dest *Item) {
 	i.Metadata.Copy(dest.Metadata)
 	i.Attributes.Copy(dest.Attributes)
 
-	i.LinkedItemRequests = make([]*ItemRequest, 0)
-	i.LinkedItems = make([]*Reference, 0)
+	dest.LinkedItemRequests = make([]*ItemRequest, 0)
+	dest.LinkedItems = make([]*Reference, 0)
 
 	for _, r := range i.LinkedItemRequests {
-		var newItemRequest *ItemRequest
+		newItemRequest := &ItemRequest{}
 
 		r.Copy(newItemRequest)
 
-		i.LinkedItemRequests = append(i.LinkedItemRequests, newItemRequest)
+		dest.LinkedItemRequests = append(i.LinkedItemRequests, newItemRequest)
 	}
 
 	for _, r := range i.LinkedItems {
-		var newLinkedItem *Reference
+		newLinkedItem := &Reference{}
 
 		r.Copy(newLinkedItem)
 
-		i.LinkedItems = append(i.LinkedItems, newLinkedItem)
+		dest.LinkedItems = append(i.LinkedItems, newLinkedItem)
 	}
 }
 
