@@ -56,14 +56,21 @@ func (i *Item) GloballyUniqueName() string {
 
 // Copy copies all information from one item pointer to another
 func (i *Item) Copy(dest *Item) {
-	if dest == nil {
-		dest = &Item{}
-	}
-
 	// Values can be copied directly
 	dest.Type = i.Type
 	dest.UniqueAttribute = i.UniqueAttribute
 	dest.Context = i.Context
+
+	// We need to check that any pointers are actually populated with pointers
+	// to somewhere in memory. If they are nil then there is no data structure
+	// to copy the data into, therefore we need to create it first
+	if dest.Metadata == nil {
+		dest.Metadata = &Metadata{}
+	}
+
+	if dest.Attributes == nil {
+		dest.Attributes = &ItemAttributes{}
+	}
 
 	i.Metadata.Copy(dest.Metadata)
 	i.Attributes.Copy(dest.Attributes)
@@ -127,10 +134,6 @@ func (r *Reference) Copy(dest *Reference) {
 
 // Copy copies all information from one Metadata pointer to another
 func (m *Metadata) Copy(dest *Metadata) {
-	if dest == nil {
-		dest = &Metadata{}
-	}
-
 	dest.BackendName = m.BackendName
 	dest.RequestMethod = m.RequestMethod
 	dest.BackendPackage = m.BackendPackage
@@ -191,10 +194,6 @@ func (a *ItemAttributes) Set(name string, value interface{}) error {
 
 // Copy copies all information from one ItemAttributes pointer to another
 func (a *ItemAttributes) Copy(dest *ItemAttributes) {
-	if dest == nil {
-		dest = &ItemAttributes{}
-	}
-
 	m := a.GetAttrStruct().AsMap()
 
 	dest.AttrStruct, _ = structpb.NewStruct(m)
