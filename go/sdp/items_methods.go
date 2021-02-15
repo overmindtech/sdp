@@ -219,12 +219,11 @@ func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
 		return nil, nil
 	}
 
-	var str *structpb.Struct
-	var s map[string]interface{}
+	var s map[string]*structpb.Value
 	var err error
 
 	// str, err = structpb.NewStruct()
-	s = make(map[string]interface{})
+	s = make(map[string]*structpb.Value)
 
 	// Loop of the map
 	for k, v := range m {
@@ -238,14 +237,10 @@ func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
 		s[k] = value
 	}
 
-	str, err = structpb.NewStruct(s)
-
-	if err != nil {
-		return nil, err
-	}
-
 	return &ItemAttributes{
-		AttrStruct: str,
+		AttrStruct: &structpb.Struct{
+			Fields: s,
+		},
 	}, err
 }
 
