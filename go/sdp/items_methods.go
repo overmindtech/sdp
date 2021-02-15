@@ -215,6 +215,10 @@ func (r *ItemRequest) Copy(dest *ItemRequest) {
 
 // ToAttributes Convers a map[string]interface{} to an ItemAttributes object
 func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
+	if m == nil {
+		return nil, nil
+	}
+
 	var str *structpb.Struct
 	var s map[string]interface{}
 	var err error
