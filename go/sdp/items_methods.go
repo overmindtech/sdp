@@ -5,6 +5,7 @@ import (
 	"encoding/base32"
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 
 	"google.golang.org/protobuf/types/known/durationpb"
@@ -214,16 +215,33 @@ func (r *ItemRequest) Copy(dest *ItemRequest) {
 
 // ToAttributes Convers a map[string]interface{} to an ItemAttributes object
 func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
-	newMap := make(map[string]interface{})
+	var str *structpb.Struct
+	var s map[string]interface{}
+	var err error
 
+	// str, err = structpb.NewStruct()
+	s = make(map[string]interface{})
+
+	// Loop of the map
 	for k, v := range m {
-		newMap[k] = sanitizeInterface(v)
+		v := reflect.ValueOf(v)
+		value, err := ToValue(v.Interface())
+
+		if err != nil {
+			return nil, err
+		}
+
+		s[k] = value
 	}
 
-	attrStruct, err := structpb.NewStruct(newMap)
+	str, err = structpb.NewStruct(s)
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &ItemAttributes{
-		AttrStruct: attrStruct,
+		AttrStruct: str,
 	}, err
 }
 
