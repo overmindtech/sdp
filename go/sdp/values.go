@@ -67,8 +67,14 @@ func ToValue(i interface{}) (*structpb.Value, error) {
 		var list *structpb.ListValue
 		var value *structpb.Value
 		var err error
+		var interfaceSlice []interface{}
 
-		list, err = structpb.NewList(i.([]interface{}))
+		// Convert to a slice of interfaces
+		for idx := 0; idx < v.Len(); idx++ {
+			interfaceSlice = append(interfaceSlice, v.Index(idx).Interface())
+		}
+
+		list, err = structpb.NewList(interfaceSlice)
 
 		if err != nil {
 			return value, err
@@ -79,8 +85,14 @@ func ToValue(i interface{}) (*structpb.Value, error) {
 		var list *structpb.ListValue
 		var value *structpb.Value
 		var err error
+		var interfaceSlice []interface{}
 
-		list, err = structpb.NewList(i.([]interface{}))
+		// Convert to a slice of interfaces
+		for idx := 0; idx < v.Len(); idx++ {
+			interfaceSlice = append(interfaceSlice, v.Index(idx).Interface())
+		}
+
+		list, err = structpb.NewList(interfaceSlice)
 
 		if err != nil {
 			return value, err
