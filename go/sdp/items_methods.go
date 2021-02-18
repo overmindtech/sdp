@@ -227,8 +227,12 @@ func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
 
 	// Loop of the map
 	for k, v := range m {
-		v := reflect.ValueOf(v)
-		value, err := ToValue(v.Interface())
+		if v == nil {
+			// If the value is nil then ignore
+			continue
+		}
+
+		value, err := ToValue(reflect.ValueOf(v).Interface())
 
 		if err != nil {
 			return nil, err
