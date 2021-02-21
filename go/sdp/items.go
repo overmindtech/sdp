@@ -180,7 +180,7 @@ func (a *ItemAttributes) Set(name string, value interface{}) error {
 
 	// Ensure that this interface will be able to be converted to a struct value
 	sanitizedValue := sanitizeInterface(value)
-	structValue, err := ToValue(sanitizedValue)
+	structValue, err := structpb.NewValue(sanitizedValue)
 
 	if err != nil {
 		return err
@@ -232,13 +232,14 @@ func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
 			continue
 		}
 
-		value, err := ToValue(reflect.ValueOf(v).Interface())
+		sanitizedValue := sanitizeInterface(v)
+		structValue, err := structpb.NewValue(sanitizedValue)
 
 		if err != nil {
 			return nil, err
 		}
 
-		s[k] = value
+		s[k] = structValue
 	}
 
 	return &ItemAttributes{
@@ -248,16 +249,115 @@ func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
 	}, err
 }
 
+// sanitizeInterface Ensures that en interface is ina format that can be
+// converted to a protobuf value. The structpb.ToValue() function expects things
+// to be in one of the following formats:
+//
+//  ╔════════════════════════╤════════════════════════════════════════════╗
+//  ║ Go type                │ Conversion                                 ║
+//  ╠════════════════════════╪════════════════════════════════════════════╣
+//  ║ nil                    │ stored as NullValue                        ║
+//  ║ bool                   │ stored as BoolValue                        ║
+//  ║ int, int32, int64      │ stored as NumberValue                      ║
+//  ║ uint, uint32, uint64   │ stored as NumberValue                      ║
+//  ║ float32, float64       │ stored as NumberValue                      ║
+//  ║ string                 │ stored as StringValue; must be valid UTF-8 ║
+//  ║ []byte                 │ stored as StringValue; base64-encoded      ║
+//  ║ map[string]interface{} │ stored as StructValue                      ║
+//  ║ []interface{}          │ stored as ListValue                        ║
+//  ╚════════════════════════╧════════════════════════════════════════════╝
+//
+// However this means that a data type like []string won't work, despite the
+// function being perfectly able to represent it in a protobuf struct. This
+// function does its best to example the available data type to ensure that as
+// long as the data can in theory be represented by a protobuf struct, the
+// conversion will work.
 func sanitizeInterface(i interface{}) interface{} {
-	// Test to see if this is going to be able to convert to struct value
-	_, err := structpb.NewValue(i)
+	v := reflect.ValueOf(i)
 
-	// If there was an error this means there is some sanitizing we need to do
-	if err != nil {
-		return fmt.Sprint(i)
+	if i == nil {
+		return nil
 	}
 
-	return i
+	switch v.Kind() {
+	case reflect.Bool:
+		return i
+	case reflect.Int:
+		return i
+	case reflect.Int8:
+		// Not supported by protobuf, needs coversion
+		return int(i.(int8))
+	case reflect.Int16:
+		// Not supported by protobuf, needs coversion
+		return int(i.(int16))
+	case reflect.Int32:
+		return i
+	case reflect.Int64:
+		return i
+	case reflect.Uint:
+		return i
+	case reflect.Uint8:
+		// Not supported by protobuf, needs coversion
+		return uint32(i.(uint8))
+	case reflect.Uint16:
+		// Not supported by protobuf, needs coversion
+		return uint32(i.(uint16))
+	case reflect.Uint32:
+		return i
+	case reflect.Uint64:
+		return i
+	case reflect.Float32:
+		return i
+	case reflect.Float64:
+		return i
+	case reflect.String:
+		return i
+	case reflect.Array:
+		// We need to check the type if each element in the array and do
+		// conversion on that
+
+		// returnval Returns the array in the format that protobuf can deal with
+		var returnval []interface{}
+
+		returnval = make([]interface{}, v.Len())
+
+		for index := 0; index < v.Len(); index++ {
+			returnval[index] = sanitizeInterface(v.Index(index).Interface())
+		}
+
+		return returnval
+	case reflect.Slice:
+		var returnval []interface{}
+
+		returnval = make([]interface{}, v.Len())
+
+		for index := 0; index < v.Len(); index++ {
+			returnval[index] = sanitizeInterface(v.Index(index).Interface())
+		}
+
+		return returnval
+	case reflect.Map:
+		var returnval map[string]interface{}
+
+		returnval = make(map[string]interface{})
+
+		for _, mapKey := range v.MapKeys() {
+			// Convert the key to a string
+			stringKey := fmt.Sprint(mapKey.Interface())
+
+			// Convert the value to a compatible interface
+			value := sanitizeInterface(v.MapIndex(mapKey).Interface())
+
+			returnval[stringKey] = value
+		}
+
+		return returnval
+	default:
+		// There is not much we can do here. We just pass the value back
+		// unmodified and if it can't be converted to a structpb then that will
+		// raise an appropriate error
+		return i
+	}
 }
 
 func hashSum(b []byte) string {
