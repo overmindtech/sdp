@@ -108,7 +108,8 @@ var ToAttributesTests = []ToAttributesTest{
 	{
 		Name: "Pointers",
 		Input: map[string]interface{}{
-			"pointer": &Bool1,
+			"pointer bool":   &Bool1,
+			"pointer string": &Dylan,
 		},
 	},
 	{
