@@ -362,6 +362,12 @@ func sanitizeInterface(i interface{}) interface{} {
 		for i := 0; i < n; i++ {
 			field := t.Field(i)
 
+			if field.PkgPath != "" {
+				// If this has a PkgPath then it is an un-exported fiend and
+				// should be ignored
+				continue
+			}
+
 			// Get the zero value for this field
 			zero := reflect.Zero(reflect.TypeOf(field)).Interface()
 

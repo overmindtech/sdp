@@ -20,9 +20,10 @@ type CustomBool bool
 var Bool1 CustomBool = false
 
 type CustomStruct struct {
-	Foo string
-	Bar string
-	Baz string
+	Foo           string
+	Bar           string
+	Baz           string
+	internalThing string
 }
 
 var Struct CustomStruct = CustomStruct{
