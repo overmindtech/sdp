@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -356,35 +357,45 @@ func sanitizeInterface(i interface{}) interface{} {
 
 		return returnMap
 	case reflect.Struct:
-		// In the case of a struct we basically want to turn it into a
-		// map[string]interface{}
-		var returnMap map[string]interface{}
+		// Special Cases
+		switch x := i.(type) {
+		case time.Time:
+			// If it's a time we just want to print in ISO8601
+			return x.Format(time.RFC3339Nano)
+		case time.Duration:
+			// If it's duration we want to print in a parseable format
+			return x.String()
+		default:
+			// In the case of a struct we basically want to turn it into a
+			// map[string]interface{}
+			var returnMap map[string]interface{}
 
-		returnMap = make(map[string]interface{})
+			returnMap = make(map[string]interface{})
 
-		// Range over fields
-		n := t.NumField()
-		for i := 0; i < n; i++ {
-			field := t.Field(i)
+			// Range over fields
+			n := t.NumField()
+			for i := 0; i < n; i++ {
+				field := t.Field(i)
 
-			if field.PkgPath != "" {
-				// If this has a PkgPath then it is an un-exported fiend and
-				// should be ignored
-				continue
+				if field.PkgPath != "" {
+					// If this has a PkgPath then it is an un-exported fiend and
+					// should be ignored
+					continue
+				}
+
+				// Get the zero value for this field
+				zeroValue := reflect.Zero(field.Type).Interface()
+				fieldValue := v.Field(i).Interface()
+
+				// Check if the field is it's nil value
+				// Check if there actually was a field with that name
+				if reflect.DeepEqual(fieldValue, zeroValue) == false {
+					returnMap[field.Name] = fieldValue
+				}
 			}
 
-			// Get the zero value for this field
-			zeroValue := reflect.Zero(field.Type).Interface()
-			fieldValue := v.Field(i).Interface()
-
-			// Check if the field is it's nil value
-			// Check if there actually was a field with that name
-			if reflect.DeepEqual(fieldValue, zeroValue) == false {
-				returnMap[field.Name] = fieldValue
-			}
+			return sanitizeInterface(returnMap)
 		}
-
-		return sanitizeInterface(returnMap)
 	case reflect.Ptr:
 		// Get the zero value for this field
 		zero := reflect.Zero(t)

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"reflect"
 	"testing"
+	"time"
 )
 
 type ToAttributesTest struct {
@@ -21,16 +22,20 @@ var Bool1 CustomBool = false
 var NilPointerBool *bool
 
 type CustomStruct struct {
-	Foo           string `json:",omitempty"`
-	Bar           string `json:",omitempty"`
-	Baz           string `json:",omitempty"`
+	Foo           string        `json:",omitempty"`
+	Bar           string        `json:",omitempty"`
+	Baz           string        `json:",omitempty"`
+	Time          time.Time     `json:",omitempty"`
+	Duration      time.Duration `json:",omitempty"`
 	internalThing string
 }
 
 var Struct CustomStruct = CustomStruct{
-	Foo: "foo",
-	Bar: "bar",
-	Baz: "baz",
+	Foo:      "foo",
+	Bar:      "bar",
+	Baz:      "baz",
+	Time:     time.Now(),
+	Duration: (10 * time.Minute),
 }
 
 var ToAttributesTests = []ToAttributesTest{
@@ -129,7 +134,8 @@ var ToAttributesTests = []ToAttributesTest{
 		Name: "Zero-value structs",
 		Input: map[string]interface{}{
 			"something": CustomStruct{
-				Foo: "yes",
+				Foo:  "yes",
+				Time: time.Now(),
 			},
 		},
 	},
