@@ -281,65 +281,61 @@ func sanitizeInterface(i interface{}) interface{} {
 
 	switch v.Kind() {
 	case reflect.Bool:
-		return i
+		return v.Bool()
 	case reflect.Int:
-		return i
+		return v.Int()
 	case reflect.Int8:
-		// Not supported by protobuf, needs coversion
-		return int(i.(int8))
+		return v.Int()
 	case reflect.Int16:
-		// Not supported by protobuf, needs coversion
-		return int(i.(int16))
+		return v.Int()
 	case reflect.Int32:
-		return i
+		return v.Int()
 	case reflect.Int64:
-		return i
+		return v.Int()
 	case reflect.Uint:
-		return i
+		return v.Uint()
 	case reflect.Uint8:
-		// Not supported by protobuf, needs coversion
-		return uint32(i.(uint8))
+		return v.Uint()
 	case reflect.Uint16:
-		// Not supported by protobuf, needs coversion
-		return uint32(i.(uint16))
+		return v.Uint()
 	case reflect.Uint32:
-		return i
+		return v.Uint()
 	case reflect.Uint64:
-		return i
+		return v.Uint()
 	case reflect.Float32:
-		return i
+		return v.Float()
 	case reflect.Float64:
-		return i
+		return v.Float()
 	case reflect.String:
-		return i
+		return fmt.Sprint(v)
 	case reflect.Array:
 		// We need to check the type if each element in the array and do
 		// conversion on that
 
-		// returnval Returns the array in the format that protobuf can deal with
-		var returnval []interface{}
+		// returnSlice Returns the array in the format that protobuf can deal with
+		var returnSlice []interface{}
 
-		returnval = make([]interface{}, v.Len())
+		returnSlice = make([]interface{}, v.Len())
 
 		for index := 0; index < v.Len(); index++ {
-			returnval[index] = sanitizeInterface(v.Index(index).Interface())
+			returnSlice[index] = sanitizeInterface(v.Index(index).Interface())
 		}
 
-		return returnval
+		return returnSlice
 	case reflect.Slice:
-		var returnval []interface{}
+		var returnSlice []interface{}
 
-		returnval = make([]interface{}, v.Len())
+		returnSlice = make([]interface{}, v.Len())
 
 		for index := 0; index < v.Len(); index++ {
-			returnval[index] = sanitizeInterface(v.Index(index).Interface())
+			returnSlice[index] = sanitizeInterface(v.Index(index).Interface())
 		}
 
-		return returnval
+		return returnSlice
 	case reflect.Map:
-		var returnval map[string]interface{}
+		var returnMap map[string]interface{}
 
-		returnval = make(map[string]interface{})
+		returnMap = make(map[string]interface{})
 
 		for _, mapKey := range v.MapKeys() {
 			// Convert the key to a string
@@ -348,14 +344,13 @@ func sanitizeInterface(i interface{}) interface{} {
 			// Convert the value to a compatible interface
 			value := sanitizeInterface(v.MapIndex(mapKey).Interface())
 
-			returnval[stringKey] = value
+			returnMap[stringKey] = value
 		}
 
-		return returnval
+		return returnMap
 	default:
-		// There is not much we can do here. We just pass the value back
-		// unmodified and if it can't be converted to a structpb then that will
-		// raise an appropriate error
+		// If we don't recognize the type then we need to see what the
+		// underlying type is and see if we can convert that
 		return i
 	}
 }

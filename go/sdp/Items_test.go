@@ -10,6 +10,14 @@ type ToAttributesTest struct {
 	Input map[string]interface{}
 }
 
+type HumanName string
+
+var Dylan HumanName = "Dylan"
+
+type CustomBool bool
+
+var Bool1 CustomBool = false
+
 var ToAttributesTests = []ToAttributesTest{
 	{
 		Name: "Basic strings map",
@@ -74,6 +82,13 @@ var ToAttributesTests = []ToAttributesTest{
 				2: "two",
 				3: "three",
 			},
+		},
+	},
+	{
+		Name: "Composite types",
+		Input: map[string]interface{}{
+			"underlying string": Dylan,
+			"underlying bool":   Bool1,
 		},
 	},
 }
