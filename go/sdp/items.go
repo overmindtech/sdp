@@ -273,7 +273,7 @@ func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
 // long as the data can in theory be represented by a protobuf struct, the
 // conversion will work.
 func sanitizeInterface(i interface{}) interface{} {
-	v := reflect.ValueOf(i)
+	v := reflect.Indirect(reflect.ValueOf(i))
 
 	if i == nil {
 		return nil
@@ -348,6 +348,31 @@ func sanitizeInterface(i interface{}) interface{} {
 		}
 
 		return returnMap
+	case reflect.Struct:
+		// In the case of a struct we basically want to turn it into a
+		// map[string]interface{}
+		var returnMap map[string]interface{}
+
+		returnMap = make(map[string]interface{})
+
+		t := v.Type()
+
+		// Range over fields
+		n := t.NumField()
+		for i := 0; i < n; i++ {
+			field := t.Field(i)
+
+			// Get the zero value for this field
+			zero := reflect.Zero(reflect.TypeOf(field)).Interface()
+
+			// Check if the field is it's nil value
+			// Check if there actually was a field with that name
+			if reflect.DeepEqual(field, zero) == false {
+				returnMap[field.Name] = v.Field(i).Interface()
+			}
+		}
+
+		return sanitizeInterface(returnMap)
 	default:
 		// If we don't recognize the type then we need to see what the
 		// underlying type is and see if we can convert that

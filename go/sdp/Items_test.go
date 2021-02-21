@@ -2,6 +2,7 @@ package sdp
 
 import (
 	"encoding/json"
+	"reflect"
 	"testing"
 )
 
@@ -10,20 +11,32 @@ type ToAttributesTest struct {
 	Input map[string]interface{}
 }
 
-type HumanName string
+type CustomString string
 
-var Dylan HumanName = "Dylan"
+var Dylan CustomString = "Dylan"
 
 type CustomBool bool
 
 var Bool1 CustomBool = false
+
+type CustomStruct struct {
+	Foo string
+	Bar string
+	Baz string
+}
+
+var Struct CustomStruct = CustomStruct{
+	Foo: "foo",
+	Bar: "bar",
+	Baz: "baz",
+}
 
 var ToAttributesTests = []ToAttributesTest{
 	{
 		Name: "Basic strings map",
 		Input: map[string]interface{}{
 			"firstName": "Dylan",
-			"lateName":  "Ratcliffe",
+			"lastName":  "Ratcliffe",
 		},
 	},
 	{
@@ -91,6 +104,23 @@ var ToAttributesTests = []ToAttributesTest{
 			"underlying bool":   Bool1,
 		},
 	},
+	{
+		Name: "Pointers",
+		Input: map[string]interface{}{
+			"pointer": &Bool1,
+		},
+	},
+	{
+		Name: "structs",
+		Input: map[string]interface{}{
+			"named struct": Struct,
+			"anon struct": struct {
+				Yes bool
+			}{
+				Yes: true,
+			},
+		},
+	},
 }
 
 func TestToAttributes(t *testing.T) {
@@ -103,15 +133,21 @@ func TestToAttributes(t *testing.T) {
 			var attributes *ItemAttributes
 			var err error
 
-			// Convert the input to JSON
-			inputBytes, err = json.MarshalIndent(tat.Input, "", "  ")
+			// Convert the input to Attributes
+			attributes, err = ToAttributes(tat.Input)
 
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			// Convert the input to Attributes
-			attributes, err = ToAttributes(tat.Input)
+			// In order to compate these reliably I'm going to do the following:
+			//
+			// 1. Convert to JSON
+			// 2. Convert back again
+			// 3. Compare with reflect.DeepEqual()
+
+			// Convert the input to JSON
+			inputBytes, err = json.MarshalIndent(tat.Input, "", "  ")
 
 			if err != nil {
 				t.Fatal(err)
@@ -120,12 +156,31 @@ func TestToAttributes(t *testing.T) {
 			// Convert the attributes to JSON
 			attributesBytes, err = json.MarshalIndent(attributes.AttrStruct.AsMap(), "", "  ")
 
-			// Compare
-			inputJSON = string(inputBytes)
-			attributesJSON = string(attributesBytes)
+			if err != nil {
+				t.Fatal(err)
+			}
 
-			if inputJSON != attributesJSON {
-				t.Errorf("JSON did not match\nInput: %v\nAttributes: %v", inputJSON, attributesJSON)
+			var input map[string]interface{}
+			var output map[string]interface{}
+
+			err = json.Unmarshal(inputBytes, &input)
+
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			err = json.Unmarshal(attributesBytes, &output)
+
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if !reflect.DeepEqual(input, output) {
+				// Convert to strings for printing
+				inputJSON = string(inputBytes)
+				attributesJSON = string(attributesBytes)
+
+				t.Errorf("JSON did not match (note that order of map keys doesn't matter)\nInput: %v\nAttributes: %v", inputJSON, attributesJSON)
 			}
 		})
 
