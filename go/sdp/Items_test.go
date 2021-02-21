@@ -18,6 +18,7 @@ var Dylan CustomString = "Dylan"
 type CustomBool bool
 
 var Bool1 CustomBool = false
+var NilPointerBool *bool
 
 type CustomStruct struct {
 	Foo           string
@@ -108,8 +109,9 @@ var ToAttributesTests = []ToAttributesTest{
 	{
 		Name: "Pointers",
 		Input: map[string]interface{}{
-			"pointer bool":   &Bool1,
-			"pointer string": &Dylan,
+			"pointer bool":    &Bool1,
+			"pointer string":  &Dylan,
+			"pointer to zero": NilPointerBool,
 		},
 	},
 	{

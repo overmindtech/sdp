@@ -274,6 +274,7 @@ func ToAttributes(m map[string]interface{}) (*ItemAttributes, error) {
 // conversion will work.
 func sanitizeInterface(i interface{}) interface{} {
 	v := reflect.ValueOf(i)
+	t := v.Type()
 
 	if i == nil {
 		return nil
@@ -355,8 +356,6 @@ func sanitizeInterface(i interface{}) interface{} {
 
 		returnMap = make(map[string]interface{})
 
-		t := v.Type()
-
 		// Range over fields
 		n := t.NumField()
 		for i := 0; i < n; i++ {
@@ -380,6 +379,14 @@ func sanitizeInterface(i interface{}) interface{} {
 
 		return sanitizeInterface(returnMap)
 	case reflect.Ptr:
+		// Get the zero value for this field
+		zero := reflect.Zero(t)
+
+		// Check if the field is it's nil value
+		if reflect.DeepEqual(v, zero) {
+			return nil
+		}
+
 		return sanitizeInterface(v.Elem().Interface())
 	default:
 		// If we don't recognize the type then we need to see what the
