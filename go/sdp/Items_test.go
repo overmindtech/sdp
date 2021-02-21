@@ -21,9 +21,9 @@ var Bool1 CustomBool = false
 var NilPointerBool *bool
 
 type CustomStruct struct {
-	Foo           string
-	Bar           string
-	Baz           string
+	Foo           string `json:",omitempty"`
+	Bar           string `json:",omitempty"`
+	Baz           string `json:",omitempty"`
 	internalThing string
 }
 
@@ -122,6 +122,14 @@ var ToAttributesTests = []ToAttributesTest{
 				Yes bool
 			}{
 				Yes: true,
+			},
+		},
+	},
+	{
+		Name: "Zero-value structs",
+		Input: map[string]interface{}{
+			"something": CustomStruct{
+				Foo: "yes",
 			},
 		},
 	},

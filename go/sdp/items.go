@@ -343,9 +343,15 @@ func sanitizeInterface(i interface{}) interface{} {
 			stringKey := fmt.Sprint(mapKey.Interface())
 
 			// Convert the value to a compatible interface
-			value := sanitizeInterface(v.MapIndex(mapKey).Interface())
+			mapValueInterface := v.MapIndex(mapKey).Interface()
+			zeroValueInterface := reflect.Zero(v.MapIndex(mapKey).Type()).Interface()
 
-			returnMap[stringKey] = value
+			// Only use the item if it isn't zero
+			if reflect.DeepEqual(mapValueInterface, zeroValueInterface) == false {
+				value := sanitizeInterface(v.MapIndex(mapKey).Interface())
+
+				returnMap[stringKey] = value
+			}
 		}
 
 		return returnMap
@@ -368,12 +374,13 @@ func sanitizeInterface(i interface{}) interface{} {
 			}
 
 			// Get the zero value for this field
-			zero := reflect.Zero(reflect.TypeOf(field)).Interface()
+			zeroValue := reflect.Zero(field.Type).Interface()
+			fieldValue := v.Field(i).Interface()
 
 			// Check if the field is it's nil value
 			// Check if there actually was a field with that name
-			if reflect.DeepEqual(field, zero) == false {
-				returnMap[field.Name] = v.Field(i).Interface()
+			if reflect.DeepEqual(fieldValue, zeroValue) == false {
+				returnMap[field.Name] = fieldValue
 			}
 		}
 
