@@ -45,6 +45,7 @@ Each target language has it's own build script in the `build` directory. For exa
 
 ```shell
 ./build/go.sh
+./build/typescript.sh
 ```
 
 ## Libraries
