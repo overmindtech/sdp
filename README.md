@@ -40,11 +40,11 @@ While the UniqueAttributeValue will always be unique for a given type, this same
 
 ## Building
 
-To build, run the following command:
+Each target language has it's own build script in the `build` directory. For example:
 
 
 ```shell
-./build/protogen.sh
+./build/go.sh
 ```
 
 ## Libraries

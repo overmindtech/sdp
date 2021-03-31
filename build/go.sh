@@ -2,9 +2,6 @@
 
 set -x
 
-# Check that we are running from the root of the project
-[ ! -f go.mod ] && echo "go.mod does not exist. You need to run this script from the project root" && exit 1
-
 # Golang build
 GO_SDP_FINAL_PATH=go/sdp
 GO_SDP_BUILD_PATH=$(mktemp -d)
