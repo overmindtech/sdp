@@ -1,0 +1,17 @@
+{
+  "name": "sdp",
+  "version": "0.0.1",
+  "description": "Javascript and Typescript libraries for the State Description Protocol",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Dylan Ratcliffe",
+  "license": "ISC",
+  "dependencies": {
+    "@types/google-protobuf": "^3.7.4",
+    "google-protobuf": "^3.15.6",
+    "ts-protoc-gen": "^0.14.0"
+  }
+}
