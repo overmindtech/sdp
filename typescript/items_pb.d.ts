@@ -1,41 +1,44 @@
-import * as jspb from 'google-protobuf'
+// package: 
+// file: items.proto
 
-import * as google_protobuf_struct_pb from 'google-protobuf/google/protobuf/struct_pb';
-import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
-import * as google_protobuf_duration_pb from 'google-protobuf/google/protobuf/duration_pb';
-
+import * as jspb from "google-protobuf";
+import * as google_protobuf_struct_pb from "google-protobuf/google/protobuf/struct_pb";
+import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
+import * as google_protobuf_duration_pb from "google-protobuf/google/protobuf/duration_pb";
 
 export class ItemRequest extends jspb.Message {
   getType(): string;
-  setType(value: string): ItemRequest;
+  setType(value: string): void;
 
-  getMethod(): equestMethod;
-  setMethod(value: equestMethod): ItemRequest;
+  getMethod(): RequestMethodMap[keyof RequestMethodMap];
+  setMethod(value: RequestMethodMap[keyof RequestMethodMap]): void;
 
   getQuery(): string;
-  setQuery(value: string): ItemRequest;
+  setQuery(value: string): void;
 
   getLinkdepth(): number;
-  setLinkdepth(value: number): ItemRequest;
+  setLinkdepth(value: number): void;
 
   getContext(): string;
-  setContext(value: string): ItemRequest;
+  setContext(value: string): void;
 
   getItemsubject(): string;
-  setItemsubject(value: string): ItemRequest;
+  setItemsubject(value: string): void;
 
   getLinkeditemsubject(): string;
-  setLinkeditemsubject(value: string): ItemRequest;
+  setLinkeditemsubject(value: string): void;
 
   getResponsesubject(): string;
-  setResponsesubject(value: string): ItemRequest;
+  setResponsesubject(value: string): void;
 
   getErrorsubject(): string;
-  setErrorsubject(value: string): ItemRequest;
+  setErrorsubject(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ItemRequest.AsObject;
   static toObject(includeInstance: boolean, msg: ItemRequest): ItemRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ItemRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ItemRequest;
   static deserializeBinaryFromReader(message: ItemRequest, reader: jspb.BinaryReader): ItemRequest;
@@ -44,7 +47,7 @@ export class ItemRequest extends jspb.Message {
 export namespace ItemRequest {
   export type AsObject = {
     type: string,
-    method: equestMethod,
+    method: RequestMethodMap[keyof RequestMethodMap],
     query: string,
     linkdepth: number,
     context: string,
@@ -56,14 +59,16 @@ export namespace ItemRequest {
 }
 
 export class ItemAttributes extends jspb.Message {
-  getAttrstruct(): google_protobuf_struct_pb.Struct | undefined;
-  setAttrstruct(value?: google_protobuf_struct_pb.Struct): ItemAttributes;
   hasAttrstruct(): boolean;
-  clearAttrstruct(): ItemAttributes;
+  clearAttrstruct(): void;
+  getAttrstruct(): google_protobuf_struct_pb.Struct | undefined;
+  setAttrstruct(value?: google_protobuf_struct_pb.Struct): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ItemAttributes.AsObject;
   static toObject(includeInstance: boolean, msg: ItemAttributes): ItemAttributes.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ItemAttributes, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ItemAttributes;
   static deserializeBinaryFromReader(message: ItemAttributes, reader: jspb.BinaryReader): ItemAttributes;
@@ -77,37 +82,39 @@ export namespace ItemAttributes {
 
 export class Item extends jspb.Message {
   getType(): string;
-  setType(value: string): Item;
+  setType(value: string): void;
 
   getUniqueattribute(): string;
-  setUniqueattribute(value: string): Item;
+  setUniqueattribute(value: string): void;
 
-  getAttributes(): ItemAttributes | undefined;
-  setAttributes(value?: ItemAttributes): Item;
   hasAttributes(): boolean;
-  clearAttributes(): Item;
+  clearAttributes(): void;
+  getAttributes(): ItemAttributes | undefined;
+  setAttributes(value?: ItemAttributes): void;
 
-  getMetadata(): Metadata | undefined;
-  setMetadata(value?: Metadata): Item;
   hasMetadata(): boolean;
-  clearMetadata(): Item;
+  clearMetadata(): void;
+  getMetadata(): Metadata | undefined;
+  setMetadata(value?: Metadata): void;
 
   getContext(): string;
-  setContext(value: string): Item;
+  setContext(value: string): void;
 
+  clearLinkeditemrequestsList(): void;
   getLinkeditemrequestsList(): Array<ItemRequest>;
-  setLinkeditemrequestsList(value: Array<ItemRequest>): Item;
-  clearLinkeditemrequestsList(): Item;
+  setLinkeditemrequestsList(value: Array<ItemRequest>): void;
   addLinkeditemrequests(value?: ItemRequest, index?: number): ItemRequest;
 
+  clearLinkeditemsList(): void;
   getLinkeditemsList(): Array<Reference>;
-  setLinkeditemsList(value: Array<Reference>): Item;
-  clearLinkeditemsList(): Item;
+  setLinkeditemsList(value: Array<Reference>): void;
   addLinkeditems(value?: Reference, index?: number): Reference;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Item.AsObject;
   static toObject(includeInstance: boolean, msg: Item): Item.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Item, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Item;
   static deserializeBinaryFromReader(message: Item, reader: jspb.BinaryReader): Item;
@@ -126,14 +133,16 @@ export namespace Item {
 }
 
 export class Items extends jspb.Message {
+  clearItemsList(): void;
   getItemsList(): Array<Item>;
-  setItemsList(value: Array<Item>): Items;
-  clearItemsList(): Items;
+  setItemsList(value: Array<Item>): void;
   addItems(value?: Item, index?: number): Item;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Items.AsObject;
   static toObject(includeInstance: boolean, msg: Items): Items.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Items, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Items;
   static deserializeBinaryFromReader(message: Items, reader: jspb.BinaryReader): Items;
@@ -147,17 +156,19 @@ export namespace Items {
 
 export class Reference extends jspb.Message {
   getType(): string;
-  setType(value: string): Reference;
+  setType(value: string): void;
 
   getUniqueattributevalue(): string;
-  setUniqueattributevalue(value: string): Reference;
+  setUniqueattributevalue(value: string): void;
 
   getContext(): string;
-  setContext(value: string): Reference;
+  setContext(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Reference.AsObject;
   static toObject(includeInstance: boolean, msg: Reference): Reference.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Reference, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Reference;
   static deserializeBinaryFromReader(message: Reference, reader: jspb.BinaryReader): Reference;
@@ -173,32 +184,34 @@ export namespace Reference {
 
 export class Metadata extends jspb.Message {
   getBackendname(): string;
-  setBackendname(value: string): Metadata;
+  setBackendname(value: string): void;
 
-  getRequestmethod(): equestMethod;
-  setRequestmethod(value: equestMethod): Metadata;
+  getRequestmethod(): RequestMethodMap[keyof RequestMethodMap];
+  setRequestmethod(value: RequestMethodMap[keyof RequestMethodMap]): void;
 
-  getTimestamp(): google_protobuf_timestamp_pb.Timestamp | undefined;
-  setTimestamp(value?: google_protobuf_timestamp_pb.Timestamp): Metadata;
   hasTimestamp(): boolean;
-  clearTimestamp(): Metadata;
+  clearTimestamp(): void;
+  getTimestamp(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setTimestamp(value?: google_protobuf_timestamp_pb.Timestamp): void;
 
-  getBackendduration(): google_protobuf_duration_pb.Duration | undefined;
-  setBackendduration(value?: google_protobuf_duration_pb.Duration): Metadata;
   hasBackendduration(): boolean;
-  clearBackendduration(): Metadata;
+  clearBackendduration(): void;
+  getBackendduration(): google_protobuf_duration_pb.Duration | undefined;
+  setBackendduration(value?: google_protobuf_duration_pb.Duration): void;
 
-  getBackenddurationperitem(): google_protobuf_duration_pb.Duration | undefined;
-  setBackenddurationperitem(value?: google_protobuf_duration_pb.Duration): Metadata;
   hasBackenddurationperitem(): boolean;
-  clearBackenddurationperitem(): Metadata;
+  clearBackenddurationperitem(): void;
+  getBackenddurationperitem(): google_protobuf_duration_pb.Duration | undefined;
+  setBackenddurationperitem(value?: google_protobuf_duration_pb.Duration): void;
 
   getBackendpackage(): string;
-  setBackendpackage(value: string): Metadata;
+  setBackendpackage(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Metadata.AsObject;
   static toObject(includeInstance: boolean, msg: Metadata): Metadata.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Metadata, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Metadata;
   static deserializeBinaryFromReader(message: Metadata, reader: jspb.BinaryReader): Metadata;
@@ -207,7 +220,7 @@ export class Metadata extends jspb.Message {
 export namespace Metadata {
   export type AsObject = {
     backendname: string,
-    requestmethod: equestMethod,
+    requestmethod: RequestMethodMap[keyof RequestMethodMap],
     timestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject,
     backendduration?: google_protobuf_duration_pb.Duration.AsObject,
     backenddurationperitem?: google_protobuf_duration_pb.Duration.AsObject,
@@ -215,8 +228,11 @@ export namespace Metadata {
   }
 }
 
-export enum RequestMethod { 
-  GET = 0,
-  FIND = 1,
-  SEARCH = 2,
+export interface RequestMethodMap {
+  GET: 0;
+  FIND: 1;
+  SEARCH: 2;
 }
+
+export const RequestMethod: RequestMethodMap;
+

@@ -1,20 +1,23 @@
-import * as jspb from 'google-protobuf'
+// package: 
+// file: errors.proto
 
-
+import * as jspb from "google-protobuf";
 
 export class ItemRequestError extends jspb.Message {
-  getErrortype(): temRequestError.ErrorType;
-  setErrortype(value: temRequestError.ErrorType): ItemRequestError;
+  getErrortype(): ItemRequestError.ErrorTypeMap[keyof ItemRequestError.ErrorTypeMap];
+  setErrortype(value: ItemRequestError.ErrorTypeMap[keyof ItemRequestError.ErrorTypeMap]): void;
 
   getErrorstring(): string;
-  setErrorstring(value: string): ItemRequestError;
+  setErrorstring(value: string): void;
 
   getContext(): string;
-  setContext(value: string): ItemRequestError;
+  setContext(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ItemRequestError.AsObject;
   static toObject(includeInstance: boolean, msg: ItemRequestError): ItemRequestError.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ItemRequestError, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ItemRequestError;
   static deserializeBinaryFromReader(message: ItemRequestError, reader: jspb.BinaryReader): ItemRequestError;
@@ -22,15 +25,17 @@ export class ItemRequestError extends jspb.Message {
 
 export namespace ItemRequestError {
   export type AsObject = {
-    errortype: temRequestError.ErrorType,
+    errortype: ItemRequestError.ErrorTypeMap[keyof ItemRequestError.ErrorTypeMap],
     errorstring: string,
     context: string,
   }
 
-  export enum ErrorType { 
-    OTHER = 0,
-    NOTFOUND = 1,
-    NOCONTEXT = 2,
+  export interface ErrorTypeMap {
+    OTHER: 0;
+    NOTFOUND: 1;
+    NOCONTEXT: 2;
   }
+
+  export const ErrorType: ErrorTypeMap;
 }
 
