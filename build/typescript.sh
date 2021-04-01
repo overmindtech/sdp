@@ -39,3 +39,9 @@ rm -rf $SDP_BUILD_PATH
 ./node_modules/.bin/ctix --verbose --project ./tsconfig.json 
 
 cd -
+
+set +x
+
+echo ""
+echo "Compile complete. Run the following to publish:"
+echo "cd typescript && npm publish && cd -"
