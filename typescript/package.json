@@ -14,5 +14,8 @@
     "@types/google-protobuf": "^3.7.4",
     "google-protobuf": "^3.15.6",
     "ts-protoc-gen": "^0.14.0"
+  },
+  "devDependencies": {
+    "create-index": "^2.6.0"
   }
 }

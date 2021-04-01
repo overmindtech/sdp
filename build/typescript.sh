@@ -7,8 +7,8 @@ set -x
 # * NodeJS
 cd typescript
 
-# Install the plugin
-npm install ts-protoc-gen
+# Install the plugins
+npm install
 
 # Path to the plugin
 PROTOC_GEN_TS_PATH="./node_modules/.bin/protoc-gen-ts"
@@ -33,5 +33,8 @@ mkdir -p $SDP_FINAL_PATH
 # Move into place
 mv -fv $SDP_BUILD_PATH/* $SDP_FINAL_PATH
 rm -rf $SDP_BUILD_PATH
+
+# Generate the index
+./node_modules/.bin/create-index ./
 
 cd -
