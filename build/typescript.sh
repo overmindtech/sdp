@@ -26,8 +26,11 @@ protoc \
     ../*.proto
 
 # Clean slate
-rm -f $SDP_FINAL_PATH/*.ts
-rm -f $SDP_FINAL_PATH/*.js
+rm -f $SDP_FINAL_PATH/*_pb.d.ts
+rm -f $SDP_FINAL_PATH/*_pb.js
+rm -f $SDP_FINAL_PATH/index.js
+rm -f $SDP_FINAL_PATH/index.ts
+
 mkdir -p $SDP_FINAL_PATH
 
 # Move into place

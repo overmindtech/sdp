@@ -14,7 +14,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// UniqueAttributeValue return the value of whatever the Unique Attribute if
+// UniqueAttributeValue returns the value of whatever the Unique Attribute is
 // for this item. This will then be converted to a string and returned
 func (i *Item) UniqueAttributeValue() string {
 	var value interface{}
@@ -97,13 +97,13 @@ func (i *Item) Copy(dest *Item) {
 	}
 }
 
-// Hash Returns a 12 character hash for the item. This is unlikely but not
+// Hash Returns a 12 character hash for the item. This is likely but not
 // guaranteed to be unique. The hash is calculated using the GloballyUniqueName
 func (i *Item) Hash() string {
 	return hashSum(([]byte(fmt.Sprint(i.GloballyUniqueName()))))
 }
 
-// Hash Returns a 12 character hash for the item. This is unlikely but not
+// Hash Returns a 12 character hash for the item. This is likely but not
 // guaranteed to be unique. The hash is calculated using the GloballyUniqueName
 func (r *Reference) Hash() string {
 	return hashSum(([]byte(fmt.Sprint(r.GloballyUniqueName()))))
@@ -420,8 +420,8 @@ func hashSum(b []byte) string {
 
 	shaSum = sha1.Sum(b)
 
-	// We need to specify a custom encoding here since dGraph has fairly struct
-	// requirements aboout what name a variable
+	// We need to specify a custom encoding here since dGraph has fairly strict
+	// requirements aboout what name a variable can have
 	paddedEncoding = base32.NewEncoding("abcdefghijklmnopqrstuvwxyzABCDEF")
 
 	// We also can't have padding since "=" is not allowed in variable names

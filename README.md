@@ -4,6 +4,47 @@ State Description Protocol is designed to allow for the serialization of the des
 
 This has been somewhat inspired by [Z Notation](https://en.wikipedia.org/wiki/Z_notation)
 
+## Additional Dynamic Data
+
+Other than the methods that are are generated from the protocol buffers, we provide the following methods for convenience on all platforms. Certain libraries may provide more functionality above the methods listed below but these methods at least will be present and return consistent results across all libraries. Not however that the naming of the methods might change to reflect best-practices in a given library.
+
+### `item.UniqueAttributeValue`
+
+Returns the value of whatever the Unique Attribute is for this item
+
+### `item.Reference`
+
+Returns an SDP reference for the item
+
+### `item.GloballyUniqueName`
+
+GloballyUniqueName Returns a string that defines the Item globally. This a
+combination of the following values:
+
+ * context
+ * type
+ * uniqueAttributeValue
+
+They are concatenated with dots (.)
+
+### `reference.GloballyUniqueName`
+
+Same as for Item
+
+### `item.Hash`
+
+Returns a 12 character hash for the item. This is likely but not guaranteed to be unique. The hash is calculated as follows:
+
+* Take the SHA-1 sum of the GloballyUniqueName
+* Encode the SHA-1 binary value using base-32 with a custom encoding
+  * The custom encoding is designed to ensure that all hashes are also valid variable names in DGraph and other databases. To this end the following encoding string is used: `abcdefghijklmnopqrstuvwxyzABCDEF`
+  * The encoding is also non-padded, though this likely wont matter since we strip the end off anyway
+* Return the first 12 characters of the resulting string
+
+### `reference.Hash`
+
+Same as item.Hash
+
 ## Querying State
 
 SDP is designed to be usable over a message queue infrastructure where a single request may be responded to by many, many respondents. In order to have this process work efficiently and provide a reasonable amount of feedback to the user about how the query is going and how much longer it might be expected to take, interim responses are used.
