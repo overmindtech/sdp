@@ -28,8 +28,6 @@ protoc \
 # Clean slate
 rm -f $SDP_FINAL_PATH/*_pb.d.ts
 rm -f $SDP_FINAL_PATH/*_pb.js
-rm -f $SDP_FINAL_PATH/index.js
-rm -f $SDP_FINAL_PATH/index.ts
 
 mkdir -p $SDP_FINAL_PATH
 
@@ -37,11 +35,11 @@ mkdir -p $SDP_FINAL_PATH
 mv -fv $SDP_BUILD_PATH/* $SDP_FINAL_PATH
 rm -rf $SDP_BUILD_PATH
 
-# Generate the indexex
-./node_modules/.bin/ctix --verbose --project ./tsconfig.json 
-
 # Compile extra typescript
 tsc
+
+mkdir -p dist
+cp -v *.d.ts *.js dist
 
 cd -
 
