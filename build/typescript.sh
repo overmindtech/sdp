@@ -38,8 +38,10 @@ mv -fv $SDP_BUILD_PATH/* $SDP_FINAL_PATH
 rm -rf $SDP_BUILD_PATH
 
 # Generate the indexex
-./node_modules/.bin/create-index ./
 ./node_modules/.bin/ctix --verbose --project ./tsconfig.json 
+
+# Compile extra typescript
+tsc
 
 cd -
 
