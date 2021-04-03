@@ -1,12 +1,9 @@
 {
   "name": "@dylanratcliffe/sdp",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Javascript and Typescript libraries for the State Description Protocol",
   "main": "index.js",
   "types": "index.d.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
