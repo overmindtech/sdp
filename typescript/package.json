@@ -1,6 +1,6 @@
 {
   "name": "@dylanratcliffe/sdp",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Javascript and Typescript libraries for the State Description Protocol",
   "main": "index.js",
   "types": "index.d.ts",
