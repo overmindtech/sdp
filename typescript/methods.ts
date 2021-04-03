@@ -1,3 +1,6 @@
+// This file contains the extra methods I want to add to the generated protobuf
+// code
+
 import { Item, Reference } from './items_pb';
 import sha1 from 'sha1';
 import toDataView from 'to-data-view';
