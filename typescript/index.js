@@ -39,12 +39,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Item = exports.Reference = exports.Response = exports.ItemRequestError = void 0;
+exports.Item = exports.Reference = exports.Metadata = exports.Items = exports.ItemAttributes = exports.ItemRequest = exports.Response = exports.ItemRequestError = void 0;
 var items_pb = __importStar(require("./items_pb"));
 var errors_pb = __importStar(require("./errors_pb"));
 var responses_pb = __importStar(require("./responses_pb"));
 var sha1_1 = __importDefault(require("sha1"));
 var to_data_view_1 = __importDefault(require("to-data-view"));
+// Manually re-export all of the stuff from the protobuf generated modules. I'm
+// pretty certain this is not a great way of doing it but if it works it's a lot
+// better than what I was doing before
 var ItemRequestError = /** @class */ (function (_super) {
     __extends(ItemRequestError, _super);
     function ItemRequestError() {
@@ -61,6 +64,39 @@ var Response = /** @class */ (function (_super) {
     return Response;
 }(responses_pb.Response));
 exports.Response = Response;
+var ItemRequest = /** @class */ (function (_super) {
+    __extends(ItemRequest, _super);
+    function ItemRequest() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return ItemRequest;
+}(items_pb.ItemRequest));
+exports.ItemRequest = ItemRequest;
+var ItemAttributes = /** @class */ (function (_super) {
+    __extends(ItemAttributes, _super);
+    function ItemAttributes() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return ItemAttributes;
+}(items_pb.ItemAttributes));
+exports.ItemAttributes = ItemAttributes;
+var Items = /** @class */ (function (_super) {
+    __extends(Items, _super);
+    function Items() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Items;
+}(items_pb.Items));
+exports.Items = Items;
+var Metadata = /** @class */ (function (_super) {
+    __extends(Metadata, _super);
+    function Metadata() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Metadata;
+}(items_pb.Metadata));
+exports.Metadata = Metadata;
+;
 var Reference = /** @class */ (function (_super) {
     __extends(Reference, _super);
     function Reference() {

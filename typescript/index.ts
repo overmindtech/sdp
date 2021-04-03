@@ -8,8 +8,17 @@ import * as responses_pb from './responses_pb';
 import sha1 from 'sha1';
 import toDataView from 'to-data-view';
 
+// Manually re-export all of the stuff from the protobuf generated modules. I'm
+// pretty certain this is not a great way of doing it but if it works it's a lot
+// better than what I was doing before
 export class ItemRequestError extends errors_pb.ItemRequestError {}
 export class Response extends responses_pb.Response {}
+export class ItemRequest extends items_pb.ItemRequest {}
+export class ItemAttributes extends items_pb.ItemAttributes {}
+export class Items extends items_pb.Items {}
+export class Metadata extends items_pb.Metadata {}
+export interface RequestMethodMap extends items_pb.RequestMethodMap {};
+
 
 export class Reference extends items_pb.Reference {
     getGloballyuniquename(): string {
