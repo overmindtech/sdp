@@ -18,6 +18,11 @@ export class ItemAttributes extends items_pb.ItemAttributes {}
 export class Items extends items_pb.Items {}
 export class Metadata extends items_pb.Metadata {}
 export interface RequestMethodMap extends items_pb.RequestMethodMap {};
+export const RequestMethod: RequestMethodMap = {
+    GET: 0,
+    FIND: 1,
+    SEARCH: 2,
+}
 
 
 export class Reference extends items_pb.Reference {

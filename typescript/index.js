@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Item = exports.Reference = exports.Metadata = exports.Items = exports.ItemAttributes = exports.ItemRequest = exports.Response = exports.ItemRequestError = void 0;
+exports.Item = exports.Reference = exports.RequestMethod = exports.Metadata = exports.Items = exports.ItemAttributes = exports.ItemRequest = exports.Response = exports.ItemRequestError = void 0;
 var items_pb = __importStar(require("./items_pb"));
 var errors_pb = __importStar(require("./errors_pb"));
 var responses_pb = __importStar(require("./responses_pb"));
@@ -97,6 +97,11 @@ var Metadata = /** @class */ (function (_super) {
 }(items_pb.Metadata));
 exports.Metadata = Metadata;
 ;
+exports.RequestMethod = {
+    GET: 0,
+    FIND: 1,
+    SEARCH: 2,
+};
 var Reference = /** @class */ (function (_super) {
     __extends(Reference, _super);
     function Reference() {

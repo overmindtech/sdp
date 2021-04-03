@@ -15,6 +15,7 @@ export declare class Metadata extends items_pb.Metadata {
 }
 export interface RequestMethodMap extends items_pb.RequestMethodMap {
 }
+export declare const RequestMethod: RequestMethodMap;
 export declare class Reference extends items_pb.Reference {
     getGloballyuniquename(): string;
     getHash(): string;
