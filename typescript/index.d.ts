@@ -1,29 +1,11 @@
-import * as items_pb from './items_pb';
-import * as errors_pb from './errors_pb';
-import * as responses_pb from './responses_pb';
-export declare class ItemRequestError extends errors_pb.ItemRequestError {
-}
-export declare class Response extends responses_pb.Response {
-}
-export declare class ItemRequest extends items_pb.ItemRequest {
-}
-export declare class ItemAttributes extends items_pb.ItemAttributes {
-}
-export declare class Items extends items_pb.Items {
-}
-export declare class Metadata extends items_pb.Metadata {
-}
-export interface RequestMethodMap extends items_pb.RequestMethodMap {
-}
-export declare const RequestMethod: RequestMethodMap;
-export declare class Reference extends items_pb.Reference {
-    getGloballyuniquename(): string;
-    getHash(): string;
-}
-export declare class Item extends items_pb.Item {
-    getUniqueattributevalue(): string;
-    getGloballyuniquename(): string;
-    getReference(): Reference;
-    getHash(): string;
+import { ItemRequest, ItemAttributes, Item, Items, Reference, Metadata, RequestMethodMap, RequestMethod } from './items_pb';
+import { ItemRequestError } from './errors_pb';
+import { Response } from './responses_pb';
+export { ItemRequest, ItemAttributes, Item, Items, Reference, Metadata, RequestMethodMap, RequestMethod, ItemRequestError, Response, };
+export declare namespace Util {
+    function getGloballyuniquename(object: Reference | Item): string;
+    function getHash(object: Reference | Item): string;
+    function getUniqueattributevalue(object: Item | Reference): string;
+    function getReference(item: Item): Reference;
 }
 //# sourceMappingURL=index.d.ts.map

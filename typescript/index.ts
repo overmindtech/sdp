@@ -1,91 +1,71 @@
 // This file contains the extra methods I want to add to the generated protobuf
 // code
 
-import * as items_pb from './items_pb';
-import * as errors_pb from './errors_pb';
-import * as responses_pb from './responses_pb';
-
+import { ItemRequest, ItemAttributes, Item, Items, Reference, Metadata, RequestMethodMap, RequestMethod } from './items_pb';
+import { ItemRequestError } from './errors_pb';
+import { Response } from './responses_pb';
 import sha1 from 'sha1';
 import toDataView from 'to-data-view';
 
-// Manually re-export all of the stuff from the protobuf generated modules. I'm
-// pretty certain this is not a great way of doing it but if it works it's a lot
-// better than what I was doing before
-export class ItemRequestError extends errors_pb.ItemRequestError {}
-export class Response extends responses_pb.Response {}
-export class ItemRequest extends items_pb.ItemRequest {}
-export class ItemAttributes extends items_pb.ItemAttributes {}
-export class Items extends items_pb.Items {}
-export class Metadata extends items_pb.Metadata {}
-export interface RequestMethodMap extends items_pb.RequestMethodMap {};
-export const RequestMethod: RequestMethodMap = {
-    GET: 0,
-    FIND: 1,
-    SEARCH: 2,
+// Re-Export all the stuff we just imported
+export {
+    ItemRequest,
+    ItemAttributes,
+    Item,
+    Items,
+    Reference,
+    Metadata,
+    RequestMethodMap,
+    RequestMethod,
+    ItemRequestError,
+    Response,
 }
 
-
-export class Reference extends items_pb.Reference {
-    getGloballyuniquename(): string {
-        return globallyUniqueName(this);
-    }
-    getHash(): string {
-        return hash(this);
-    }
-}
-
-export class Item extends items_pb.Item {
-    getUniqueattributevalue(): string {
-        const uniqueAttribute = this.getUniqueattribute();
-        const fields = this.getAttributes()?.getAttrstruct()?.getFieldsMap();
-        return String(fields?.get(uniqueAttribute));
+export namespace Util {
+    export function getGloballyuniquename(object: Reference | Item): string {
+        const elements: string[] = [
+            object.getContext(),
+            object.getType(),
+            getUniqueattributevalue(object),
+        ];
+    
+        return elements.join(".");
     }
 
-    getGloballyuniquename(): string {
-        return globallyUniqueName(this);
+    export function getHash(object: Reference | Item): string {
+        const bytes = sha1(getGloballyuniquename(object), {
+            asBytes: true,
+        })
+    
+        const base32String = base32EncodeCustom(bytes);
+    
+        return base32String.substring(0,11)
     }
-    getReference(): Reference {
+
+    export function getUniqueattributevalue(object: Item | Reference): string {
+        if ("getUniqueattributevalue" in object) {
+            return object.getUniqueattributevalue();
+        } else {
+            const uniqueAttribute = object.getUniqueattribute();
+            const fields = object.getAttributes()?.getAttrstruct()?.getFieldsMap();
+            return String(fields?.get(uniqueAttribute));
+        }
+    }
+
+    export function getReference(item: Item): Reference {
         const ref = new Reference();
 
-        ref.setContext(this.getContext());
-        ref.setType(this.getType());
-        ref.setUniqueattributevalue(this.getUniqueattributevalue());
+        ref.setContext(item.getContext());
+        ref.setType(item.getType());
+        ref.setUniqueattributevalue(getUniqueattributevalue(item));
     
         return ref;    
     }
-    getHash(): string {
-        return hash(this);
-    }
 }
-
 
 //
 // Private helper functions
 //
-
-// Calculates a hash for each item. Should match the golang implementation
-//
-// TODO: Test that this matches the golang implementation
-function hash(x: Item | Reference): string {
-    const bytes = sha1(x.getGloballyuniquename(),{
-        asBytes: true,
-    })
-
-    const base32String = base32EncodeCustom(bytes);
-
-    return base32String.substring(0,11)
-}
-
-// Shared code for both items and references
-function globallyUniqueName(x: Item | Reference): string {
-    const elements: string[] = [
-        x.getContext(),
-        x.getType(),
-        x.getUniqueattributevalue(),
-    ];
-
-    return elements.join(".");
-}
 
 // This is a copied and modified version of
 // https://github.com/LinusU/base32-encode made to support my custom encoding
