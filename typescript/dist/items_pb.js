@@ -11,6 +11,10 @@
 /* eslint-disable */
 // @ts-nocheck
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+  return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+
 var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
