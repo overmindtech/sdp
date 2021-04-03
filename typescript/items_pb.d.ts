@@ -118,12 +118,6 @@ export class Item extends jspb.Message {
   static serializeBinaryToWriter(message: Item, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Item;
   static deserializeBinaryFromReader(message: Item, reader: jspb.BinaryReader): Item;
-
-  getUniqueattributevalue(): string;
-  getGloballyuniquename(): string;
-  getReference(): Reference;
-  getHash(): string;
-
 }
 
 export namespace Item {
@@ -178,10 +172,6 @@ export class Reference extends jspb.Message {
   static serializeBinaryToWriter(message: Reference, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Reference;
   static deserializeBinaryFromReader(message: Reference, reader: jspb.BinaryReader): Reference;
-
-  getGloballyuniquename(): string;
-  getHash(): string;
-
 }
 
 export namespace Reference {

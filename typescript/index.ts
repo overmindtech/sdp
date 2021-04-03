@@ -1,56 +1,53 @@
 // This file contains the extra methods I want to add to the generated protobuf
 // code
 
-import { Item, Reference } from './items_pb';
+import * as items_pb from './items_pb';
+import * as errors_pb from './errors_pb';
+import * as responses_pb from './responses_pb';
+
 import sha1 from 'sha1';
 import toDataView from 'to-data-view';
 
-declare module "./items_pb" {
-    interface Item {
-        getUniqueattributevalue(): string;
-        getGloballyuniquename(): string;
-        getReference(): Reference;
-        getHash(): string;
-    }
+export class ItemRequestError extends errors_pb.ItemRequestError {}
+export class Response extends responses_pb.Response {}
 
-    interface Reference {
-        getGloballyuniquename(): string;
-        getHash(): string;
+export class Reference extends items_pb.Reference {
+    getGloballyuniquename(): string {
+        return globallyUniqueName(this);
+    }
+    getHash(): string {
+        return hash(this);
     }
 }
 
-Item.prototype.getUniqueattributevalue = function (this: Item): string {
-    const uniqueAttribute = this.getUniqueattribute();
-    const fields = this.getAttributes()?.getAttrstruct()?.getFieldsMap();
-    return String(fields?.get(uniqueAttribute));
+export class Item extends items_pb.Item {
+    getUniqueattributevalue(): string {
+        const uniqueAttribute = this.getUniqueattribute();
+        const fields = this.getAttributes()?.getAttrstruct()?.getFieldsMap();
+        return String(fields?.get(uniqueAttribute));
+    }
+
+    getGloballyuniquename(): string {
+        return globallyUniqueName(this);
+    }
+    getReference(): Reference {
+        const ref = new Reference();
+
+        ref.setContext(this.getContext());
+        ref.setType(this.getType());
+        ref.setUniqueattributevalue(this.getUniqueattributevalue());
+    
+        return ref;    
+    }
+    getHash(): string {
+        return hash(this);
+    }
 }
 
-Item.prototype.getReference = function (this: Item): Reference {
-    const ref = new Reference();
 
-    ref.setContext(this.getContext());
-    ref.setType(this.getType());
-    ref.setUniqueattributevalue(this.getUniqueattributevalue());
-
-    return ref;
-}
-
-Item.prototype.getGloballyuniquename = function(this: Item): string {
-    return globallyUniqueName(this);
-}
-
-Item.prototype.getHash = function(this: Item): string {
-    return hash(this);
-}
-
-Reference.prototype.getGloballyuniquename = function(this: Reference): string {
-    return globallyUniqueName(this);
-}
-
-Reference.prototype.getHash = function(this: Reference): string {
-    return hash(this);
-}
-
+//
+// Private helper functions
+//
 
 // Calculates a hash for each item. Should match the golang implementation
 //
@@ -109,8 +106,3 @@ function base32EncodeCustom (data: Uint8Array | ArrayBuffer | Int8Array | Uint8C
   
     return output
 }
-
-// Export everything
-export * from './errors_pb';
-export * from './items_pb';
-export * from './responses_pb';

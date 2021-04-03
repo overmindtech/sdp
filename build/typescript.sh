@@ -38,9 +38,6 @@ rm -rf $SDP_BUILD_PATH
 # Compile extra typescript
 tsc
 
-mkdir -p dist
-cp -v *.d.ts *.js dist
-
 cd -
 
 set +x
