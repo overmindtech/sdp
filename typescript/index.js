@@ -60,6 +60,11 @@ var Util;
         return ref;
     }
     Util.getReference = getReference;
+    // Convert a durationpb to javascript Date object
+    function toDate(duration) {
+        return new Date((duration.getSeconds() * 1000) + (duration.getNanos() / 1000000));
+    }
+    Util.toDate = toDate;
 })(Util = exports.Util || (exports.Util = {}));
 //
 // Private helper functions

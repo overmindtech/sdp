@@ -6,6 +6,7 @@ import { ItemRequestError } from './errors_pb';
 import { Response } from './responses_pb';
 import sha1 from 'sha1';
 import toDataView from 'to-data-view';
+import { Duration } from 'google-protobuf/google/protobuf/duration_pb';
 
 // Re-Export all the stuff we just imported
 export {
@@ -61,6 +62,11 @@ export namespace Util {
         ref.setUniqueattributevalue(getUniqueattributevalue(item));
     
         return ref;    
+    }
+
+    // Convert a durationpb to javascript Date object
+    export function toDate(duration: Duration): Date {
+        return new Date((duration.getSeconds() * 1000) + (duration.getNanos() / 1000000));
     }
 }
 
