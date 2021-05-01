@@ -1,4 +1,4 @@
-module github.com/dylanratcliffe/sdp
+module github.com/dylanratcliffe/sdp/go/sdp
 
 go 1.15
 
