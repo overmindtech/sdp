@@ -4,7 +4,7 @@
 set -e
 
 # Build settings
-GO_SDP_FINAL_PATH=../sdp-go
+GO_SDP_FINAL_PATH=../sdp.go
 GO_SDP_BUILD_PATH=$(mktemp -d)
 
 # Check build path exists
