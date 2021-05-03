@@ -1,4 +1,4 @@
-name: Generate Golang
+name: Generate C++
 on: push
 jobs:
   golang:
@@ -14,4 +14,4 @@ jobs:
 
     - name: Generate go code
       run: |
-        protoc -I . *.proto --go_out /tmp
+        protoc -I . *.proto --cpp_out /tmp
