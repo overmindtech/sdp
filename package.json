@@ -16,7 +16,7 @@
     "url": "https://github.com/dylanratcliffe/redacted_protocols/issues"
   },
   "homepage": "https://github.com/dylanratcliffe/redacted_protocols#readme",
-  "dependencies": {
-    "protoc-gen-ts": "^0.3.5"
+  "devDependencies": {
+    "ts-protoc-gen": "^0.14.0"
   }
 }
