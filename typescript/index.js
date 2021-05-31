@@ -48,7 +48,7 @@ var Util;
             var uniqueAttribute = object.getUniqueattribute();
             var fields = (_b = (_a = object.getAttributes()) === null || _a === void 0 ? void 0 : _a.getAttrstruct()) === null || _b === void 0 ? void 0 : _b.getFieldsMap();
             var value = fields === null || fields === void 0 ? void 0 : fields.get(uniqueAttribute);
-            return (value === null || value === void 0 ? void 0 : value.getStringValue()) || "";
+            return (value === null || value === void 0 ? void 0 : value.toString()) || "";
         }
     }
     Util.getUniqueattributevalue = getUniqueattributevalue;
