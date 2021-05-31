@@ -50,7 +50,7 @@ export namespace Util {
             const uniqueAttribute = object.getUniqueattribute();
             const fields = object.getAttributes()?.getAttrstruct()?.getFieldsMap();
             const value = fields?.get(uniqueAttribute)
-            return value?.getStringValue() || "";
+            return value?.toString() || "";
         }
     }
 
