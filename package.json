@@ -1,0 +1,22 @@
+{
+  "name": "sdp-utils",
+  "version": "1.0.0",
+  "description": "Utilities for builing SDP",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dylanratcliffe/redacted_protocols.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dylanratcliffe/redacted_protocols/issues"
+  },
+  "homepage": "https://github.com/dylanratcliffe/redacted_protocols#readme",
+  "devDependencies": {
+    "ts-protoc-gen": "^0.14.0"
+  }
+}
