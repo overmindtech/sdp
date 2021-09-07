@@ -154,7 +154,8 @@ message Metadata {
   // This is the name of the backend that was used to find the item.
   string backendName = 2;
 
-  RequestMethod requestMethod = 3;
+  // The request that caused this item to be found
+  ItemRequest sourceRequest = 3;
 
   // The time that the item was found
   google.protobuf.Timestamp timestamp = 4;
