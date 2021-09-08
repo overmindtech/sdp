@@ -74,9 +74,6 @@ message ItemRequest {
 
   // Subject that both interim and final responses should be sent to
   string responseSubject = 17;
-
-  // Subject that errors should be sent to
-  string errorSubject = 18;
 }
 
 
