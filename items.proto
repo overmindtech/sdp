@@ -72,13 +72,6 @@ message ItemRequest {
   // Subject that items resulting from the request should be sent to
   string itemSubject = 16;
 
-  // Subject that items resulting from linked item requests should be sent to.
-  // This can be used to differentiate between results from the original vs
-  // subsequent requests if required. If this is blank, users of this protocol
-  // should assume that linked items are to be sent on the same subject as the
-  // original items
-  string linkedItemSubject = 19;
-
   // Subject that both interim and final responses should be sent to
   string responseSubject = 17;
 

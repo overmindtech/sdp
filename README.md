@@ -85,7 +85,7 @@ When implementing SDP over a message queue, you should follow the below naming c
 
 ### `items.{context}`
 
-All producers of SDP items should post their items to this topic, regardless of `itemSubject`, `linkedItemSubject`, `responseSubject` or `errorSubject`. Items will be published into this topic with `{context}` replaced by whatever the current context is. Users can subscribe to a particular context, or all contexts using a wildcard.
+All producers of SDP items should post their items to this topic, regardless of `itemSubject`, `responseSubject` or `errorSubject`. Items will be published into this topic with `{context}` replaced by whatever the current context is. Users can subscribe to a particular context, or all contexts using a wildcard.
 
 ### `requests.all`
 
