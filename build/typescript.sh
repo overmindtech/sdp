@@ -14,7 +14,7 @@ npm install
 PROTOC_GEN_TS_PATH="./node_modules/.bin/protoc-gen-ts"
 
 # Golang build
-SDP_FINAL_PATH=../sdp.js
+SDP_FINAL_PATH=../sdp-js
 SDP_BUILD_PATH=$(mktemp -d)
 
 # Compile
@@ -44,4 +44,4 @@ set +x
 
 echo ""
 echo "Compile complete. Run the following to publish:"
-echo "cd ../sdp.js && npm publish && cd -"
+echo "cd ../sdp-js && npm publish && cd -"
