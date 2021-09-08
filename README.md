@@ -69,6 +69,8 @@ responder->>requester: Item
 responder->>requester: Final Response: DONE
 ```
 
+The subjects upon which the responses and items should be sent are determined by the requester and sent within the request itself. The naming conventions for this are found below.
+
 ## Item Uniqueness
 
 An item is considered unique with a unique combination of:
@@ -83,17 +85,21 @@ While the UniqueAttributeValue will always be unique for a given type, this same
 
 When implementing SDP over a message queue, you should follow the below naming convention for topics/subjects.
 
-### `items.{context}`
-
-All producers of SDP items should post their items to this topic, regardless of `itemSubject`, `linkedItemSubject`, `responseSubject` or `errorSubject`. Items will be published into this topic with `{context}` replaced by whatever the current context is. Users can subscribe to a particular context, or all contexts using a wildcard.
-
-### `requests.all`
+### `request.all`
 
 Everything will listen on this subject for requests. Any requests that are placed onto this subject will be responded to by everything that is currently active.
 
-### `requests.contexts.{context}`
+### `request.context.{context}`
 
 We will listen on the this subject for requests that are specific to our given context and respond to them
+
+### `return.response.{inbox}`
+
+Responses to a request should be sent on this topic, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself
+
+### `return.item.{inbox}`
+
+Items should be sent to this topic as part of a request, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself
 
 ## Building
 
