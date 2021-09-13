@@ -101,6 +101,16 @@ Responses to a request should be sent on this topic, with `{inbox}` being replac
 
 Items should be sent to this topic as part of a request, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself
 
+### Deprecated Subjects
+
+#### `items.all`
+
+This has been removed in favour of the wildcard subscription to `return.item.>`
+
+#### `items.{context}`
+
+This has been removed in favour of the wildcard subscription to `return.item.>`. Not that this doesn't allow for subscribing to items from only one context since the inboxes are random, but I can't currently see a use for that anyway.
+
 ## Building
 
 Each target language has it's own build script in the `build` directory. For example:
