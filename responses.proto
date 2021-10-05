@@ -15,8 +15,9 @@ option go_package = "github.com/dylanratcliffe/sdp/go/sdp";
 
 // Response is returned when a query is made
 message Response {
-  // The context that is working on a response
-  string context = 1;
+  // The name of the responder that is working on a response. This is purely
+  // informational
+  string responder = 1;
 
   // ResponseState represents the state of the responder, note that both
   // COMPLETE and ERROR are completion states i.e. do not expect any more items
