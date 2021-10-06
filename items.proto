@@ -141,8 +141,8 @@ message Reference {
 
 // Metadata about the item. Where it came from, how long it took, etc.
 message Metadata {
-  // This is the name of the backend that was used to find the item.
-  string backendName = 2;
+  // This is the name of the source that was used to find the item.
+  string sourceName = 2;
 
   // The request that caused this item to be found
   ItemRequest sourceRequest = 3;
@@ -150,14 +150,11 @@ message Metadata {
   // The time that the item was found
   google.protobuf.Timestamp timestamp = 4;
 
-  // How long the backend took to execute in total when processing the
+  // How long the source took to execute in total when processing the
   // ItemRequest
-  google.protobuf.Duration backendDuration = 5;
+  google.protobuf.Duration sourceDuration = 5;
 
-  // How long the backend took to execute per item when processing the
+  // How long the source took to execute per item when processing the
   // ItemRequest
-  google.protobuf.Duration backendDurationPerItem = 6;
-
-  // Name of the backend package
-  string backendPackage = 7;
+  google.protobuf.Duration sourceDurationPerItem = 6;
 }
