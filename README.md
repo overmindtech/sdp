@@ -101,6 +101,17 @@ Responses to a request should be sent on this topic, with `{inbox}` being replac
 
 Items should be sent to this topic as part of a request, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself
 
+## Errors
+
+Item requests that are not successful will return an `ItemRequestError`. The structure of these errors is:
+
+* `errorType`: The error type (enum)
+  * `NOTFOUND`: NOTFOUND means that the item was not found. This is only returned as the result of a GET request since all other requests would return an empty list instead
+  * `NOCONTEXT`: NOCONTEXT means that the item was not found because we don't have access to the requested context. This should not be interpreted as "The item doesn't exist" (as with a NOTFOUND error) but rather as "We can't tell you whether or not the item exists"
+  * `OTHER`: This should be used of all other failure modes, such as timeouts, unexpected failures when querying state, permissions errors etc. Errors that return this type should not be cached as the error may be transient.
+* `errorString`: The string contents of the error
+* `context`: The context from which the error was raised
+
 ### Deprecated Subjects
 
 #### `items.all`

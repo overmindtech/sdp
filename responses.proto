@@ -46,7 +46,9 @@ message ItemRequestError {
   // The error type. Any types in here will be gracefully handled unless the
   // type os "OTHER"
   enum ErrorType {
-    // This should be used of all other failure modes
+    // This should be used of all other failure modes, such as timeouts,
+    // unexpected failures when querying state, permissions errors etc. Errors
+    // that return this type should not be cached as the error may be transient.
     OTHER = 0;
 
     // NOTFOUND means that the item was not found. This is only returned as the
