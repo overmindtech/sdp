@@ -139,5 +139,5 @@ Each target language has it's own build script in the `build` directory. For exa
 Currently the golang libraries for this live in this repo since I can't be bother splitting them out right now:
 
 ```
-go get -v github.com/dylanratcliffe/sdp/go/sdp
+go get -v github.com/overmindtech/sdp/go/sdp
 ```

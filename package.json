@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dylanratcliffe/redacted_protocols.git"
+    "url": "git+https://github.com/overmindtech/redacted_protocols.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dylanratcliffe/redacted_protocols/issues"
+    "url": "https://github.com/overmindtech/redacted_protocols/issues"
   },
-  "homepage": "https://github.com/dylanratcliffe/redacted_protocols#readme",
+  "homepage": "https://github.com/overmindtech/redacted_protocols#readme",
   "devDependencies": {
     "ts-protoc-gen": "^0.14.0"
   }

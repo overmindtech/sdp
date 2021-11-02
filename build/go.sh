@@ -25,7 +25,7 @@ rm -f $GO_SDP_FINAL_PATH/*.pb.go
 mkdir -p $GO_SDP_FINAL_PATH
 
 # Move into place
-mv -fv $GO_SDP_BUILD_PATH/github.com/dylanratcliffe/sdp/go/sdp/* $GO_SDP_FINAL_PATH
+mv -fv $GO_SDP_BUILD_PATH/github.com/overmindtech/sdp/go/sdp/* $GO_SDP_FINAL_PATH
 rm -rf $GO_SDP_BUILD_PATH
 
 echo "✅ Complete"
