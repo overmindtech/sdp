@@ -157,4 +157,14 @@ message Metadata {
   // How long the source took to execute per item when processing the
   // ItemRequest
   google.protobuf.Duration sourceDurationPerItem = 6;
+
+  // Whether the item should be hidden/ignored by user-facing things such as
+  // GUIs and databases.
+  //
+  // Some types of items are only relevant in calculating higher-layer
+  // abstractions and are therefore always hidden. A good example of this would
+  // be the output of a command. This could be used by a remote source to gather
+  // information, but we don't actually want to show the user all the commands
+  // that were run, just the final item returned by the source
+  bool hidden = 7;
 }
