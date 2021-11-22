@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___        
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_       
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_      
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__     
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____    
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________   
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________  
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________ 
+//         ___\///////////_____\////////////_____\///______________
+option go_package = "github.com/overmindtech/sdp/go/sdp";
+
+// The message signals that the item request with the corresponding UUID should
+// be cancelled. Work should stop immediately, and a final response should be
+// sent with a state of CANCELLED to acknowledge that the request has ended due
+// to a cancellation
+message ItemRequestCancel {
+  // UUID of the item request that this response is in relation to (in binary
+  // format)
+  bytes UUID = 1;
+}

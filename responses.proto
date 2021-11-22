@@ -26,6 +26,7 @@ message Response {
     WORKING = 0;
     COMPLETE = 1;
     ERROR = 2;
+    CANCELLED = 3;
   }
 
   // The state of the responder
@@ -36,6 +37,10 @@ message Response {
   // can be considered stale and the requester may give up
   google.protobuf.Duration nextUpdateIn = 3;
 
+  // UUID if the item request that this response is in relation to (in binary
+  // format)
+  bytes itemRequestUUID = 4;
+
   // The error that was returned during the request. This should only be
   // populated if the state is ERROR
   ItemRequestError error = 16;
@@ -43,6 +48,10 @@ message Response {
 
 // ItemRequestError is sent back when an item request fails
 message ItemRequestError {
+   // UUID if the item request that this response is in relation to (in binary
+  // format)
+  bytes itemRequestUUID = 1;
+
   // The error type. Any types in here will be gracefully handled unless the
   // type os "OTHER"
   enum ErrorType {

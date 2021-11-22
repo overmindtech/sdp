@@ -65,6 +65,12 @@ message ItemRequest {
   // required this caching can be turned off using this parameter
   bool ignoreCache = 6;
 
+  // A UUID to uniquely identify the request. This should be stored by the
+  // requester as it will be needed later if the requester wants to cancel a
+  // request. It should be stored as 128 bytes, as opposed to the textual
+  // representation
+  bytes UUID = 7;
+
   // The below fields are used when a request is made over the NATS network and
   // the requester needs to specify where the results of that request should be
   // sent. These subjects will be used in addition to the defaults and are
