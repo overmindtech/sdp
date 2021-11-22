@@ -83,6 +83,15 @@ message ItemRequest {
   string responseSubject = 17;
 }
 
+// The message signals that the item request with the corresponding UUID should
+// be cancelled. Work should stop immediately, and a final response should be
+// sent with a state of CANCELLED to acknowledge that the request has ended due
+// to a cancellation
+message ItemRequestCancel {
+  // UUID of the item request that this response is in relation to (in binary
+  // format)
+  bytes UUID = 1;
+}
 
 // ItemAttributes represents the known attributes for an item. These are likely
 // to be common to a given type, but even this is not guaranteed. All items must
