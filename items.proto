@@ -36,14 +36,6 @@ enum RequestMethod {
 }
 
 // ItemRequest represents a request for an item.
-//
-// Type: (Optional) The type of item that you are looking for, is this is not
-// provided then the request will be for all types that the receiver knows
-// about.
-//
-// Method: (Required) The request method to use
-//
-// Query: (Optional) The query to pass
 message ItemRequest {
   // The type of item to search for. "*" means all types
   string type = 1;
@@ -63,6 +55,15 @@ message ItemRequest {
   // The context for which we are requesting. To query all contexts use the the
   // wildcard '*'
   string context = 5;
+
+  // Whether to ignore the cache and execute the request regardless.
+  //
+  // By default sources will implement some level of caching, this is
+  // particularly important for linked items as a single request with a large
+  // link depth may result in the same item being requested many times as links
+  // are resolved and more and more items link to each other. However if
+  // required this caching can be turned off using this parameter
+  bool ignoreCache = 6;
 
   // The below fields are used when a request is made over the NATS network and
   // the requester needs to specify where the results of that request should be
