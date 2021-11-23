@@ -87,7 +87,7 @@ message ItemRequest {
 // be cancelled. Work should stop immediately, and a final response should be
 // sent with a state of CANCELLED to acknowledge that the request has ended due
 // to a cancellation
-message ItemRequestCancel {
+message CancelItemRequest {
   // UUID of the item request that this response is in relation to (in binary
   // format)
   bytes UUID = 1;
