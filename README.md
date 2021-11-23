@@ -83,23 +83,49 @@ While the UniqueAttributeValue will always be unique for a given type, this same
 
 ## Message Queue Topics/Subjects
 
-When implementing SDP over a message queue, you should follow the below naming convention for topics/subjects.
+When implementing SDP over a message queue (usually NATS), you should follow the below naming convention for topics/subjects. Note that the naming of subjects shouldn't influence how messages are actually handled, for example an `ItemRequest` that came though the subject `request.all` should be treated the same as one that come from `request.context.{context}`. All of the information needed for the processing of messages is contained in the message itself and the subjects are currently only used for convenience and routing.
 
 ### `request.all`
 
-Everything will listen on this subject for requests. Any requests that are placed onto this subject will be responded to by everything that is currently active.
+Everything will listen on this subject for requests. Requests sent to this subject should have a `context` of `*` and will therefore be responded to by everything. It is of course possible to send a request to this subject that has only one specific context, but this would be incredibly wasteful of network bandwidth as the message would be relays to all consumers and then discarded by all but one.
 
 ### `request.context.{context}`
 
-We will listen on the this subject for requests that are specific to our given context and respond to them
+All sources should listen on a subject named with the above naming conventions for all contexts that they are able to find items for. In some cases, such as agent-based sources in a physical server or VM this will likely only be one e.g. `request.context.webserver01`. However some sources may be able to connect to many contexts and will therefore subscribe to one subject for each. An example could be a Kubernetes source which is able to connect to many namespaces. Its subscriptions could look like:
+
+* `request.context.cluster1.namespace1`
+* `request.context.cluster1.namespace2`
+
+Dots are valid in context names and should be used for logical serration as above.
 
 ### `return.response.{inbox}`
 
-Responses to a request should be sent on this topic, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself
+Responses to a request should be sent on this topic, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself. e.g.
+
+```json
+{
+  "type": "person",
+  "method": 0,
+  "query": "Dylan",
+  "linkDepth": 4,
+  "context": "global",
+  "UUID": "bcee962c-ca60-479b-8a96-ab970d878392",
+  "itemSubject": "return.item._INBOX.712ab421", // Items will be sent here
+  "responseSubject": "return.response._INBOX.978af6de" // Responses will be sent here
+}
+```
 
 ### `return.item.{inbox}`
 
-Items should be sent to this topic as part of a request, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself
+Items should be sent to this topic as part of a request, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself as above
+
+### `cancel.all`
+
+This subject exists to allow cancellation requests to be sent. Cancellations should be sent to this subject if the initial `ItemRequest` was sent to the corresponding subject: `request.all`
+
+### `cancel.context.{context}`
+
+Cancellation requests for specific contexts should use this subject to send their cancellation requests
 
 ## Errors
 
