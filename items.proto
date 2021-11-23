@@ -71,6 +71,14 @@ message ItemRequest {
   // representation
   bytes UUID = 7;
 
+  // The timeout for this request. This will affect both the initial request,
+  // and also any linked item requests that are executed as part of it. This
+  // means that if a request has a timeout of 10s, and takes 2s to complete, the
+  // linked item requests should have a remaining timeout of 8s meaning that the
+  // entire request including all linking needs to be done in 10s, not 10s for
+  // *each* request
+  google.protobuf.Duration timeout = 8;
+
   // The below fields are used when a request is made over the NATS network and
   // the requester needs to specify where the results of that request should be
   // sent. These subjects will be used in addition to the defaults and are
