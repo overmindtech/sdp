@@ -70,6 +70,10 @@ message ItemRequestError {
     // item doesn't exist" (as with a NOTFOUND error) but rather as "We can't
     // tell you whether or not the item exists"
     NOCONTEXT = 2;
+
+    // TIMEOUT means that the source times out when trying to query the item.
+    // The timeout is provided in the original request
+    TIMEOUT = 3;
   }
   ErrorType errorType = 2;
 
