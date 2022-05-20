@@ -192,3 +192,32 @@ message Metadata {
   // that were run, just the final item returned by the source
   bool hidden = 7;
 }
+
+// ReverseLinksRequest Is used to find linked item requests for item with
+// *inbound* rather than outbound links. This allows linking in reverse e.g.
+//
+//   ip -> load balancer
+//
+// where usually only:
+//
+//   load balancer -> ip
+//
+// would be possible
+message ReverseLinksRequest {
+  // The item that you would like to find reverse links for
+  Reference item = 1;
+
+  // The timeout for this request
+  google.protobuf.Duration timeout = 2;
+}
+
+// ReverseLinks Represents linked item requests that can be run and will result
+// in objects with *inbound* links to a given item
+message ReverseLinksResponse {
+  // The item requests that should be executed in order to find items that link
+  // to the requested item
+  repeated ItemRequest linkedItemRequests = 1;
+
+  // An error, if present. If not this will be an empty string
+  string error = 2;
+}
