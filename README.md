@@ -181,6 +181,10 @@ This subject exists to allow cancellation requests to be sent. Cancellations sho
 
 Cancellation requests for specific contexts should use this subject to send their cancellation requests
 
+### `reverse.links`
+
+This subject hosts the reverse linker, users should send a `ReverseLinksRequest` to this subject (with a response inbox). The reverse linker will the respond with a `ReverseLinksResponse`
+
 ## Errors
 
 Item requests that are not successful will return an `ItemRequestError`. The structure of these errors is:
