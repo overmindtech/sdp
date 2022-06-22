@@ -13,24 +13,24 @@ import "google/protobuf/duration.proto";
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp/go/sdp";
 
+// ResponderState represents the state of the responder, note that both
+// COMPLETE and ERROR are completion states i.e. do not expect any more items
+// to be returned from the request
+enum ResponderState {
+  WORKING = 0;
+  COMPLETE = 1;
+  ERROR = 2;
+  CANCELLED = 3;
+}
+
 // Response is returned when a query is made
 message Response {
   // The name of the responder that is working on a response. This is purely
   // informational
   string responder = 1;
 
-  // ResponseState represents the state of the responder, note that both
-  // COMPLETE and ERROR are completion states i.e. do not expect any more items
-  // to be returned from the request
-  enum ResponseState {
-    WORKING = 0;
-    COMPLETE = 1;
-    ERROR = 2;
-    CANCELLED = 3;
-  }
-
   // The state of the responder
-  ResponseState state = 2;
+  ResponderState state = 2;
 
   // The timespan within which to expect the next update. (e.g. 10s) If no
   // further interim responses are received within this time the connection
@@ -48,7 +48,7 @@ message Response {
 
 // ItemRequestError is sent back when an item request fails
 message ItemRequestError {
-   // UUID if the item request that this response is in relation to (in binary
+  // UUID if the item request that this response is in relation to (in binary
   // format)
   bytes itemRequestUUID = 1;
 

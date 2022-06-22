@@ -163,6 +163,15 @@ message Reference {
   string context = 3;
 }
 
+// Edge Represents a link between two items, it is not used in regular SDP
+// queries as it's up to the client to infer the edges from the LinkedItems
+// field, however request managed by the gateway will explicitly send edges to
+// reduce the processing burden on the client side
+message Edge {
+  Reference from = 1;
+  Reference to = 2;
+}
+
 // Metadata about the item. Where it came from, how long it took, etc.
 message Metadata {
   // This is the name of the source that was used to find the item.

@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+import "items.proto";
+import "responses.proto";
+import "google/protobuf/duration.proto";
+
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___        
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_       
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_      
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__     
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____    
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________   
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________  
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________ 
+//         ___\///////////_____\////////////_____\///______________
+option go_package = "github.com/overmindtech/sdp/go/sdp";
+
+// GatewayRequest Represents a request made to the gateway. Currently it only
+// includes a regular ItemRequest which is relayed to the NATS network, however
+// this could expand in the future
+message GatewayRequest {
+    ItemRequest request = 1;
+
+    google.protobuf.Duration minStatusInterval = 2; // Minimum time between status updates. Setting this value too low can result in too many status messages
+}
+
+// GatewayResponse The gateway will always respond with this type of message,
+// however the purpose of it is purely as a wrapper to the many different types
+// of messages that the gateway can send
+message GatewayResponse {
+    oneof response_type {
+        Item newItem = 2;
+        Edge newEdge = 3;
+        GatewayRequestStatus status = 4;
+    }
+}
+
+// GatewayRequestStatus Contains the status of the gateway request
+message GatewayRequestStatus {
+    map<string, ResponderState> responderStates = 1;
+    map<string, ItemRequestError> responderErrors = 2;
+
+    message Summary {
+        int32 working = 1;
+		int32 stalled = 2;
+		int32 complete = 3;
+		int32 failed = 4;
+		int32 cancelled = 5;
+		int32 responders = 6;
+    }
+
+    Summary summary = 3;
+}
