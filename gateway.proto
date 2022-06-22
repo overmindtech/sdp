@@ -48,7 +48,7 @@ message GatewayRequestStatus {
         int32 working = 1;
 		int32 stalled = 2;
 		int32 complete = 3;
-		int32 failed = 4;
+		int32 error = 4;
 		int32 cancelled = 5;
 		int32 responders = 6;
     }
