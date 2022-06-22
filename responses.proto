@@ -21,6 +21,7 @@ enum ResponderState {
   COMPLETE = 1;
   ERROR = 2;
   CANCELLED = 3;
+  STALLED = 4;
 }
 
 // Response is returned when a query is made
