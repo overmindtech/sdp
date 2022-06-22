@@ -29,9 +29,10 @@ message GatewayRequest {
 // of messages that the gateway can send
 message GatewayResponse {
     oneof response_type {
-        Item newItem = 2;
-        Edge newEdge = 3;
-        GatewayRequestStatus status = 4;
+        Item newItem = 2; // A new item that has been discovered
+        Edge newEdge = 3; // A new edge between two items
+        GatewayRequestStatus status = 4; // Status of the overall request
+        string error = 5; // An error in the request. This represents a fatal error in the request itself and will be the last message sent
     }
 }
 
