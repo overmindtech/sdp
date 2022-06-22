@@ -19,9 +19,12 @@ option go_package = "github.com/overmindtech/sdp/go/sdp";
 // includes a regular ItemRequest which is relayed to the NATS network, however
 // this could expand in the future
 message GatewayRequest {
-    ItemRequest request = 1;
+    oneof request_type {
+        ItemRequest request = 1;
+        CancelItemRequest cancel = 3;
+    }
 
-    google.protobuf.Duration minStatusInterval = 2; // Minimum time between status updates. Setting this value too low can result in too many status messages
+    optional google.protobuf.Duration minStatusInterval = 2; // Minimum time between status updates. Setting this value too low can result in too many status messages
 }
 
 // GatewayResponse The gateway will always respond with this type of message,
@@ -32,7 +35,7 @@ message GatewayResponse {
         Item newItem = 2; // A new item that has been discovered
         Edge newEdge = 3; // A new edge between two items
         GatewayRequestStatus status = 4; // Status of the overall request
-        string error = 5; // An error in the request. This represents a fatal error in the request itself and will be the last message sent
+        string error = 5; // An error that means the request couldn't be executed
     }
 }
 
