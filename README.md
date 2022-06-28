@@ -165,13 +165,18 @@ Responses to a request should be sent on this topic, with `{inbox}` being replac
   "context": "global",
   "UUID": "bcee962c-ca60-479b-8a96-ab970d878392",
   "itemSubject": "return.item._INBOX.712ab421", // Items will be sent here
-  "responseSubject": "return.response._INBOX.978af6de" // Responses will be sent here
+  "responseSubject": "return.response._INBOX.978af6de", // Responses will be sent here
+  "errorSubject": "return.error._INBOX.48aaf4ba" // Responses will be sent here
 }
 ```
 
 ### `return.item.{inbox}`
 
 Items should be sent to this topic as part of a request, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself as above
+
+### `return.error.{inbox}`
+
+Errors that are encountered as part of the request will ne sent on this subject, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself as above
 
 ### `cancel.all`
 
@@ -187,14 +192,23 @@ This subject hosts the reverse linker, users should send a `ReverseLinksRequest`
 
 ## Errors
 
-Item requests that are not successful will return an `ItemRequestError`. The structure of these errors is:
+Errors that are encountered as part of a request will be sent on the `errorSubject` which which will be named with the following convention: `return.error.{inbox}`. A given request may have zero or many errors, depending on the number of sources that are consulted in order to complete the request. If all sources fail, the responder will respond with a status of `ERROR`, however as long as some sources were able to complete, the responder will respond with `COMPLETE`.
 
+It is up to the client to determine how best to surface errors to the user depending on the use case.
+
+Sources that encountered errors will send errors on the `errorSubject` of type: `ItemRequestError`. The structure of these errors is:
+
+* `itemRequestUUID`: The UUID of the item request that caused the error
 * `errorType`: The error type (enum)
   * `NOTFOUND`: NOTFOUND means that the item was not found. This is only returned as the result of a GET request since all other requests would return an empty list instead
   * `NOCONTEXT`: NOCONTEXT means that the item was not found because we don't have access to the requested context. This should not be interpreted as "The item doesn't exist" (as with a NOTFOUND error) but rather as "We can't tell you whether or not the item exists"
   * `OTHER`: This should be used of all other failure modes, such as timeouts, unexpected failures when querying state, permissions errors etc. Errors that return this type should not be cached as the error may be transient.
+  * `TIMEOUT`: The request timed out
 * `errorString`: The string contents of the error
 * `context`: The context from which the error was raised
+* `sourceName`: The name of the source that raised the error
+* `itemType`: The type of item that was being queried
+* `responderName`: The responder which encountered the error
 
 ### Deprecated Subjects
 

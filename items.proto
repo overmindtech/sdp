@@ -89,6 +89,9 @@ message ItemRequest {
 
   // Subject that both interim and final responses should be sent to
   string responseSubject = 17;
+
+  // Subject that errors will be sent to
+  string errorSubject = 18;
 }
 
 // The message signals that the item request with the corresponding UUID should
@@ -124,9 +127,6 @@ message Item {
   // definition for what a context should be other than the fact that it should
   // be somewhat descriptive and should ensure item uniqueness
   string context = 5;
-
-
-  // --- Optional ---
 
   // Not all items will have relatedItems we are are using a two byte
   // integer to save one byte integers for more common things
