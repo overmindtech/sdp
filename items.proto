@@ -89,6 +89,9 @@ message ItemRequest {
 
   // Subject that both interim and final responses should be sent to
   string responseSubject = 17;
+
+  // Subject that errors will be sent to
+  string errorSubject = 18;
 }
 
 // The message signals that the item request with the corresponding UUID should
@@ -125,9 +128,6 @@ message Item {
   // be somewhat descriptive and should ensure item uniqueness
   string context = 5;
 
-
-  // --- Optional ---
-
   // Not all items will have relatedItems we are are using a two byte
   // integer to save one byte integers for more common things
   repeated ItemRequest linkedItemRequests = 16;
@@ -161,6 +161,15 @@ message Reference {
   string type = 1;
   string UniqueAttributeValue = 2;
   string context = 3;
+}
+
+// Edge Represents a link between two items, it is not used in regular SDP
+// queries as it's up to the client to infer the edges from the LinkedItems
+// field, however request managed by the gateway will explicitly send edges to
+// reduce the processing burden on the client side
+message Edge {
+  Reference from = 1;
+  Reference to = 2;
 }
 
 // Metadata about the item. Where it came from, how long it took, etc.
