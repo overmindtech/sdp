@@ -42,7 +42,6 @@ message GatewayResponse {
 // GatewayRequestStatus Contains the status of the gateway request
 message GatewayRequestStatus {
     map<string, ResponderState> responderStates = 1;
-    map<string, ItemRequestError> responderErrors = 2;
 
     message Summary {
         int32 working = 1;
