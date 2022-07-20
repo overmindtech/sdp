@@ -54,4 +54,10 @@ message GatewayRequestStatus {
     }
 
     Summary summary = 3;
+
+    // Whether all items have finished being processed by the gateway. It is
+    // possible for all responders to be complete, but the gateway is still
+    // working. A request should only be considered complete when all working ==
+    // 0 and postProcessingComplete == true
+    bool postProcessingComplete = 4;
 }
