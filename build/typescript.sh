@@ -11,7 +11,7 @@ set -e
 npm install
 
 # Path to the plugin
-PROTOC_GEN_TS_PATH="./node_modules/.bin/protoc-gen-ts"
+PROTOC_GEN_TS_PATH="$(readlink -f ./node_modules/.bin/protoc-gen-ts)"
 
 # Golang build
 SDP_FINAL_PATH=../sdp-js

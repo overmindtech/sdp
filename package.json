@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/overmindtech/sdp#readme",
   "devDependencies": {
-    "ts-protoc-gen": "^0.15.0"
+    "grpc_tools_node_protoc_ts": "^5.3.2"
   }
 }
