@@ -57,7 +57,8 @@ The attributes of an item convey all information about that item. The `attrStruc
 
 ### Naming Convention
 
-It is convention that the names of attribute keys follow `camelCase` with the first letter lowercase. Child keys should also follow this convention unless it is returning information that has been returned directly form the underlying system in an already-structured format, in this case it is ast teh developer's discretion whether to use camel case or keep the existing case.
+**Attributes:** It is convention that the names of attribute keys follow `camelCase` with the first letter lowercase. Child keys should also follow this convention unless it is returning information that has been returned directly form the underlying system in an already-structured format, in this case it is at the developer's discretion whether to use camel case or keep the existing case.
+
 ## Additional Dynamic Data
 
 Other than the methods that are are generated from the protocol buffers, we provide the following methods for convenience on all platforms. Certain libraries may provide more functionality above the methods listed below but these methods at least will be present and return consistent results across all libraries. Not however that the naming of the methods might change to reflect best-practices in a given library.
