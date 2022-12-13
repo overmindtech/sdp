@@ -223,20 +223,17 @@ This has been removed in favour of the wildcard subscription to `return.item.>`.
 
 ## Building
 
-Each target language has it's own build script in the `build` directory. For example:
+First install the dependencies
 
+```
+brew install protobuf@3
+brew link --overwrite protobuf@3
+brew install protoc-gen-go node typescript
+```
+
+Each target language has it's own build script in the `build` directory. For example:
 
 ```shell
 ./build/go.sh
 ./build/typescript.sh
-```
-
-## Libraries
-
-### Golang
-
-Currently the golang libraries for this live in this repo since I can't be bother splitting them out right now:
-
-```
-go get -v github.com/overmindtech/sdp/go/sdp
 ```
