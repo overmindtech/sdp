@@ -71,11 +71,11 @@ message ItemRequestError {
     // list instead
     NOTFOUND = 1;
 
-    // NOCONTEXT means that the item was not found because we don't have
-    // access to the requested context. This should not be interpreted as "The
+    // NOSCOPE means that the item was not found because we don't have
+    // access to the requested scope. This should not be interpreted as "The
     // item doesn't exist" (as with a NOTFOUND error) but rather as "We can't
     // tell you whether or not the item exists"
-    NOCONTEXT = 2;
+    NOSCOPE = 2;
 
     // TIMEOUT means that the source times out when trying to query the item.
     // The timeout is provided in the original request
@@ -86,8 +86,8 @@ message ItemRequestError {
   // The string contents of the error
   string errorString = 3;
 
-  // The context from which the error was raised
-  string context = 4;
+  // The scope from which the error was raised
+  string scope = 4;
 
   // The name of the source which raised the error (if relevant)
   string sourceName = 5;

@@ -21,30 +21,30 @@ Below is an example of an `Item` in SDP serialized as JSON for readability:
             "name": "one.one.one.one"
         }
     },
-    "context": "global",
+    "scope": "global",
     "linkedItemRequests": [
         {
             "type": "ip",
             "query": "2606:4700:4700::1001",
-            "context": "global",
+            "scope": "global",
             "method": "GET"
         },
         {
             "type": "ip",
             "query": "2606:4700:4700::1111",
-            "context": "global",
+            "scope": "global",
             "method": "GET"
         },
         {
             "type": "ip",
             "query": "1.0.0.1",
-            "context": "global",
+            "scope": "global",
             "method": "GET"
         },
         {
             "type": "ip",
             "query": "1.1.1.1",
-            "context": "global",
+            "scope": "global",
             "method": "GET"
         }
     ]
@@ -76,7 +76,7 @@ Returns an SDP reference for the item
 GloballyUniqueName Returns a string that defines the Item globally. This a
 combination of the following values:
 
- * context
+ * scope
  * type
  * uniqueAttributeValue
 
@@ -132,26 +132,26 @@ An item is considered unique with a unique combination of:
 
 * Type
 * UniqueAttributeValue
-* Context
+* Scope
 
-While the UniqueAttributeValue will always be unique for a given type, this same item may exist in many contexts. AN example could be the same package installed on many servers, or the same deployment in many Kubernetes namespaces. Hence context is required to ensure uniqueness globally.
+While the UniqueAttributeValue will always be unique for a given type, this same item may exist in many scopes. AN example could be the same package installed on many servers, or the same deployment in many Kubernetes namespaces. Hence scope is required to ensure uniqueness globally.
 
 ## Message Queue Topics/Subjects
 
-When implementing SDP over a message queue (usually NATS), you should follow the below naming convention for topics/subjects. Note that the naming of subjects shouldn't influence how messages are actually handled, for example an `ItemRequest` that came though the subject `request.all` should be treated the same as one that come from `request.context.{context}`. All of the information needed for the processing of messages is contained in the message itself and the subjects are currently only used for convenience and routing.
+When implementing SDP over a message queue (usually NATS), you should follow the below naming convention for topics/subjects. Note that the naming of subjects shouldn't influence how messages are actually handled, for example an `ItemRequest` that came though the subject `request.all` should be treated the same as one that come from `request.scope.{scope}`. All of the information needed for the processing of messages is contained in the message itself and the subjects are currently only used for convenience and routing.
 
 ### `request.all`
 
-Everything will listen on this subject for requests. Requests sent to this subject should have a `context` of `*` and will therefore be responded to by everything. It is of course possible to send a request to this subject that has only one specific context, but this would be incredibly wasteful of network bandwidth as the message would be relays to all consumers and then discarded by all but one.
+Everything will listen on this subject for requests. Requests sent to this subject should have a `scope` of `*` and will therefore be responded to by everything. It is of course possible to send a request to this subject that has only one specific scope, but this would be incredibly wasteful of network bandwidth as the message would be relays to all consumers and then discarded by all but one.
 
-### `request.context.{context}`
+### `request.scope.{scope}`
 
-All sources should listen on a subject named with the above naming conventions for all contexts that they are able to find items for. In some cases, such as agent-based sources in a physical server or VM this will likely only be one e.g. `request.context.webserver01`. However some sources may be able to connect to many contexts and will therefore subscribe to one subject for each. An example could be a Kubernetes source which is able to connect to many namespaces. Its subscriptions could look like:
+All sources should listen on a subject named with the above naming conventions for all scopes that they are able to find items for. In some cases, such as agent-based sources in a physical server or VM this will likely only be one e.g. `request.scope.webserver01`. However some sources may be able to connect to many scopes and will therefore subscribe to one subject for each. An example could be a Kubernetes source which is able to connect to many namespaces. Its subscriptions could look like:
 
-* `request.context.cluster1.namespace1`
-* `request.context.cluster1.namespace2`
+* `request.scope.cluster1.namespace1`
+* `request.scope.cluster1.namespace2`
 
-Dots are valid in context names and should be used for logical serration as above.
+Dots are valid in scope names and should be used for logical serration as above.
 
 ### `return.response.{inbox}`
 
@@ -163,7 +163,7 @@ Responses to a request should be sent on this topic, with `{inbox}` being replac
   "method": 0,
   "query": "Dylan",
   "linkDepth": 4,
-  "context": "global",
+  "scope": "global",
   "UUID": "bcee962c-ca60-479b-8a96-ab970d878392",
   "itemSubject": "return.item._INBOX.712ab421", // Items will be sent here
   "responseSubject": "return.response._INBOX.978af6de", // Responses will be sent here
@@ -183,9 +183,9 @@ Errors that are encountered as part of the request will ne sent on this subject,
 
 This subject exists to allow cancellation requests to be sent. Cancellations should be sent to this subject if the initial `ItemRequest` was sent to the corresponding subject: `request.all`
 
-### `cancel.context.{context}`
+### `cancel.scope.{scope}`
 
-Cancellation requests for specific contexts should use this subject to send their cancellation requests
+Cancellation requests for specific scopes should use this subject to send their cancellation requests
 
 ### `reverse.links`
 
@@ -202,11 +202,11 @@ Sources that encountered errors will send errors on the `errorSubject` of type: 
 * `itemRequestUUID`: The UUID of the item request that caused the error
 * `errorType`: The error type (enum)
   * `NOTFOUND`: NOTFOUND means that the item was not found. This is only returned as the result of a GET request since all other requests would return an empty list instead
-  * `NOCONTEXT`: NOCONTEXT means that the item was not found because we don't have access to the requested context. This should not be interpreted as "The item doesn't exist" (as with a NOTFOUND error) but rather as "We can't tell you whether or not the item exists"
+  * `NOSCOPE`: NOSCOPE means that the item was not found because we don't have access to the requested scope. This should not be interpreted as "The item doesn't exist" (as with a NOTFOUND error) but rather as "We can't tell you whether or not the item exists"
   * `OTHER`: This should be used of all other failure modes, such as timeouts, unexpected failures when querying state, permissions errors etc. Errors that return this type should not be cached as the error may be transient.
   * `TIMEOUT`: The request timed out
 * `errorString`: The string contents of the error
-* `context`: The context from which the error was raised
+* `scope`: The scope from which the error was raised
 * `sourceName`: The name of the source that raised the error
 * `itemType`: The type of item that was being queried
 * `responderName`: The responder which encountered the error
@@ -217,9 +217,9 @@ Sources that encountered errors will send errors on the `errorSubject` of type: 
 
 This has been removed in favour of the wildcard subscription to `return.item.>`
 
-#### `items.{context}`
+#### `items.{scope}`
 
-This has been removed in favour of the wildcard subscription to `return.item.>`. Not that this doesn't allow for subscribing to items from only one context since the inboxes are random, but I can't currently see a use for that anyway.
+This has been removed in favour of the wildcard subscription to `return.item.>`. Not that this doesn't allow for subscribing to items from only one scope since the inboxes are random, but I can't currently see a use for that anyway.
 
 ## Building
 
