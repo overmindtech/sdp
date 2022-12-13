@@ -23,7 +23,7 @@ option go_package = "github.com/overmindtech/sdp/go/sdp";
 //      If an item matching th parameter passed doesn't exist the server should
 //      fail
 //
-// FIND: This takes no query (or ignores it) and should return all items that it
+// LIST: This takes no query (or ignores it) and should return all items that it
 //       can find
 //
 // SEARCH: This takes a non-unique query which is designed to be used as a
@@ -31,7 +31,7 @@ option go_package = "github.com/overmindtech/sdp/go/sdp";
 //         match the query
 enum RequestMethod {
   GET = 0;
-  FIND = 1;
+  LIST = 1;
   SEARCH = 2;
 }
 
@@ -52,9 +52,9 @@ message ItemRequest {
   // are that it is effectively the same, think six degrees of separation etc.
   uint32 linkDepth = 4;
 
-  // The context for which we are requesting. To query all contexts use the the
+  // The scope for which we are requesting. To query all scopes use the the
   // wildcard '*'
-  string context = 5;
+  string scope = 5;
 
   // Whether to ignore the cache and execute the request regardless.
   //
@@ -121,12 +121,12 @@ message Item {
   ItemAttributes attributes = 3;
   Metadata metadata = 4;
 
-  // The context within which the item is unique. Item uniqueness is determined
+  // The scope within which the item is unique. Item uniqueness is determined
   // by the combination of type and uniqueAttribute value. However it is
-  // possible for the same item to exist in many contexts. There is not formal
-  // definition for what a context should be other than the fact that it should
+  // possible for the same item to exist in many scopes. There is not formal
+  // definition for what a scope should be other than the fact that it should
   // be somewhat descriptive and should ensure item uniqueness
-  string context = 5;
+  string scope = 5;
 
   // Not all items will have relatedItems we are are using a two byte
   // integer to save one byte integers for more common things
@@ -144,7 +144,7 @@ message Item {
   // bytes socketID = 18;
 }
 
-// This is a list of items, like a Find() would return
+// This is a list of items, like a List() would return
 message Items {
   repeated Item items = 1;
 }
@@ -155,12 +155,12 @@ message Items {
 //
 //   * Type
 //   * UniqueAttributeValue
-//   * Context
+//   * Scope
 //
 message Reference {
   string type = 1;
   string UniqueAttributeValue = 2;
-  string context = 3;
+  string scope = 3;
 }
 
 // Edge Represents a link between two items, it is not used in regular SDP
