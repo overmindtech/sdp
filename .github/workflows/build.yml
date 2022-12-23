@@ -12,6 +12,6 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
 
-    - name: Generate go code
+    - name: Generate C++ code
       run: |
         protoc -I . *.proto --cpp_out /tmp

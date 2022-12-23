@@ -15,13 +15,50 @@ import "google/protobuf/duration.proto";
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp/go/sdp";
 
+// This message is sent to the gateway to instruct it to "undo" a request. This
+// means that the request will be removed from the session, along with all items
+// that were a result of that request. If these items have already been sent to
+// the client, the gateway will send `deleteItem` messages instructing the
+// client to delete them
+message UndoItemRequest {
+    // UUID of the request to undo
+    bytes UUID = 1;
+}
+
+// This requests that the gateway "expands" an item. This involves executing all
+// linked item requests within the session and sending the results to the
+// client. It is recommended that this be used rather than simply sending each
+// linked item request. Using this request type allows the Gateway to save the
+// session more intelligently so that it can be bookmarked and used later.
+// "Expanding" an item will mean an item always acts the same, even if its
+// linked item requests have changed
+message ExpandItemRequest {
+    // The item that should be expanded
+    Reference item = 1;
+    // How many levels of expansion should be run
+    uint32 linkDepth = 2;
+}
+
+
 // GatewayRequest Represents a request made to the gateway. Currently it only
 // includes a regular ItemRequest which is relayed to the NATS network, however
 // this could expand in the future
 message GatewayRequest {
     oneof request_type {
-        ItemRequest request = 1;
-        CancelItemRequest cancel = 3;
+        // Adds a new request to the session, starting it immediately
+        ItemRequest newRequest = 1;
+        // Cancel a running request
+        CancelItemRequest cancelRequest = 3;
+        // Undo a request, removing it and all of its results from the session
+        UndoItemRequest undoRequest = 4;
+        // Exclude an item from the results
+        Reference excludeItem = 5;
+        // Remove an item from the list of exclusions
+        Reference includeItem = 6;
+        // Expand linked items for a given item
+        ExpandItemRequest expandItem = 7;
+        // Revert the expensions for a given item
+        Reference unexpandItem = 8;
     }
 
     optional google.protobuf.Duration minStatusInterval = 2; // Minimum time between status updates. Setting this value too low can result in too many status messages
