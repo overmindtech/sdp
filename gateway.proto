@@ -47,7 +47,7 @@ message GatewayRequest {
         ItemRequest newRequest = 1;
         // Cancel a running request
         CancelItemRequest cancelRequest = 3;
-        // Undo a request, removing it and all of its results from the session
+        // Undo the specified request, if it was the last request received by the gateway. This removes it and all of its results from the session
         UndoItemRequest undoRequest = 4;
         // Exclude an item from the results
         Reference excludeItem = 5;
