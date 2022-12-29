@@ -40,9 +40,7 @@ message ExpandItemRequest {
 }
 
 
-// GatewayRequest Represents a request made to the gateway. Currently it only
-// includes a regular ItemRequest which is relayed to the NATS network, however
-// this could expand in the future
+// GatewayRequest A union of all request made to the gateway.
 message GatewayRequest {
     oneof request_type {
         // Adds a new request to the session, starting it immediately
