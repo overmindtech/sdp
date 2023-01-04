@@ -69,6 +69,12 @@ message GatewayResponse {
     oneof response_type {
         Item newItem = 2; // A new item that has been discovered
         Edge newEdge = 3; // A new edge between two items
+
+        Reference deleteItem = 7; // An item that should be deleted from local state
+        Edge deleteEdge = 8; // An edge that should be deleted form local state
+        
+        Item updateItem = 9; // An item that has already been sent, but contains new data, it should be updated to reflect this version
+
         ItemRequestError newItemRequestError = 6; // A new error that was encountered as part of the request
         GatewayRequestStatus status = 4; // Status of the overall request
         string error = 5; // An error that means the request couldn't be executed
