@@ -34,13 +34,7 @@ rm -rf $SDP_FINAL_PATH/google
 mv -fv $SDP_BUILD_PATH/* $SDP_FINAL_PATH
 rm -rf $SDP_BUILD_PATH
 
-# Compile extra typescript
-cd $SDP_FINAL_PATH
-tsc
-cd -
-
 set +x
 
 echo ""
-echo "Compile complete. Run the following to publish:"
-echo "cd ../sdp-js && npm publish && cd -"
+echo "Complete."
