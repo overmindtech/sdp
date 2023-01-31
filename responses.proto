@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/duration.proto";
+import "items.proto";
 
 // _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___        
 //  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_       
@@ -12,6 +13,27 @@ import "google/protobuf/duration.proto";
 //        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________ 
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp/go/sdp";
+
+// Response is returned as the result of an ItemRequest, it can contain newly
+// found items, errors, or progress updates
+message Response {
+  // UUID if the item request that this response is in relation to (in binary
+  // format)
+  bytes itemRequestUUID = 1;
+
+  oneof type {
+    // An update on the progress of this particular responder. Used to determin
+    // how many responders are still working on a request and allows a requester
+    // to know when all is complete
+    ProgressUpdate progressUpdate = 2;
+
+    // An item returned as a result of the request
+    Item item = 3;
+
+    // An error encountered as part of th request
+    ItemRequestError error = 4;
+  }
+}
 
 // ResponderState represents the state of the responder, note that both
 // COMPLETE and ERROR are completion states i.e. do not expect any more items
@@ -33,8 +55,8 @@ enum ResponderState {
   STALLED = 4;
 }
 
-// Response is returned when a query is made
-message Response {
+// ProgressUpdate is returned when a query is made
+message ProgressUpdate {
   // The name of the responder that is working on a response. This is purely
   // informational
   string responder = 1;
@@ -46,18 +68,10 @@ message Response {
   // further interim responses are received within this time the connection
   // can be considered stale and the requester may give up
   google.protobuf.Duration nextUpdateIn = 3;
-
-  // UUID if the item request that this response is in relation to (in binary
-  // format)
-  bytes itemRequestUUID = 4;
 }
 
 // ItemRequestError is sent back when an item request fails
 message ItemRequestError {
-  // UUID if the item request that this response is in relation to (in binary
-  // format)
-  bytes itemRequestUUID = 1;
-
   // The error type. Any types in here will be gracefully handled unless the
   // type os "OTHER"
   enum ErrorType {

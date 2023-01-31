@@ -37,6 +37,9 @@ enum RequestMethod {
 
 // ItemRequest represents a request for an item.
 message ItemRequest {
+  // Past removed fields
+  reserved 16, 17, 18;
+
   // The type of item to search for. "*" means all types
   string type = 1;
 
@@ -83,15 +86,6 @@ message ItemRequest {
   // the requester needs to specify where the results of that request should be
   // sent. These subjects will be used in addition to the defaults and are
   // usually just dynamically generated inboxes
-
-  // Subject that items resulting from the request should be sent to
-  string itemSubject = 16;
-
-  // Subject that both interim and final responses should be sent to
-  string responseSubject = 17;
-
-  // Subject that errors will be sent to
-  string errorSubject = 18;
 }
 
 // The message signals that the item request with the corresponding UUID should
