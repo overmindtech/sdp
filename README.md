@@ -112,14 +112,17 @@ An interim response is designed to give the requester the following information:
 
 The communication looks as follows:
 
-```sequence {theme="hand"}
+```mermaid
+sequenceDiagram
 requester->>responder: Initial Request
-Note right of responder: The initial request will include\nthe following subjects for the\nresponders to send responses on:\n* Items\n* InterimResponses\n* Errors
+Note right of responder: The initial request will include<br>the following subjects for the<br>responders to send responses on:<br>* Items<br>* InterimResponses<br>* Errors
 responder->>requester: Interim Response: WORKING
-Note right of responder: While the responder works\nit will keep sending interim\nresponses so that the requester\nknows it's still working
+Note right of responder: While the responder works<br>it will keep sending interim<br>responses so that the requester<br>knows it's still working
 responder->>requester: Interim Response: WORKING
 responder->>requester: Item
 responder->>requester: Item
+Note left of responder: time passing
+responder->>requester: Interim Response: WORKING
 responder->>requester: Item
 responder->>requester: Final Response: DONE
 ```
