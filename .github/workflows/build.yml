@@ -1,17 +1,16 @@
-name: Generate C++
+name: Test Code Generation
 on: push
 jobs:
   golang:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
 
-    - name: Install Protoc
-      uses: arduino/setup-protoc@v1
+      - name: Check out code
+        uses: actions/checkout@v3
 
-    - name: Check out code
-      uses: actions/checkout@v3
-
-    - name: Generate C++ code
-      run: |
-        protoc -I . *.proto --cpp_out /tmp
+      - name: Generate C++ code
+        run: |
+          protoc -I . *.proto --cpp_out /tmp
