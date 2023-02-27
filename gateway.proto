@@ -3,15 +3,17 @@ syntax = "proto3";
 import "items.proto";
 import "responses.proto";
 import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
 
-// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___        
-//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_       
-//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_      
-//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__     
-//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____    
-//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________   
-//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________  
-//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________ 
+
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp/go/sdp";
 
@@ -39,8 +41,80 @@ message ExpandItemRequest {
     uint32 linkDepth = 2;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// snapshot handling
+//
+// the gateway can store, retrieve, list and delete snapshots of previous
+// query results.
+///////////////////////////////////////////////////////////////////////////////
 
-// GatewayRequest A union of all request made to the gateway.
+// Descriptor for a snapshot
+message SnapshotDescriptor {
+    // unique id to identify this snapshot
+    bytes UUID = 1;
+    // timestamp when this snapshot was created
+    google.protobuf.Timestamp created = 2;
+    // user supplied name of this snapshot
+    string name = 3;
+    // user supplied description of this snapshot
+    string description = 4;
+    // number of items in this snapshot
+    uint32 size = 5;
+}
+
+// Retrieve the list of stored query snapshots for the currently active account.
+// Returns a SnapshotList
+message ListSnapshots {
+    // TODO: pagination
+}
+
+// response format for ListSnapshots
+message SnapshotList {
+    bool success = 1;
+    string errorMessage = 2;
+    repeated SnapshotDescriptor snapshots = 3;
+}
+
+// Ask the gateway to store the current state as snapshot with the specified details.
+// Returns a SnapshotStored message when the snapshot is stored
+message StoreSnapshot {
+    // user supplied name of this snapshot
+    string name = 1;
+    // user supplied description of this snapshot
+    string description = 2;
+}
+
+// After a snapshot is successfully stored, this reply with the new snapshot's details is sent.
+message SnapshotStored {
+    bool success = 1;
+    string errorMessage = 2;
+    SnapshotDescriptor snapshot = 3;
+}
+
+// Ask the gateway to load the specified snapshot into the current state.
+// Results are streamed to the client in the same way query results are.
+message LoadSnapshot {
+    // unique id of the snapshot to load
+    bytes UUID = 1;
+}
+
+message SnapshotLoadResult {
+    bool success = 1;
+    string errorMessage = 2;
+}
+
+// Delete the snapshot with the specified ID.
+message DeleteSnapshot {
+    // unique id of the snapshot to delete
+    bytes UUID = 1;
+}
+
+message SnapshotDeleteResult {
+    bool success = 1;
+    string errorMessage = 2;
+}
+
+// A union of all request made to the gateway.
 message GatewayRequest {
     oneof request_type {
         // Adds a new request to the session, starting it immediately
@@ -55,14 +129,22 @@ message GatewayRequest {
         Reference includeItem = 6;
         // Expand linked items for a given item
         ExpandItemRequest expandItem = 7;
-        // Revert the expensions for a given item
+        // Revert the expansions for a given item
         Reference unexpandItem = 8;
+        // return the requested list of snapshots
+        ListSnapshots listSnapshots = 9;
+        // store the current state as snapshot
+        StoreSnapshot storeSnapshot = 10;
+        // load a snapshot into the current state
+        LoadSnapshot loadSnapshot = 11;
+        // delete a snapshot from the underlying storage
+        DeleteSnapshot deleteSnapshot = 12;
     }
 
     optional google.protobuf.Duration minStatusInterval = 2; // Minimum time between status updates. Setting this value too low can result in too many status messages
 }
 
-// GatewayResponse The gateway will always respond with this type of message,
+// The gateway will always respond with this type of message,
 // however the purpose of it is purely as a wrapper to the many different types
 // of messages that the gateway can send
 message GatewayResponse {
@@ -70,18 +152,24 @@ message GatewayResponse {
         Item newItem = 2; // A new item that has been discovered
         Edge newEdge = 3; // A new edge between two items
 
-        Reference deleteItem = 7; // An item that should be deleted from local state
-        Edge deleteEdge = 8; // An edge that should be deleted form local state
-        
-        Item updateItem = 9; // An item that has already been sent, but contains new data, it should be updated to reflect this version
-
-        ItemRequestError newItemRequestError = 6; // A new error that was encountered as part of the request
         GatewayRequestStatus status = 4; // Status of the overall request
         string error = 5; // An error that means the request couldn't be executed
+
+        ItemRequestError newItemRequestError = 6; // A new error that was encountered as part of the request
+
+        Reference deleteItem = 7; // An item that should be deleted from local state
+        Edge deleteEdge = 8; // An edge that should be deleted form local state
+
+        Item updateItem = 9; // An item that has already been sent, but contains new data, it should be updated to reflect this version
+
+        SnapshotList snapshotList = 10;
+        SnapshotStored snapshotStored = 11;
+        SnapshotLoadResult snapshotLoadResult = 12;
+        SnapshotDeleteResult snapshotDeleteResult = 13;
     }
 }
 
-// GatewayRequestStatus Contains the status of the gateway request
+// Contains the status of the gateway request
 message GatewayRequestStatus {
     map<string, ResponderState> responderStates = 1;
 
