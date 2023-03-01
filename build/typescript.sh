@@ -20,7 +20,7 @@ SDP_BUILD_PATH=$(mktemp -d)
 protoc \
     -I ../ \
     --plugin="protoc-gen-ts=${PROTOC_GEN_TS_PATH}" \
-    --js_out="import_style=commonjs,binary:${SDP_BUILD_PATH}" \
+    --js_out="import_style=commonjsstrict,binary:${SDP_BUILD_PATH}" \
     --ts_out="${SDP_BUILD_PATH}" \
     --proto_path . \
     *.proto
