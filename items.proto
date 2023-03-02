@@ -159,7 +159,7 @@ message Items {
 //
 message Reference {
   string type = 1;
-  string UniqueAttributeValue = 2;
+  string uniqueAttributeValue = 2;
   string scope = 3;
 }
 

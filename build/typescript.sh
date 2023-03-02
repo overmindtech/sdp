@@ -11,7 +11,7 @@ set -e
 npm install
 
 # Path to the plugin
-PROTOC_GEN_TS_PATH="$(readlink -f ./node_modules/.bin/protoc-gen-ts)"
+PROTOC_GEN_TS_PATH="$(readlink -f ./node_modules/.bin/protoc-gen-es)"
 
 SDP_FINAL_PATH=../sdp-js/src/__generated__
 SDP_BUILD_PATH=$(mktemp -d)
@@ -19,9 +19,9 @@ SDP_BUILD_PATH=$(mktemp -d)
 # Compile
 protoc \
     -I ../ \
-    --plugin="protoc-gen-ts=${PROTOC_GEN_TS_PATH}" \
-    --js_out="import_style=commonjs,binary:${SDP_BUILD_PATH}" \
-    --ts_out="${SDP_BUILD_PATH}" \
+    --plugin="protoc-gen-es=${PROTOC_GEN_TS_PATH}" \
+    --es_out ${SDP_BUILD_PATH} \
+    --es_opt target=ts,import_extension=.ts \
     --proto_path . \
     *.proto
 
