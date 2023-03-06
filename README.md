@@ -22,7 +22,7 @@ Below is an example of an `Item` in SDP serialized as JSON for readability:
         }
     },
     "scope": "global",
-    "linkedItemRequests": [
+    "linkedItemQueries": [
         {
             "type": "ip",
             "query": "2606:4700:4700::1001",
@@ -141,7 +141,7 @@ While the UniqueAttributeValue will always be unique for a given type, this same
 
 ## Message Queue Topics/Subjects
 
-When implementing SDP over a message queue (usually NATS), you should follow the below naming convention for topics/subjects. Note that the naming of subjects shouldn't influence how messages are actually handled, for example an `ItemRequest` that came though the subject `request.all` should be treated the same as one that come from `request.scope.{scope}`. All of the information needed for the processing of messages is contained in the message itself and the subjects are currently only used for convenience and routing.
+When implementing SDP over a message queue (usually NATS), you should follow the below naming convention for topics/subjects. Note that the naming of subjects shouldn't influence how messages are actually handled, for example a `Query` that came though the subject `request.all` should be treated the same as one that come from `request.scope.{scope}`. All of the information needed for the processing of messages is contained in the message itself and the subjects are currently only used for convenience and routing.
 
 ### `request.all`
 
@@ -158,7 +158,7 @@ Dots are valid in scope names and should be used for logical serration as above.
 
 ### `return.response.{inbox}`
 
-Responses to a request should be sent on this topic, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself. e.g.
+Responses to a request should be sent on this topic, with `{inbox}` being replaced with a randomly generated string. This is specified in the `Query` itself. e.g.
 
 ```json
 {
@@ -176,15 +176,15 @@ Responses to a request should be sent on this topic, with `{inbox}` being replac
 
 ### `return.item.{inbox}`
 
-Items should be sent to this topic as part of a request, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself as above
+Items should be sent to this topic as part of a request, with `{inbox}` being replaced with a randomly generated string. This is specified in the `Query` itself as above
 
 ### `return.error.{inbox}`
 
-Errors that are encountered as part of the request will ne sent on this subject, with `{inbox}` being replaced with a randomly generated string. This is specified in the `ItemRequest` itself as above
+Errors that are encountered as part of the request will ne sent on this subject, with `{inbox}` being replaced with a randomly generated string. This is specified in the `Query` itself as above
 
 ### `cancel.all`
 
-This subject exists to allow cancellation requests to be sent. Cancellations should be sent to this subject if the initial `ItemRequest` was sent to the corresponding subject: `request.all`
+This subject exists to allow cancellation requests to be sent. Cancellations should be sent to this subject if the initial `Query` was sent to the corresponding subject: `request.all`
 
 ### `cancel.scope.{scope}`
 
@@ -200,9 +200,9 @@ Errors that are encountered as part of a request will be sent on the `errorSubje
 
 It is up to the client to determine how best to surface errors to the user depending on the use case.
 
-Sources that encountered errors will send errors on the `errorSubject` of type: `ItemRequestError`. The structure of these errors is:
+Sources that encountered errors will send errors on the `errorSubject` of type: `QueryError`. The structure of these errors is:
 
-* `itemRequestUUID`: The UUID of the item request that caused the error
+* `UUID`: The UUID of the item request that caused the error
 * `errorType`: The error type (enum)
   * `NOTFOUND`: NOTFOUND means that the item was not found. This is only returned as the result of a GET request since all other requests would return an empty list instead
   * `NOSCOPE`: NOSCOPE means that the item was not found because we don't have access to the requested scope. This should not be interpreted as "The item doesn't exist" (as with a NOTFOUND error) but rather as "We can't tell you whether or not the item exists"

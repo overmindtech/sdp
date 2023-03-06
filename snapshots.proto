@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
+//         ___\///////////_____\////////////_____\///______________
+option go_package = "github.com/overmindtech/sdp/go/sdp";
+
+
+///////////////////////////////////////////////////////////////////////////////
+// snapshot handling
+//
+// the gateway can store, retrieve, list and delete snapshots of previous
+// query results.
+///////////////////////////////////////////////////////////////////////////////
+
+// Descriptor for a snapshot
+message SnapshotDescriptor {
+    // unique id to identify this snapshot
+    bytes UUID = 1;
+    // timestamp when this snapshot was created
+    google.protobuf.Timestamp created = 2;
+    // user supplied name of this snapshot
+    string name = 3;
+    // user supplied description of this snapshot
+    string description = 4;
+    // number of items in this snapshot
+    uint32 size = 5;
+}
+
+// Retrieve the list of stored query snapshots for the currently active account.
+// Returns a SnapshotList
+message ListSnapshots {
+    // TODO: pagination
+}
+
+// response format for ListSnapshots
+message SnapshotListResult {
+    bool success = 1;
+    string errorMessage = 2;
+    repeated SnapshotDescriptor snapshots = 3;
+}
+
+// Ask the gateway to store the current state as snapshot with the specified details.
+// Returns a SnapshotStored message when the snapshot is stored
+message StoreSnapshot {
+    // user supplied name of this snapshot
+    string name = 1;
+    // user supplied description of this snapshot
+    string description = 2;
+}
+
+// After a snapshot is successfully stored, this reply with the new snapshot's details is sent.
+message SnapshotStoreResult {
+    bool success = 1;
+    string errorMessage = 2;
+    SnapshotDescriptor snapshot = 3;
+}
+
+// Ask the gateway to load the specified snapshot into the current state.
+// Results are streamed to the client in the same way query results are.
+message LoadSnapshot {
+    // unique id of the snapshot to load
+    bytes UUID = 1;
+}
+
+message SnapshotLoadResult {
+    bool success = 1;
+    string errorMessage = 2;
+}
+
+// Delete the snapshot with the specified ID.
+message DeleteSnapshot {
+    // unique id of the snapshot to delete
+    bytes UUID = 1;
+}
+
+message SnapshotDeleteResult {
+    bool success = 1;
+    string errorMessage = 2;
+}

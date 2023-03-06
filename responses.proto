@@ -2,14 +2,14 @@ syntax = "proto3";
 
 import "google/protobuf/duration.proto";
 
-// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___        
-//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_       
-//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_      
-//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__     
-//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____    
-//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________   
-//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________  
-//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________ 
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp/go/sdp";
 
@@ -18,8 +18,8 @@ option go_package = "github.com/overmindtech/sdp/go/sdp";
 // to be returned from the request
 enum ResponderState {
   // The responder is still gathering data
-  WORKING = 0; 
-  
+  WORKING = 0;
+
   // The request is complete
   COMPLETE = 1;
 
@@ -49,52 +49,5 @@ message Response {
 
   // UUID if the item request that this response is in relation to (in binary
   // format)
-  bytes itemRequestUUID = 4;
-}
-
-// ItemRequestError is sent back when an item request fails
-message ItemRequestError {
-  // UUID if the item request that this response is in relation to (in binary
-  // format)
-  bytes itemRequestUUID = 1;
-
-  // The error type. Any types in here will be gracefully handled unless the
-  // type os "OTHER"
-  enum ErrorType {
-    // This should be used of all other failure modes, such as timeouts,
-    // unexpected failures when querying state, permissions errors etc. Errors
-    // that return this type should not be cached as the error may be transient.
-    OTHER = 0;
-
-    // NOTFOUND means that the item was not found. This is only returned as the
-    // result of a GET request since all other requests would return an empty
-    // list instead
-    NOTFOUND = 1;
-
-    // NOSCOPE means that the item was not found because we don't have
-    // access to the requested scope. This should not be interpreted as "The
-    // item doesn't exist" (as with a NOTFOUND error) but rather as "We can't
-    // tell you whether or not the item exists"
-    NOSCOPE = 2;
-
-    // TIMEOUT means that the source times out when trying to query the item.
-    // The timeout is provided in the original request
-    TIMEOUT = 3;
-  }
-  ErrorType errorType = 2;
-
-  // The string contents of the error
-  string errorString = 3;
-
-  // The scope from which the error was raised
-  string scope = 4;
-
-  // The name of the source which raised the error (if relevant)
-  string sourceName = 5;
-
-  // The type of item that we were looking for at the time of the error
-  string itemType = 6;
-
-  // The name of the responder that this error was raised from
-  string responderName = 7;
+  bytes UUID = 4;
 }

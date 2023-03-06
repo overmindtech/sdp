@@ -5,38 +5,97 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
 
 
-// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___        
-//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_       
-//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_      
-//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__     
-//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____    
-//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________   
-//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________  
-//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________ 
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp/go/sdp";
 
-// RequestMethod represents the available request methods. The details of these
-// methods are:
-//
-// GET: This takes a single unique query and should only return a single item.
-//      If an item matching th parameter passed doesn't exist the server should
-//      fail
-//
-// LIST: This takes no query (or ignores it) and should return all items that it
-//       can find
-//
-// SEARCH: This takes a non-unique query which is designed to be used as a
-//         search term. It should return some number of items (or zero) which
-//         match the query
-enum RequestMethod {
-  GET = 0;
-  LIST = 1;
-  SEARCH = 2;
+// This is the same as Item within the package with a couple of exceptions, no
+// real reason why this whole thing couldn't be modelled in protobuf though if
+// required. Just need to decide what if anything should remain private
+message Item {
+  string type = 1;
+  string uniqueAttribute = 2;
+  ItemAttributes attributes = 3;
+  Metadata metadata = 4;
+
+  // The scope within which the item is unique. Item uniqueness is determined
+  // by the combination of type and uniqueAttribute value. However it is
+  // possible for the same item to exist in many scopes. There is not formal
+  // definition for what a scope should be other than the fact that it should
+  // be somewhat descriptive and should ensure item uniqueness
+  string scope = 5;
+
+  // Not all items will have relatedItems we are are using a two byte
+  // integer to save one byte integers for more common things
+  repeated Query linkedItemQueries = 16;
+
+  // Linked items
+  repeated Reference linkedItems = 17;
+
+  // If an item needs to return a socket it will do the following:
+  //
+  // 1. Call the socket RPC on the server with the socketID as metadata
+  // 2. Respond with the item and include a socket ID. This should by a UUID
+  //    represented as a string of 128 bytes
+  //
+  // bytes socketID = 18;
 }
 
-// ItemRequest represents a request for an item.
-message ItemRequest {
+// ItemAttributes represents the known attributes for an item. These are likely
+// to be common to a given type, but even this is not guaranteed. All items must
+// have at least one attribute however as it needs something to uniquely
+// identify it
+message ItemAttributes {
+  google.protobuf.Struct attrStruct = 1;
+}
+
+// Metadata about the item. Where it came from, how long it took, etc.
+message Metadata {
+  // This is the name of the source that was used to find the item.
+  string sourceName = 2;
+
+  // The query that caused this item to be found. This is for gateway-internal use and will not be exposed to the frontend.
+  Query sourceQuery = 3;
+
+  // The time that the item was found
+  google.protobuf.Timestamp timestamp = 4;
+
+  // How long the source took to execute in total when processing the
+  // Query
+  google.protobuf.Duration sourceDuration = 5;
+
+  // How long the source took to execute per item when processing the
+  // Query
+  google.protobuf.Duration sourceDurationPerItem = 6;
+
+  // Whether the item should be hidden/ignored by user-facing things such as
+  // GUIs and databases.
+  //
+  // Some types of items are only relevant in calculating higher-layer
+  // abstractions and are therefore always hidden. A good example of this would
+  // be the output of a command. This could be used by a remote source to gather
+  // information, but we don't actually want to show the user all the commands
+  // that were run, just the final item returned by the source
+  bool hidden = 7;
+
+  // The UUID of the QUERY that caused this item to be found
+  bytes sourceQueryUUID = 8;
+}
+
+// This is a list of items, like a List() would return
+message Items {
+  repeated Item items = 1;
+}
+
+// Query represents a request for an item or a list of items.
+message Query {
   // The type of item to search for. "*" means all types
   string type = 1;
 
@@ -94,59 +153,119 @@ message ItemRequest {
   string errorSubject = 18;
 }
 
-// The message signals that the item request with the corresponding UUID should
+// QueryError is sent back when an item request fails
+message QueryError {
+  // UUID if the item request that this response is in relation to (in binary
+  // format)
+  bytes UUID = 1;
+
+  // The error type. Any types in here will be gracefully handled unless the
+  // type os "OTHER"
+  enum ErrorType {
+    // This should be used of all other failure modes, such as timeouts,
+    // unexpected failures when querying state, permissions errors etc. Errors
+    // that return this type should not be cached as the error may be transient.
+    OTHER = 0;
+
+    // NOTFOUND means that the item was not found. This is only returned as the
+    // result of a GET request since all other requests would return an empty
+    // list instead
+    NOTFOUND = 1;
+
+    // NOSCOPE means that the item was not found because we don't have
+    // access to the requested scope. This should not be interpreted as "The
+    // item doesn't exist" (as with a NOTFOUND error) but rather as "We can't
+    // tell you whether or not the item exists"
+    NOSCOPE = 2;
+
+    // TIMEOUT means that the source times out when trying to query the item.
+    // The timeout is provided in the original request
+    TIMEOUT = 3;
+  }
+  ErrorType errorType = 2;
+
+  // The string contents of the error
+  string errorString = 3;
+
+  // The scope from which the error was raised
+  string scope = 4;
+
+  // The name of the source which raised the error (if relevant)
+  string sourceName = 5;
+
+  // The type of item that we were looking for at the time of the error
+  string itemType = 6;
+
+  // The name of the responder that this error was raised from
+  string responderName = 7;
+}
+
+// RequestMethod represents the available request methods. The details of these
+// methods are:
+//
+// GET: This takes a single unique query and should only return a single item.
+//      If an item matching th parameter passed doesn't exist the server should
+//      fail
+//
+// LIST: This takes no query (or ignores it) and should return all items that it
+//       can find
+//
+// SEARCH: This takes a non-unique query which is designed to be used as a
+//         search term. It should return some number of items (or zero) which
+//         match the query
+enum RequestMethod {
+  GET = 0;
+  LIST = 1;
+  SEARCH = 2;
+}
+
+// The message signals that the Query with the corresponding UUID should
 // be cancelled. Work should stop immediately, and a final response should be
 // sent with a state of CANCELLED to acknowledge that the request has ended due
 // to a cancellation
-message CancelItemRequest {
-  // UUID of the item request that this response is in relation to (in binary
-  // format)
+message CancelQuery {
+  // UUID of the Query to cancel
   bytes UUID = 1;
 }
 
-// ItemAttributes represents the known attributes for an item. These are likely
-// to be common to a given type, but even this is not guaranteed. All items must
-// have at least one attribute however as it needs something to uniquely
-// identify it
-message ItemAttributes {
-  google.protobuf.Struct attrStruct = 1;
+// This message is sent to the gateway to instruct it to "undo" a query. This
+// means that the query will be removed from the session, along with all items
+// and edges that were a result of that request. If these items have already
+// been sent to the client, the gateway will send `deleteItem` messages instructing
+// the client to delete them
+message UndoQuery {
+  // UUID of the Query to cancel
+  bytes UUID = 1;
 }
 
-// This is the same as Item within the package with a couple of exceptions, no
-// real reason why this whole thing couldn't be modelled in protobuf though if
-// required. Just need to decide what if anything should remain private
-message Item {
-  string type = 1;
-  string uniqueAttribute = 2;
-  ItemAttributes attributes = 3;
-  Metadata metadata = 4;
+// This requests that the gateway "expands" an item. This involves executing all
+// linked item requests within the session and sending the results to the
+// client. It is recommended that this be used rather than simply sending each
+// linked item request. Using this request type allows the Gateway to save the
+// session more intelligently so that it can be bookmarked and used later.
+// "Expanding" an item will mean an item always acts the same, even if its
+// linked item requests have changed
+message Expand {
+  // The item that should be expanded
+  Reference item = 1;
+  // How many levels of expansion should be run
+  uint32 linkDepth = 2;
 
-  // The scope within which the item is unique. Item uniqueness is determined
-  // by the combination of type and uniqueAttribute value. However it is
-  // possible for the same item to exist in many scopes. There is not formal
-  // definition for what a scope should be other than the fact that it should
-  // be somewhat descriptive and should ensure item uniqueness
-  string scope = 5;
-
-  // Not all items will have relatedItems we are are using a two byte
-  // integer to save one byte integers for more common things
-  repeated ItemRequest linkedItemRequests = 16;
-
-  // Linked items
-  repeated Reference linkedItems = 17;
-
-  // If an item needs to return a socket it will do the following:
-  //
-  // 1. Call the socket RPC on the server with the socketID as metadata
-  // 2. Respond with the item and include a socket ID. This should by a UUID
-  //    represented as a string of 128 bytes
-  //
-  // bytes socketID = 18;
+  // A UUID to uniquely identify the request. This should be stored by the
+  // requester as it will be needed later if the requester wants to cancel a
+  // request. It should be stored as 128 bytes, as opposed to the textual
+  // representation
+  bytes UUID = 3;
 }
 
-// This is a list of items, like a List() would return
-message Items {
-  repeated Item items = 1;
+// This message is sent to the gateway to instruct it to "undo" an Expand. This
+// means that the expansion will be removed from the session, along with all items
+// and edges that were a result of that request. If these items have already
+// been sent to the client, the gateway will send `deleteItem` messages instructing
+// the client to delete them
+message UndoExpand {
+  // UUID of the Expand to cancel
+  bytes UUID = 1;
 }
 
 // Reference to an item
@@ -172,36 +291,6 @@ message Edge {
   Reference to = 2;
 }
 
-// Metadata about the item. Where it came from, how long it took, etc.
-message Metadata {
-  // This is the name of the source that was used to find the item.
-  string sourceName = 2;
-
-  // The request that caused this item to be found
-  ItemRequest sourceRequest = 3;
-
-  // The time that the item was found
-  google.protobuf.Timestamp timestamp = 4;
-
-  // How long the source took to execute in total when processing the
-  // ItemRequest
-  google.protobuf.Duration sourceDuration = 5;
-
-  // How long the source took to execute per item when processing the
-  // ItemRequest
-  google.protobuf.Duration sourceDurationPerItem = 6;
-
-  // Whether the item should be hidden/ignored by user-facing things such as
-  // GUIs and databases.
-  //
-  // Some types of items are only relevant in calculating higher-layer
-  // abstractions and are therefore always hidden. A good example of this would
-  // be the output of a command. This could be used by a remote source to gather
-  // information, but we don't actually want to show the user all the commands
-  // that were run, just the final item returned by the source
-  bool hidden = 7;
-}
-
 // ReverseLinksRequest Is used to find linked item requests for item with
 // *inbound* rather than outbound links. This allows linking in reverse e.g.
 //
@@ -225,7 +314,7 @@ message ReverseLinksRequest {
 message ReverseLinksResponse {
   // The item requests that should be executed in order to find items that link
   // to the requested item
-  repeated ItemRequest linkedItemRequests = 1;
+  repeated Query linkedItemQueries = 1;
 
   // An error, if present. If not this will be an empty string
   string error = 2;

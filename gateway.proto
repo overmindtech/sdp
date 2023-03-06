@@ -2,8 +2,8 @@ syntax = "proto3";
 
 import "items.proto";
 import "responses.proto";
+import "snapshots.proto";
 import "google/protobuf/duration.proto";
-import "google/protobuf/timestamp.proto";
 
 
 // _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
@@ -17,128 +17,56 @@ import "google/protobuf/timestamp.proto";
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp/go/sdp";
 
-// This message is sent to the gateway to instruct it to "undo" a request. This
-// means that the request will be removed from the session, along with all items
-// that were a result of that request. If these items have already been sent to
-// the client, the gateway will send `deleteItem` messages instructing the
-// client to delete them
-message UndoItemRequest {
-    // UUID of the request to undo
-    bytes UUID = 1;
-}
-
-// This requests that the gateway "expands" an item. This involves executing all
-// linked item requests within the session and sending the results to the
-// client. It is recommended that this be used rather than simply sending each
-// linked item request. Using this request type allows the Gateway to save the
-// session more intelligently so that it can be bookmarked and used later.
-// "Expanding" an item will mean an item always acts the same, even if its
-// linked item requests have changed
-message ExpandItemRequest {
-    // The item that should be expanded
-    Reference item = 1;
-    // How many levels of expansion should be run
-    uint32 linkDepth = 2;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// snapshot handling
-//
-// the gateway can store, retrieve, list and delete snapshots of previous
-// query results.
-///////////////////////////////////////////////////////////////////////////////
-
-// Descriptor for a snapshot
-message SnapshotDescriptor {
-    // unique id to identify this snapshot
-    bytes UUID = 1;
-    // timestamp when this snapshot was created
-    google.protobuf.Timestamp created = 2;
-    // user supplied name of this snapshot
-    string name = 3;
-    // user supplied description of this snapshot
-    string description = 4;
-    // number of items in this snapshot
-    uint32 size = 5;
-}
-
-// Retrieve the list of stored query snapshots for the currently active account.
-// Returns a SnapshotList
-message ListSnapshots {
-    // TODO: pagination
-}
-
-// response format for ListSnapshots
-message SnapshotList {
-    bool success = 1;
-    string errorMessage = 2;
-    repeated SnapshotDescriptor snapshots = 3;
-}
-
-// Ask the gateway to store the current state as snapshot with the specified details.
-// Returns a SnapshotStored message when the snapshot is stored
-message StoreSnapshot {
-    // user supplied name of this snapshot
-    string name = 1;
-    // user supplied description of this snapshot
-    string description = 2;
-}
-
-// After a snapshot is successfully stored, this reply with the new snapshot's details is sent.
-message SnapshotStored {
-    bool success = 1;
-    string errorMessage = 2;
-    SnapshotDescriptor snapshot = 3;
-}
-
-// Ask the gateway to load the specified snapshot into the current state.
-// Results are streamed to the client in the same way query results are.
-message LoadSnapshot {
-    // unique id of the snapshot to load
-    bytes UUID = 1;
-}
-
-message SnapshotLoadResult {
-    bool success = 1;
-    string errorMessage = 2;
-}
-
-// Delete the snapshot with the specified ID.
-message DeleteSnapshot {
-    // unique id of the snapshot to delete
-    bytes UUID = 1;
-}
-
-message SnapshotDeleteResult {
-    bool success = 1;
-    string errorMessage = 2;
-}
-
 // A union of all request made to the gateway.
 message GatewayRequest {
     oneof request_type {
-        // Adds a new request to the session, starting it immediately
-        ItemRequest newRequest = 1;
-        // Cancel a running request
-        CancelItemRequest cancelRequest = 3;
-        // Undo the specified request, if it was the last request received by the gateway. This removes it and all of its results from the session
-        UndoItemRequest undoRequest = 4;
-        // Exclude an item from the results
-        Reference excludeItem = 5;
-        // Remove an item from the list of exclusions
-        Reference includeItem = 6;
-        // Expand linked items for a given item
-        ExpandItemRequest expandItem = 7;
-        // Revert the expansions for a given item
-        Reference unexpandItem = 8;
-        // return the requested list of snapshots
+        // Adds a new query for items to the session, starting it immediately
+        Query query = 1;
+        // Cancel a running query
+        CancelQuery cancelQuery = 3;
+        // Undo the specified query, if it was the last request received by the gateway. This removes it and all of its effects from the session
+        UndoQuery undoQuery = 4;
+
+        // TODO: implement
+        // // Exclude an item from the results
+        // Reference excludeItem = 5;
+        // // Remove an item from the list of exclusions
+        // Reference includeItem = 6;
+
+        // Expand all linked items for the given item
+        Expand expand = 7;
+        // Undo the specified item expansion
+        UndoExpand undoExpand = 8;
+        // TODO: CancelExpand?
+
+        // return the list of snapshots for this account
         ListSnapshots listSnapshots = 9;
-        // store the current state as snapshot
+        // store the current session state as snapshot
         StoreSnapshot storeSnapshot = 10;
         // load a snapshot into the current state
         LoadSnapshot loadSnapshot = 11;
         // delete a snapshot from the underlying storage
         DeleteSnapshot deleteSnapshot = 12;
+        // TODO: implement?
+        // // cancel the loading of a snapshot
+        // CancelLoadSnapshot cancelLoadSnapshot = ??;
+        // // undo the loading of a snapshot
+        // UndoLoadSnapshot undoLoadSnapshot = ??;
+
+        // TODO: implement!
+        // // return the list of bookmarks for this account
+        // ListBookmarks listBookmarks = 9;
+        // // store the current set of queries as bookmarks
+        // StoreBookmark storeBookmark = 10;
+        // // load and execute a bookmark into the current state
+        // LoadBookmark loadBookmark = 11;
+        // // delete a bookmark from the underlying storage
+        // DeleteBookmark deleteBookmark = 12;
+        // // TODO: implement?
+        // // // cancel the loading of a Bookmark
+        // // CancelLoadBookmark cancelLoadBookmark = ??;
+        // // // undo the loading of a Bookmark
+        // // UndoLoadBookmark undoLoadBookmark = ??;
     }
 
     optional google.protobuf.Duration minStatusInterval = 2; // Minimum time between status updates. Setting this value too low can result in too many status messages
@@ -155,21 +83,21 @@ message GatewayResponse {
         GatewayRequestStatus status = 4; // Status of the overall request
         string error = 5; // An error that means the request couldn't be executed
 
-        ItemRequestError newItemRequestError = 6; // A new error that was encountered as part of the request
+        QueryError queryError = 6; // A new error that was encountered as part of a query
 
         Reference deleteItem = 7; // An item that should be deleted from local state
         Edge deleteEdge = 8; // An edge that should be deleted form local state
 
         Item updateItem = 9; // An item that has already been sent, but contains new data, it should be updated to reflect this version
 
-        SnapshotList snapshotList = 10;
-        SnapshotStored snapshotStored = 11;
+        SnapshotListResult snapshotListResult = 10;
+        SnapshotStoreResult snapshotStoredResult = 11;
         SnapshotLoadResult snapshotLoadResult = 12;
         SnapshotDeleteResult snapshotDeleteResult = 13;
     }
 }
 
-// Contains the status of the gateway request
+// Contains the status of the gateway request.
 message GatewayRequestStatus {
     map<string, ResponderState> responderStates = 1;
 
