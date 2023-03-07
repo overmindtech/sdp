@@ -24,7 +24,7 @@ message GatewayRequest {
         Query query = 1;
         // Cancel a running query
         CancelQuery cancelQuery = 3;
-        // Undo the specified query, if it was the last request received by the gateway. This removes it and all of its effects from the session
+        // Undo the specified query, if it was the last query received by the gateway. This removes it and all of its effects from the session
         UndoQuery undoQuery = 4;
 
         // TODO: implement
