@@ -94,13 +94,13 @@ message Items {
   repeated Item items = 1;
 }
 
-// Query represents a request for an item or a list of items.
+// Query represents a query for an item or a list of items.
 message Query {
   // The type of item to search for. "*" means all types
   string type = 1;
 
   // Which method to use when looking for it
-  RequestMethod method = 2;
+  QueryMethod method = 2;
 
   // What query should be passed to that method
   string query = 3;
@@ -115,35 +115,35 @@ message Query {
   // wildcard '*'
   string scope = 5;
 
-  // Whether to ignore the cache and execute the request regardless.
+  // Whether to ignore the cache and execute the query regardless.
   //
   // By default sources will implement some level of caching, this is
-  // particularly important for linked items as a single request with a large
-  // link depth may result in the same item being requested many times as links
-  // are resolved and more and more items link to each other. However if
-  // required this caching can be turned off using this parameter
+  // particularly important for linked items as a single query with a large link
+  // depth may result in the same item being queried many times as links are
+  // resolved and more and more items link to each other. However if required
+  // this caching can be turned off using this parameter
   bool ignoreCache = 6;
 
-  // A UUID to uniquely identify the request. This should be stored by the
+  // A UUID to uniquely identify the query. This should be stored by the
   // requester as it will be needed later if the requester wants to cancel a
-  // request. It should be stored as 128 bytes, as opposed to the textual
+  // query. It should be stored as 128 bytes, as opposed to the textual
   // representation
   bytes UUID = 7;
 
-  // The timeout for this request. This will affect both the initial request,
-  // and also any linked item requests that are executed as part of it. This
-  // means that if a request has a timeout of 10s, and takes 2s to complete, the
-  // linked item requests should have a remaining timeout of 8s meaning that the
-  // entire request including all linking needs to be done in 10s, not 10s for
-  // *each* request
+  // The timeout for this query. This will affect both the initial query, and
+  // also any linked item queries that are executed as part of it. This means
+  // that if a query has a timeout of 10s, and takes 2s to complete, the linked
+  // item queries should have a remaining timeout of 8s meaning that the entire
+  // query including all linking needs to be done in 10s, not 10s for *each*
+  // query
   google.protobuf.Duration timeout = 8;
 
-  // The below fields are used when a request is made over the NATS network and
-  // the requester needs to specify where the results of that request should be
+  // The below fields are used when a query is made over the NATS network and
+  // the requester needs to specify where the results of that query should be
   // sent. These subjects will be used in addition to the defaults and are
   // usually just dynamically generated inboxes
 
-  // Subject that items resulting from the request should be sent to
+  // Subject that items resulting from the query should be sent to
   string itemSubject = 16;
 
   // Subject that both interim and final responses should be sent to
@@ -153,9 +153,9 @@ message Query {
   string errorSubject = 18;
 }
 
-// QueryError is sent back when an item request fails
+// QueryError is sent back when an item query fails
 message QueryError {
-  // UUID if the item request that this response is in relation to (in binary
+  // UUID if the item query that this response is in relation to (in binary
   // format)
   bytes UUID = 1;
 
@@ -168,7 +168,7 @@ message QueryError {
     OTHER = 0;
 
     // NOTFOUND means that the item was not found. This is only returned as the
-    // result of a GET request since all other requests would return an empty
+    // result of a GET query since all other queries would return an empty
     // list instead
     NOTFOUND = 1;
 
@@ -179,7 +179,7 @@ message QueryError {
     NOSCOPE = 2;
 
     // TIMEOUT means that the source times out when trying to query the item.
-    // The timeout is provided in the original request
+    // The timeout is provided in the original query
     TIMEOUT = 3;
   }
   ErrorType errorType = 2;
@@ -200,7 +200,7 @@ message QueryError {
   string responderName = 7;
 }
 
-// RequestMethod represents the available request methods. The details of these
+// QueryMethod represents the available query methods. The details of these
 // methods are:
 //
 // GET: This takes a single unique query and should only return a single item.
@@ -213,7 +213,7 @@ message QueryError {
 // SEARCH: This takes a non-unique query which is designed to be used as a
 //         search term. It should return some number of items (or zero) which
 //         match the query
-enum RequestMethod {
+enum QueryMethod {
   GET = 0;
   LIST = 1;
   SEARCH = 2;
@@ -221,7 +221,7 @@ enum RequestMethod {
 
 // The message signals that the Query with the corresponding UUID should
 // be cancelled. Work should stop immediately, and a final response should be
-// sent with a state of CANCELLED to acknowledge that the request has ended due
+// sent with a state of CANCELLED to acknowledge that the query has ended due
 // to a cancellation
 message CancelQuery {
   // UUID of the Query to cancel
@@ -230,7 +230,7 @@ message CancelQuery {
 
 // This message is sent to the gateway to instruct it to "undo" a query. This
 // means that the query will be removed from the session, along with all items
-// and edges that were a result of that request. If these items have already
+// and edges that were a result of that query. If these items have already
 // been sent to the client, the gateway will send `deleteItem` messages instructing
 // the client to delete them
 message UndoQuery {
@@ -239,12 +239,12 @@ message UndoQuery {
 }
 
 // This requests that the gateway "expands" an item. This involves executing all
-// linked item requests within the session and sending the results to the
+// linked item queries within the session and sending the results to the
 // client. It is recommended that this be used rather than simply sending each
 // linked item request. Using this request type allows the Gateway to save the
 // session more intelligently so that it can be bookmarked and used later.
 // "Expanding" an item will mean an item always acts the same, even if its
-// linked item requests have changed
+// linked item queries have changed
 message Expand {
   // The item that should be expanded
   Reference item = 1;
@@ -291,7 +291,7 @@ message Edge {
   Reference to = 2;
 }
 
-// ReverseLinksRequest Is used to find linked item requests for item with
+// ReverseLinksRequest Is used to find linked item queries for item with
 // *inbound* rather than outbound links. This allows linking in reverse e.g.
 //
 //   ip -> load balancer
@@ -309,10 +309,10 @@ message ReverseLinksRequest {
   google.protobuf.Duration timeout = 2;
 }
 
-// ReverseLinks Represents linked item requests that can be run and will result
+// ReverseLinks Represents linked item queries that can be run and will result
 // in objects with *inbound* links to a given item
 message ReverseLinksResponse {
-  // The item requests that should be executed in order to find items that link
+  // The item queries that should be executed in order to find items that link
   // to the requested item
   repeated Query linkedItemQueries = 1;
 

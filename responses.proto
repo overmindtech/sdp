@@ -15,12 +15,12 @@ option go_package = "github.com/overmindtech/sdp/go/sdp";
 
 // ResponderState represents the state of the responder, note that both
 // COMPLETE and ERROR are completion states i.e. do not expect any more items
-// to be returned from the request
+// to be returned from the query
 enum ResponderState {
   // The responder is still gathering data
   WORKING = 0;
 
-  // The request is complete
+  // The query is complete
   COMPLETE = 1;
 
   // All sources have returned errors
@@ -47,7 +47,7 @@ message Response {
   // can be considered stale and the requester may give up
   google.protobuf.Duration nextUpdateIn = 3;
 
-  // UUID if the item request that this response is in relation to (in binary
+  // UUID of the item query that this response is in relation to (in binary
   // format)
   bytes UUID = 4;
 }
