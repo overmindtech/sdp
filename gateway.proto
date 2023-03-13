@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+import "bookmarks.proto";
 import "items.proto";
 import "responses.proto";
 import "snapshots.proto";
@@ -53,20 +54,19 @@ message GatewayRequest {
         // // undo the loading of a snapshot
         // UndoLoadSnapshot undoLoadSnapshot = ??;
 
-        // TODO: implement!
-        // // return the list of bookmarks for this account
-        // ListBookmarks listBookmarks = 9;
-        // // store the current set of queries as bookmarks
-        // StoreBookmark storeBookmark = 10;
-        // // load and execute a bookmark into the current state
-        // LoadBookmark loadBookmark = 11;
-        // // delete a bookmark from the underlying storage
-        // DeleteBookmark deleteBookmark = 12;
-        // // TODO: implement?
-        // // // cancel the loading of a Bookmark
-        // // CancelLoadBookmark cancelLoadBookmark = ??;
-        // // // undo the loading of a Bookmark
-        // // UndoLoadBookmark undoLoadBookmark = ??;
+        // return the list of bookmarks for this account
+        ListBookmarks listBookmarks = 13;
+        // store the current set of queries as bookmarks
+        StoreBookmark storeBookmark = 14;
+        // load and execute a bookmark into the current state
+        LoadBookmark loadBookmark = 15;
+        // delete a bookmark from the underlying storage
+        DeleteBookmark deleteBookmark = 16;
+        // TODO: implement?
+        // // cancel the loading of a Bookmark
+        // CancelLoadBookmark cancelLoadBookmark = ??;
+        // // undo the loading of a Bookmark
+        // UndoLoadBookmark undoLoadBookmark = ??;
     }
 
     optional google.protobuf.Duration minStatusInterval = 2; // Minimum time between status updates. Setting this value too low can result in too many status messages
@@ -94,6 +94,11 @@ message GatewayResponse {
         SnapshotStoreResult snapshotStoreResult = 11;
         SnapshotLoadResult snapshotLoadResult = 12;
         SnapshotDeleteResult snapshotDeleteResult = 13;
+
+        BookmarkListResult bookmarkListResult = 14;
+        BookmarkStoreResult bookmarkStoreResult = 15;
+        BookmarkLoadResult bookmarkLoadResult = 16;
+        BookmarkDeleteResult bookmarkDeleteResult = 17;
     }
 }
 
