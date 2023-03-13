@@ -91,7 +91,7 @@ message GatewayResponse {
         Item updateItem = 9; // An item that has already been sent, but contains new data, it should be updated to reflect this version
 
         SnapshotListResult snapshotListResult = 10;
-        SnapshotStoreResult snapshotStoredResult = 11;
+        SnapshotStoreResult snapshotStoreResult = 11;
         SnapshotLoadResult snapshotLoadResult = 12;
         SnapshotDeleteResult snapshotDeleteResult = 13;
     }
