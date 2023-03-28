@@ -16,6 +16,15 @@ import "google/protobuf/duration.proto";
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp/go/sdp";
 
+// Represents the health of something, the meaning of each state may depend on
+// the context in which it is used but should be reasonably obvious
+enum Health {
+  HEALTH_UNKNOWN = 0; // The health could not be determined
+  HEALTH_OK = 1; // Functioning normally
+  HEALTH_WARNING = 2; // Functioning, but degraded
+  HEALTH_ERROR = 3; // Not functioning
+}
+
 // This is the same as Item within the package with a couple of exceptions, no
 // real reason why this whole thing couldn't be modelled in protobuf though if
 // required. Just need to decide what if anything should remain private
@@ -39,13 +48,9 @@ message Item {
   // Linked items
   repeated Reference linkedItems = 17;
 
-  // If an item needs to return a socket it will do the following:
-  //
-  // 1. Call the socket RPC on the server with the socketID as metadata
-  // 2. Respond with the item and include a socket ID. This should by a UUID
-  //    represented as a string of 128 bytes
-  //
-  // bytes socketID = 18;
+  // (optional) Represents the health of the item. Only items that have a
+  // clearly relevant health attribute should return a value for health
+  optional Health health = 18;
 }
 
 // ItemAttributes represents the known attributes for an item. These are likely
