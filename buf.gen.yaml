@@ -2,14 +2,14 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/overmindtech/sdp-go/go/sdp
+    default: github.com/overmindtech/sdp-go/sdp
 plugins:
   - plugin: go
-    out: gen/sdp-go
+    out: gen/sdp-go/sdp
     opt:
       - paths=source_relative
   - plugin: connect-go
-    out: gen/sdp-go
+    out: gen/sdp-go/sdp
     opt:
       - paths=source_relative
   - plugin: es

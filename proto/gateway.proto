@@ -18,7 +18,6 @@ import "google/protobuf/duration.proto";
 //       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
 //        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
 //         ___\///////////_____\////////////_____\///______________
-option go_package = "github.com/overmindtech/sdp/go/sdp";
 
 // The "REST" part of the gateway service. This contains all common request/reply-style APIs for the gateway.
 service GatewayService {

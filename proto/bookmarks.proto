@@ -68,13 +68,13 @@ message UpdateBookmarkRequest {
     // unique id to identify this bookmark
     bytes UUID = 1;
     // user supplied name of this bookmark
-    string name = 1;
+    string name = 2;
     // user supplied description of this bookmark
-    string description = 2;
+    string description = 3;
 }
 
-// After a bookmark is successfully stored, this reply with the new bookmark's details is sent.
-message StoreBookmarkResponse {
+// After a bookmark is successfully updated, this reply with the new bookmark's details is sent.
+message UpdateBookmarkResponse {
     bool success = 1;
     string errorMessage = 2;
     BookmarkDescriptor bookmark = 3;
