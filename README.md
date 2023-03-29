@@ -2,8 +2,13 @@
 
 ```
 # install requirements
-go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
+curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v22.2/protoc-22.2-linux-x86_64.zip
+unzip protoc-22.2-linux-x86_64.zip -d ~/.local
+
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 go install github.com/bufbuild/connect-go/cmd/protoc-gen-connect-go@latest
+
+npm install
 
 # generate protobuf,connect(go,es) stubs
 npx buf generate proto/
