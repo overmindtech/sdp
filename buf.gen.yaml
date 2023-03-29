@@ -1,0 +1,23 @@
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: github.com/overmindtech/sdp/gen/sdp-go
+plugins:
+  - plugin: go
+    out: gen/sdp-go
+    opt:
+      - paths=source_relative
+  - plugin: go-grpc
+    out: gen/sdp-go
+    opt:
+      - paths=source_relative
+  - plugin: grpc-gateway
+    out: gen/sdp-go
+    opt:
+      - paths=source_relative
+  - plugin: openapiv2
+    out: gen/openapiv2
+  - name: es
+    opt: target=ts,import_extension=.ts
+    out: gen/sdp-js

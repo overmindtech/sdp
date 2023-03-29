@@ -1,0 +1,131 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "bookmarks.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Bookmarks"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/gateway/v1/bookmarks": {
+      "post": {
+        "operationId": "Bookmarks_List",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BookmarkListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        ],
+        "tags": [
+          "Bookmarks"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "BookmarkDescriptor": {
+      "type": "object",
+      "properties": {
+        "UUID": {
+          "type": "string",
+          "format": "byte",
+          "title": "unique id to identify this bookmark"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "title": "timestamp when this bookmark was created"
+        },
+        "name": {
+          "type": "string",
+          "title": "user supplied name of this bookmark"
+        },
+        "description": {
+          "type": "string",
+          "title": "user supplied description of this bookmark"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64",
+          "title": "number of items in this bookmark"
+        }
+      },
+      "title": "Descriptor for a bookmark"
+    },
+    "BookmarkListResult": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "bookmarks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/BookmarkDescriptor"
+          }
+        }
+      },
+      "title": "response format for ListBookmarks"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

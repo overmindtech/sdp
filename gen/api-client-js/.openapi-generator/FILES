@@ -1,0 +1,15 @@
+.gitignore
+.npmignore
+README.md
+package.json
+src/apis/BookmarksApi.ts
+src/apis/index.ts
+src/index.ts
+src/models/BookmarkDescriptor.ts
+src/models/BookmarkListResult.ts
+src/models/ProtobufAny.ts
+src/models/RpcStatus.ts
+src/models/index.ts
+src/runtime.ts
+tsconfig.esm.json
+tsconfig.json

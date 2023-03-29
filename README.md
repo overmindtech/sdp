@@ -1,3 +1,39 @@
+# WIP - grpc-gateway prototype
+
+```
+# install requirements
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
+
+# generate protobuf,grpc,gateway stubs
+npx buf generate proto/
+
+# generate openapi go client from generated openapi specs
+# possibly obsolete: use grpc directly
+docker run --rm -u $(id -u):$(id -g) -v "${PWD}:/local" openapitools/openapi-generator-cli generate \
+    -i /local/gen/openapiv2/bookmarks.swagger.json \
+    -g go \
+    -o /local/gen/api-client-go \
+    -c /local/openapi-config.yml \
+    --git-repo-id api-server-go \
+    --git-user-id overmindtech \
+    --package-name overmind
+# cleanup cruft
+rm -rf gen/api-client-go/git_push.sh gen/api-client-go/.travis.yml gen/api-client-go/test
+
+# generate typescript client from generated openapi specs
+docker run --rm -u $(id -u):$(id -g) -v "${PWD}:/local" openapitools/openapi-generator-cli generate \
+    -i /local/gen/openapiv2/bookmarks.swagger.json \
+    -g typescript-fetch \
+    -o /local/gen/api-client-js \
+    -c /local/openapi-config.yml \
+    --git-repo-id api-client-js \
+    --git-user-id overmindtech \
+    --additional-properties=supportsES6=true,npmName=@overmindtech/overmind,npmVersion=0.1.0
+```
+
 # State Description Protocol
 
 State Description Protocol is designed to allow for the serialization of the description of the current state of a computer system for the purposes of auditing, monitoring etc. It is deliberately simplistic and is designed to transmit the details of things that we don't know the importance of. For this reason it doesn't contain dedicated ways of describing files, packages etc. since it doesn't presume to know what it is describing, other than the fact that it is "state".

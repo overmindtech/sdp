@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
+//         ___\///////////_____\////////////_____\///______________
+// option go_package = "github.com/overmindtech/sdp/go/sdp";
+
+service Bookmarks {
+    rpc List(google.protobuf.Empty) returns (BookmarkListResult) {
+        option (google.api.http) = {
+            post: "/gateway/v1/bookmarks"
+            body: "*"
+        };
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// bookmark handling
+//
+// the gateway can store, retrieve, list and delete bookmarks of queries
+///////////////////////////////////////////////////////////////////////////////
+
+// Descriptor for a bookmark
+message BookmarkDescriptor {
+    // unique id to identify this bookmark
+    bytes UUID = 1;
+    // timestamp when this bookmark was created
+    google.protobuf.Timestamp created = 2;
+    // user supplied name of this bookmark
+    string name = 3;
+    // user supplied description of this bookmark
+    string description = 4;
+    // number of items in this bookmark
+    uint32 size = 5;
+}
+
+// Retrieve the list of stored query bookmarks for the currently active account.
+// Returns a BookmarkList
+message ListBookmarks {
+    // TODO: pagination
+}
+
+// response format for ListBookmarks
+message BookmarkListResult {
+    bool success = 1;
+    string errorMessage = 2;
+    repeated BookmarkDescriptor bookmarks = 3;
+}
+
+// Ask the gateway to store the current state as bookmark with the specified details.
+// Returns a BookmarkStored message when the bookmark is stored
+message StoreBookmark {
+    // user supplied name of this bookmark
+    string name = 1;
+    // user supplied description of this bookmark
+    string description = 2;
+}
+
+// After a bookmark is successfully stored, this reply with the new bookmark's details is sent.
+message BookmarkStoreResult {
+    bool success = 1;
+    string errorMessage = 2;
+    BookmarkDescriptor bookmark = 3;
+}
+
+// Ask the gateway to load the specified bookmark into the current state.
+// Results are streamed to the client in the same way query results are.
+message LoadBookmark {
+    // unique id of the bookmark to load
+    bytes UUID = 1;
+}
+
+message BookmarkLoadResult {
+    bool success = 1;
+    string errorMessage = 2;
+}
+
+// Delete the bookmark with the specified ID.
+message DeleteBookmark {
+    // unique id of the bookmark to delete
+    bytes UUID = 1;
+}
+
+message BookmarkDeleteResult {
+    bool success = 1;
+    string errorMessage = 2;
+}

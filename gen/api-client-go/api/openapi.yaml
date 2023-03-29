@@ -1,0 +1,111 @@
+openapi: 3.0.1
+info:
+  title: bookmarks.proto
+  version: version not set
+servers:
+- url: /
+tags:
+- name: Bookmarks
+paths:
+  /gateway/v1/bookmarks:
+    post:
+      operationId: Bookmarks_List
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookmarkListResult'
+          description: A successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rpcStatus'
+          description: An unexpected error response.
+      tags:
+      - Bookmarks
+      x-codegen-request-body-name: body
+components:
+  schemas:
+    BookmarkDescriptor:
+      example:
+        size: 0
+        created: 2000-01-23T04:56:07.000+00:00
+        name: name
+        description: description
+        UUID: UUID
+      properties:
+        UUID:
+          format: byte
+          pattern: "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+          title: unique id to identify this bookmark
+          type: string
+        created:
+          format: date-time
+          title: timestamp when this bookmark was created
+          type: string
+        name:
+          title: user supplied name of this bookmark
+          type: string
+        description:
+          title: user supplied description of this bookmark
+          type: string
+        size:
+          format: int64
+          title: number of items in this bookmark
+          type: integer
+      title: Descriptor for a bookmark
+      type: object
+    BookmarkListResult:
+      example:
+        bookmarks:
+        - size: 0
+          created: 2000-01-23T04:56:07.000+00:00
+          name: name
+          description: description
+          UUID: UUID
+        - size: 0
+          created: 2000-01-23T04:56:07.000+00:00
+          name: name
+          description: description
+          UUID: UUID
+        success: true
+        errorMessage: errorMessage
+      properties:
+        success:
+          type: boolean
+        errorMessage:
+          type: string
+        bookmarks:
+          items:
+            $ref: '#/components/schemas/BookmarkDescriptor'
+          type: array
+      title: response format for ListBookmarks
+      type: object
+    protobufAny:
+      additionalProperties:
+        type: object
+      properties:
+        '@type':
+          type: string
+      type: object
+    rpcStatus:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+        details:
+          items:
+            $ref: '#/components/schemas/protobufAny'
+          type: array
+      type: object
+x-original-swagger-version: "2.0"
