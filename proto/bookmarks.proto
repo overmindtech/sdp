@@ -37,12 +37,12 @@ message BookmarkDescriptor {
 
 // Retrieve the list of stored query bookmarks for the currently active account.
 // Returns a BookmarkList
-message ListBookmarks {
+message ListBookmarksRequest {
     // TODO: pagination
 }
 
 // response format for ListBookmarks
-message BookmarkListResult {
+message ListBookmarkResponse {
     bool success = 1;
     string errorMessage = 2;
     repeated BookmarkDescriptor bookmarks = 3;
@@ -50,7 +50,7 @@ message BookmarkListResult {
 
 // Ask the gateway to store the current state as bookmark with the specified details.
 // Returns a BookmarkStored message when the bookmark is stored
-message StoreBookmark {
+message StoreBookmarkRequest {
     // user supplied name of this bookmark
     string name = 1;
     // user supplied description of this bookmark
@@ -58,31 +58,49 @@ message StoreBookmark {
 }
 
 // After a bookmark is successfully stored, this reply with the new bookmark's details is sent.
-message BookmarkStoreResult {
+message StoreBookmarkResponse {
     bool success = 1;
     string errorMessage = 2;
     BookmarkDescriptor bookmark = 3;
 }
 
+message UpdateBookmarkRequest {
+    // unique id to identify this bookmark
+    bytes UUID = 1;
+    // user supplied name of this bookmark
+    string name = 1;
+    // user supplied description of this bookmark
+    string description = 2;
+}
+
+// After a bookmark is successfully stored, this reply with the new bookmark's details is sent.
+message StoreBookmarkResponse {
+    bool success = 1;
+    string errorMessage = 2;
+    BookmarkDescriptor bookmark = 3;
+}
+
+
+
 // Ask the gateway to load the specified bookmark into the current state.
 // Results are streamed to the client in the same way query results are.
-message LoadBookmark {
+message LoadBookmarkRequest {
     // unique id of the bookmark to load
     bytes UUID = 1;
 }
 
-message BookmarkLoadResult {
+message LoadBookmarkResponse {
     bool success = 1;
     string errorMessage = 2;
 }
 
 // Delete the bookmark with the specified ID.
-message DeleteBookmark {
+message DeleteBookmarkRequest {
     // unique id of the bookmark to delete
     bytes UUID = 1;
 }
 
-message BookmarkDeleteResult {
+message DeleteBookmarkResponse {
     bool success = 1;
     string errorMessage = 2;
 }

@@ -38,11 +38,11 @@ message SnapshotDescriptor {
 
 // Retrieve the list of stored query snapshots for the currently active account.
 // Returns a SnapshotList
-message ListSnapshots {
+message ListSnapshotsRequest {
     // TODO: pagination
 }
 
-// response format for ListSnapshots
+// response format for ListSnapshotsRequest
 message SnapshotListResult {
     bool success = 1;
     string errorMessage = 2;
@@ -51,7 +51,7 @@ message SnapshotListResult {
 
 // Ask the gateway to store the current state as snapshot with the specified details.
 // Returns a SnapshotStored message when the snapshot is stored
-message StoreSnapshot {
+message StoreSnapshotRequest {
     // user supplied name of this snapshot
     string name = 1;
     // user supplied description of this snapshot
@@ -67,7 +67,7 @@ message SnapshotStoreResult {
 
 // Ask the gateway to load the specified snapshot into the current state.
 // Results are streamed to the client in the same way query results are.
-message LoadSnapshot {
+message LoadSnapshotRequest {
     // unique id of the snapshot to load
     bytes UUID = 1;
 }
@@ -78,7 +78,7 @@ message SnapshotLoadResult {
 }
 
 // Delete the snapshot with the specified ID.
-message DeleteSnapshot {
+message DeleteSnapshotRequest {
     // unique id of the snapshot to delete
     bytes UUID = 1;
 }

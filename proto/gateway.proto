@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package gateway;
+
 import "bookmarks.proto";
 import "items.proto";
 import "responses.proto";
@@ -17,6 +19,13 @@ import "google/protobuf/duration.proto";
 //        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp/go/sdp";
+
+// The "REST" part of the gateway service. This contains all common request/reply-style APIs for the gateway.
+service GatewayService {
+    rpc ListBookmarks(ListBookmarksRequest) returns (ListBookmarkResponse) {}
+    rpc UpdateBookmark(UpdateBookmarkRequest) returns (UpdateBookmarkResponse) {}
+    rpc DeleteBookmark(DeleteBookmarkRequest) returns (DeleteBookmarkResponse) {}
+}
 
 // A union of all request made to the gateway.
 message GatewayRequest {
@@ -41,13 +50,13 @@ message GatewayRequest {
         // TODO: CancelExpand?
 
         // return the list of snapshots for this account
-        ListSnapshots listSnapshots = 9;
+        ListSnapshotsRequest listSnapshots = 9;
         // store the current session state as snapshot
-        StoreSnapshot storeSnapshot = 10;
+        StoreSnapshotRequest storeSnapshot = 10;
         // load a snapshot into the current state
-        LoadSnapshot loadSnapshot = 11;
+        LoadSnapshotRequest loadSnapshot = 11;
         // delete a snapshot from the underlying storage
-        DeleteSnapshot deleteSnapshot = 12;
+        DeleteSnapshotRequest deleteSnapshot = 12;
         // TODO: implement?
         // // cancel the loading of a snapshot
         // CancelLoadSnapshot cancelLoadSnapshot = ??;
@@ -55,13 +64,13 @@ message GatewayRequest {
         // UndoLoadSnapshot undoLoadSnapshot = ??;
 
         // return the list of bookmarks for this account
-        ListBookmarks listBookmarks = 13;
+        // ListBookmarksRequest listBookmarks = 13;
         // store the current set of queries as bookmarks
-        StoreBookmark storeBookmark = 14;
+        StoreBookmarkRequest storeBookmark = 14;
         // load and execute a bookmark into the current state
-        LoadBookmark loadBookmark = 15;
+        LoadBookmarkRequest loadBookmark = 15;
         // delete a bookmark from the underlying storage
-        DeleteBookmark deleteBookmark = 16;
+        // DeleteBookmarkRequest deleteBookmark = 16;
         // TODO: implement?
         // // cancel the loading of a Bookmark
         // CancelLoadBookmark cancelLoadBookmark = ??;
@@ -95,10 +104,10 @@ message GatewayResponse {
         SnapshotLoadResult snapshotLoadResult = 12;
         SnapshotDeleteResult snapshotDeleteResult = 13;
 
-        BookmarkListResult bookmarkListResult = 14;
-        BookmarkStoreResult bookmarkStoreResult = 15;
-        BookmarkLoadResult bookmarkLoadResult = 16;
-        BookmarkDeleteResult bookmarkDeleteResult = 17;
+        // ListBookmarkResponse bookmarkListResult = 14;
+        StoreBookmarkResponse bookmarkStored = 15;
+        LoadBookmarkResponse bookmarkLoaded = 16;
+        // BookmarkDeleteResult bookmarkDeleteResult = 17;
     }
 }
 
