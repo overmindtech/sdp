@@ -24,8 +24,3 @@ plugins:
     out: gen/sdp-js
     opt:
       - target=ts,import_extension=.ts
-  # - plugin: openapiv2
-  #   out: gen/openapiv2
-  # - name: es
-  #   opt: target=ts,import_extension=.ts
-  #   out: gen/sdp-js

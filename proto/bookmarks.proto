@@ -1,9 +1,7 @@
 syntax = "proto3";
 
-import "google/api/annotations.proto";
-
-import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+
 
 // _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
 //  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
@@ -14,11 +12,8 @@ import "google/protobuf/timestamp.proto";
 //       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
 //        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
 //         ___\///////////_____\////////////_____\///______________
-// option go_package = "github.com/overmindtech/sdp/go/sdp";
+option go_package = "github.com/overmindtech/sdp/go/sdp";
 
-service Bookmarks {
-    rpc List(google.protobuf.Empty) returns (BookmarkListResult) {}
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // bookmark handling

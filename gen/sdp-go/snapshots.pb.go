@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.30.0
 // 	protoc        (unknown)
-// source: bookmarks.proto
+// source: snapshots.proto
 
 package sdp_go
 
@@ -21,41 +21,41 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Descriptor for a bookmark
-type BookmarkDescriptor struct {
+// Descriptor for a snapshot
+type SnapshotDescriptor struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// unique id to identify this bookmark
+	// unique id to identify this snapshot
 	UUID []byte `protobuf:"bytes,1,opt,name=UUID,proto3" json:"UUID,omitempty"`
-	// timestamp when this bookmark was created
+	// timestamp when this snapshot was created
 	Created *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=created,proto3" json:"created,omitempty"`
-	// user supplied name of this bookmark
+	// user supplied name of this snapshot
 	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	// user supplied description of this bookmark
+	// user supplied description of this snapshot
 	Description string `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	// number of items in this bookmark
+	// number of items in this snapshot
 	Size uint32 `protobuf:"varint,5,opt,name=size,proto3" json:"size,omitempty"`
 }
 
-func (x *BookmarkDescriptor) Reset() {
-	*x = BookmarkDescriptor{}
+func (x *SnapshotDescriptor) Reset() {
+	*x = SnapshotDescriptor{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bookmarks_proto_msgTypes[0]
+		mi := &file_snapshots_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *BookmarkDescriptor) String() string {
+func (x *SnapshotDescriptor) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BookmarkDescriptor) ProtoMessage() {}
+func (*SnapshotDescriptor) ProtoMessage() {}
 
-func (x *BookmarkDescriptor) ProtoReflect() protoreflect.Message {
-	mi := &file_bookmarks_proto_msgTypes[0]
+func (x *SnapshotDescriptor) ProtoReflect() protoreflect.Message {
+	mi := &file_snapshots_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -66,71 +66,71 @@ func (x *BookmarkDescriptor) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BookmarkDescriptor.ProtoReflect.Descriptor instead.
-func (*BookmarkDescriptor) Descriptor() ([]byte, []int) {
-	return file_bookmarks_proto_rawDescGZIP(), []int{0}
+// Deprecated: Use SnapshotDescriptor.ProtoReflect.Descriptor instead.
+func (*SnapshotDescriptor) Descriptor() ([]byte, []int) {
+	return file_snapshots_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *BookmarkDescriptor) GetUUID() []byte {
+func (x *SnapshotDescriptor) GetUUID() []byte {
 	if x != nil {
 		return x.UUID
 	}
 	return nil
 }
 
-func (x *BookmarkDescriptor) GetCreated() *timestamppb.Timestamp {
+func (x *SnapshotDescriptor) GetCreated() *timestamppb.Timestamp {
 	if x != nil {
 		return x.Created
 	}
 	return nil
 }
 
-func (x *BookmarkDescriptor) GetName() string {
+func (x *SnapshotDescriptor) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *BookmarkDescriptor) GetDescription() string {
+func (x *SnapshotDescriptor) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-func (x *BookmarkDescriptor) GetSize() uint32 {
+func (x *SnapshotDescriptor) GetSize() uint32 {
 	if x != nil {
 		return x.Size
 	}
 	return 0
 }
 
-// Retrieve the list of stored query bookmarks for the currently active account.
-// Returns a BookmarkList
-type ListBookmarks struct {
+// Retrieve the list of stored query snapshots for the currently active account.
+// Returns a SnapshotList
+type ListSnapshots struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *ListBookmarks) Reset() {
-	*x = ListBookmarks{}
+func (x *ListSnapshots) Reset() {
+	*x = ListSnapshots{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bookmarks_proto_msgTypes[1]
+		mi := &file_snapshots_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *ListBookmarks) String() string {
+func (x *ListSnapshots) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListBookmarks) ProtoMessage() {}
+func (*ListSnapshots) ProtoMessage() {}
 
-func (x *ListBookmarks) ProtoReflect() protoreflect.Message {
-	mi := &file_bookmarks_proto_msgTypes[1]
+func (x *ListSnapshots) ProtoReflect() protoreflect.Message {
+	mi := &file_snapshots_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -141,39 +141,39 @@ func (x *ListBookmarks) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListBookmarks.ProtoReflect.Descriptor instead.
-func (*ListBookmarks) Descriptor() ([]byte, []int) {
-	return file_bookmarks_proto_rawDescGZIP(), []int{1}
+// Deprecated: Use ListSnapshots.ProtoReflect.Descriptor instead.
+func (*ListSnapshots) Descriptor() ([]byte, []int) {
+	return file_snapshots_proto_rawDescGZIP(), []int{1}
 }
 
-// response format for ListBookmarks
-type BookmarkListResult struct {
+// response format for ListSnapshots
+type SnapshotListResult struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
 	Success      bool                  `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	ErrorMessage string                `protobuf:"bytes,2,opt,name=errorMessage,proto3" json:"errorMessage,omitempty"`
-	Bookmarks    []*BookmarkDescriptor `protobuf:"bytes,3,rep,name=bookmarks,proto3" json:"bookmarks,omitempty"`
+	Snapshots    []*SnapshotDescriptor `protobuf:"bytes,3,rep,name=snapshots,proto3" json:"snapshots,omitempty"`
 }
 
-func (x *BookmarkListResult) Reset() {
-	*x = BookmarkListResult{}
+func (x *SnapshotListResult) Reset() {
+	*x = SnapshotListResult{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bookmarks_proto_msgTypes[2]
+		mi := &file_snapshots_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *BookmarkListResult) String() string {
+func (x *SnapshotListResult) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BookmarkListResult) ProtoMessage() {}
+func (*SnapshotListResult) ProtoMessage() {}
 
-func (x *BookmarkListResult) ProtoReflect() protoreflect.Message {
-	mi := &file_bookmarks_proto_msgTypes[2]
+func (x *SnapshotListResult) ProtoReflect() protoreflect.Message {
+	mi := &file_snapshots_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -184,62 +184,62 @@ func (x *BookmarkListResult) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BookmarkListResult.ProtoReflect.Descriptor instead.
-func (*BookmarkListResult) Descriptor() ([]byte, []int) {
-	return file_bookmarks_proto_rawDescGZIP(), []int{2}
+// Deprecated: Use SnapshotListResult.ProtoReflect.Descriptor instead.
+func (*SnapshotListResult) Descriptor() ([]byte, []int) {
+	return file_snapshots_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *BookmarkListResult) GetSuccess() bool {
+func (x *SnapshotListResult) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *BookmarkListResult) GetErrorMessage() string {
+func (x *SnapshotListResult) GetErrorMessage() string {
 	if x != nil {
 		return x.ErrorMessage
 	}
 	return ""
 }
 
-func (x *BookmarkListResult) GetBookmarks() []*BookmarkDescriptor {
+func (x *SnapshotListResult) GetSnapshots() []*SnapshotDescriptor {
 	if x != nil {
-		return x.Bookmarks
+		return x.Snapshots
 	}
 	return nil
 }
 
-// Ask the gateway to store the current state as bookmark with the specified details.
-// Returns a BookmarkStored message when the bookmark is stored
-type StoreBookmark struct {
+// Ask the gateway to store the current state as snapshot with the specified details.
+// Returns a SnapshotStored message when the snapshot is stored
+type StoreSnapshot struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// user supplied name of this bookmark
+	// user supplied name of this snapshot
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// user supplied description of this bookmark
+	// user supplied description of this snapshot
 	Description string `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 }
 
-func (x *StoreBookmark) Reset() {
-	*x = StoreBookmark{}
+func (x *StoreSnapshot) Reset() {
+	*x = StoreSnapshot{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bookmarks_proto_msgTypes[3]
+		mi := &file_snapshots_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *StoreBookmark) String() string {
+func (x *StoreSnapshot) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StoreBookmark) ProtoMessage() {}
+func (*StoreSnapshot) ProtoMessage() {}
 
-func (x *StoreBookmark) ProtoReflect() protoreflect.Message {
-	mi := &file_bookmarks_proto_msgTypes[3]
+func (x *StoreSnapshot) ProtoReflect() protoreflect.Message {
+	mi := &file_snapshots_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -250,53 +250,53 @@ func (x *StoreBookmark) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StoreBookmark.ProtoReflect.Descriptor instead.
-func (*StoreBookmark) Descriptor() ([]byte, []int) {
-	return file_bookmarks_proto_rawDescGZIP(), []int{3}
+// Deprecated: Use StoreSnapshot.ProtoReflect.Descriptor instead.
+func (*StoreSnapshot) Descriptor() ([]byte, []int) {
+	return file_snapshots_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *StoreBookmark) GetName() string {
+func (x *StoreSnapshot) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *StoreBookmark) GetDescription() string {
+func (x *StoreSnapshot) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-// After a bookmark is successfully stored, this reply with the new bookmark's details is sent.
-type BookmarkStoreResult struct {
+// After a snapshot is successfully stored, this reply with the new snapshot's details is sent.
+type SnapshotStoreResult struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
 	Success      bool                `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	ErrorMessage string              `protobuf:"bytes,2,opt,name=errorMessage,proto3" json:"errorMessage,omitempty"`
-	Bookmark     *BookmarkDescriptor `protobuf:"bytes,3,opt,name=bookmark,proto3" json:"bookmark,omitempty"`
+	Snapshot     *SnapshotDescriptor `protobuf:"bytes,3,opt,name=snapshot,proto3" json:"snapshot,omitempty"`
 }
 
-func (x *BookmarkStoreResult) Reset() {
-	*x = BookmarkStoreResult{}
+func (x *SnapshotStoreResult) Reset() {
+	*x = SnapshotStoreResult{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bookmarks_proto_msgTypes[4]
+		mi := &file_snapshots_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *BookmarkStoreResult) String() string {
+func (x *SnapshotStoreResult) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BookmarkStoreResult) ProtoMessage() {}
+func (*SnapshotStoreResult) ProtoMessage() {}
 
-func (x *BookmarkStoreResult) ProtoReflect() protoreflect.Message {
-	mi := &file_bookmarks_proto_msgTypes[4]
+func (x *SnapshotStoreResult) ProtoReflect() protoreflect.Message {
+	mi := &file_snapshots_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -307,60 +307,60 @@ func (x *BookmarkStoreResult) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BookmarkStoreResult.ProtoReflect.Descriptor instead.
-func (*BookmarkStoreResult) Descriptor() ([]byte, []int) {
-	return file_bookmarks_proto_rawDescGZIP(), []int{4}
+// Deprecated: Use SnapshotStoreResult.ProtoReflect.Descriptor instead.
+func (*SnapshotStoreResult) Descriptor() ([]byte, []int) {
+	return file_snapshots_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *BookmarkStoreResult) GetSuccess() bool {
+func (x *SnapshotStoreResult) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *BookmarkStoreResult) GetErrorMessage() string {
+func (x *SnapshotStoreResult) GetErrorMessage() string {
 	if x != nil {
 		return x.ErrorMessage
 	}
 	return ""
 }
 
-func (x *BookmarkStoreResult) GetBookmark() *BookmarkDescriptor {
+func (x *SnapshotStoreResult) GetSnapshot() *SnapshotDescriptor {
 	if x != nil {
-		return x.Bookmark
+		return x.Snapshot
 	}
 	return nil
 }
 
-// Ask the gateway to load the specified bookmark into the current state.
+// Ask the gateway to load the specified snapshot into the current state.
 // Results are streamed to the client in the same way query results are.
-type LoadBookmark struct {
+type LoadSnapshot struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// unique id of the bookmark to load
+	// unique id of the snapshot to load
 	UUID []byte `protobuf:"bytes,1,opt,name=UUID,proto3" json:"UUID,omitempty"`
 }
 
-func (x *LoadBookmark) Reset() {
-	*x = LoadBookmark{}
+func (x *LoadSnapshot) Reset() {
+	*x = LoadSnapshot{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bookmarks_proto_msgTypes[5]
+		mi := &file_snapshots_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *LoadBookmark) String() string {
+func (x *LoadSnapshot) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoadBookmark) ProtoMessage() {}
+func (*LoadSnapshot) ProtoMessage() {}
 
-func (x *LoadBookmark) ProtoReflect() protoreflect.Message {
-	mi := &file_bookmarks_proto_msgTypes[5]
+func (x *LoadSnapshot) ProtoReflect() protoreflect.Message {
+	mi := &file_snapshots_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -371,19 +371,19 @@ func (x *LoadBookmark) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoadBookmark.ProtoReflect.Descriptor instead.
-func (*LoadBookmark) Descriptor() ([]byte, []int) {
-	return file_bookmarks_proto_rawDescGZIP(), []int{5}
+// Deprecated: Use LoadSnapshot.ProtoReflect.Descriptor instead.
+func (*LoadSnapshot) Descriptor() ([]byte, []int) {
+	return file_snapshots_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *LoadBookmark) GetUUID() []byte {
+func (x *LoadSnapshot) GetUUID() []byte {
 	if x != nil {
 		return x.UUID
 	}
 	return nil
 }
 
-type BookmarkLoadResult struct {
+type SnapshotLoadResult struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -392,23 +392,23 @@ type BookmarkLoadResult struct {
 	ErrorMessage string `protobuf:"bytes,2,opt,name=errorMessage,proto3" json:"errorMessage,omitempty"`
 }
 
-func (x *BookmarkLoadResult) Reset() {
-	*x = BookmarkLoadResult{}
+func (x *SnapshotLoadResult) Reset() {
+	*x = SnapshotLoadResult{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bookmarks_proto_msgTypes[6]
+		mi := &file_snapshots_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *BookmarkLoadResult) String() string {
+func (x *SnapshotLoadResult) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BookmarkLoadResult) ProtoMessage() {}
+func (*SnapshotLoadResult) ProtoMessage() {}
 
-func (x *BookmarkLoadResult) ProtoReflect() protoreflect.Message {
-	mi := &file_bookmarks_proto_msgTypes[6]
+func (x *SnapshotLoadResult) ProtoReflect() protoreflect.Message {
+	mi := &file_snapshots_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -419,52 +419,52 @@ func (x *BookmarkLoadResult) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BookmarkLoadResult.ProtoReflect.Descriptor instead.
-func (*BookmarkLoadResult) Descriptor() ([]byte, []int) {
-	return file_bookmarks_proto_rawDescGZIP(), []int{6}
+// Deprecated: Use SnapshotLoadResult.ProtoReflect.Descriptor instead.
+func (*SnapshotLoadResult) Descriptor() ([]byte, []int) {
+	return file_snapshots_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *BookmarkLoadResult) GetSuccess() bool {
+func (x *SnapshotLoadResult) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *BookmarkLoadResult) GetErrorMessage() string {
+func (x *SnapshotLoadResult) GetErrorMessage() string {
 	if x != nil {
 		return x.ErrorMessage
 	}
 	return ""
 }
 
-// Delete the bookmark with the specified ID.
-type DeleteBookmark struct {
+// Delete the snapshot with the specified ID.
+type DeleteSnapshot struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// unique id of the bookmark to delete
+	// unique id of the snapshot to delete
 	UUID []byte `protobuf:"bytes,1,opt,name=UUID,proto3" json:"UUID,omitempty"`
 }
 
-func (x *DeleteBookmark) Reset() {
-	*x = DeleteBookmark{}
+func (x *DeleteSnapshot) Reset() {
+	*x = DeleteSnapshot{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bookmarks_proto_msgTypes[7]
+		mi := &file_snapshots_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *DeleteBookmark) String() string {
+func (x *DeleteSnapshot) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteBookmark) ProtoMessage() {}
+func (*DeleteSnapshot) ProtoMessage() {}
 
-func (x *DeleteBookmark) ProtoReflect() protoreflect.Message {
-	mi := &file_bookmarks_proto_msgTypes[7]
+func (x *DeleteSnapshot) ProtoReflect() protoreflect.Message {
+	mi := &file_snapshots_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -475,19 +475,19 @@ func (x *DeleteBookmark) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteBookmark.ProtoReflect.Descriptor instead.
-func (*DeleteBookmark) Descriptor() ([]byte, []int) {
-	return file_bookmarks_proto_rawDescGZIP(), []int{7}
+// Deprecated: Use DeleteSnapshot.ProtoReflect.Descriptor instead.
+func (*DeleteSnapshot) Descriptor() ([]byte, []int) {
+	return file_snapshots_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *DeleteBookmark) GetUUID() []byte {
+func (x *DeleteSnapshot) GetUUID() []byte {
 	if x != nil {
 		return x.UUID
 	}
 	return nil
 }
 
-type BookmarkDeleteResult struct {
+type SnapshotDeleteResult struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -496,23 +496,23 @@ type BookmarkDeleteResult struct {
 	ErrorMessage string `protobuf:"bytes,2,opt,name=errorMessage,proto3" json:"errorMessage,omitempty"`
 }
 
-func (x *BookmarkDeleteResult) Reset() {
-	*x = BookmarkDeleteResult{}
+func (x *SnapshotDeleteResult) Reset() {
+	*x = SnapshotDeleteResult{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bookmarks_proto_msgTypes[8]
+		mi := &file_snapshots_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *BookmarkDeleteResult) String() string {
+func (x *SnapshotDeleteResult) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BookmarkDeleteResult) ProtoMessage() {}
+func (*SnapshotDeleteResult) ProtoMessage() {}
 
-func (x *BookmarkDeleteResult) ProtoReflect() protoreflect.Message {
-	mi := &file_bookmarks_proto_msgTypes[8]
+func (x *SnapshotDeleteResult) ProtoReflect() protoreflect.Message {
+	mi := &file_snapshots_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -523,32 +523,32 @@ func (x *BookmarkDeleteResult) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BookmarkDeleteResult.ProtoReflect.Descriptor instead.
-func (*BookmarkDeleteResult) Descriptor() ([]byte, []int) {
-	return file_bookmarks_proto_rawDescGZIP(), []int{8}
+// Deprecated: Use SnapshotDeleteResult.ProtoReflect.Descriptor instead.
+func (*SnapshotDeleteResult) Descriptor() ([]byte, []int) {
+	return file_snapshots_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *BookmarkDeleteResult) GetSuccess() bool {
+func (x *SnapshotDeleteResult) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *BookmarkDeleteResult) GetErrorMessage() string {
+func (x *SnapshotDeleteResult) GetErrorMessage() string {
 	if x != nil {
 		return x.ErrorMessage
 	}
 	return ""
 }
 
-var File_bookmarks_proto protoreflect.FileDescriptor
+var File_snapshots_proto protoreflect.FileDescriptor
 
-var file_bookmarks_proto_rawDesc = []byte{
-	0x0a, 0x0f, 0x62, 0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72, 0x6b, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+var file_snapshots_proto_rawDesc = []byte{
+	0x0a, 0x0f, 0x73, 0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f, 0x74, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x1a, 0x1f, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
 	0x75, 0x66, 0x2f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x22, 0xa8, 0x01, 0x0a, 0x12, 0x42, 0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72, 0x6b, 0x44,
+	0x74, 0x6f, 0x22, 0xa8, 0x01, 0x0a, 0x12, 0x53, 0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f, 0x74, 0x44,
 	0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x55, 0x55, 0x49,
 	0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x55, 0x55, 0x49, 0x44, 0x12, 0x34, 0x0a,
 	0x07, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a,
@@ -559,79 +559,79 @@ var file_bookmarks_proto_rawDesc = []byte{
 	0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65,
 	0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a,
 	0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x22, 0x0f, 0x0a,
-	0x0d, 0x4c, 0x69, 0x73, 0x74, 0x42, 0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72, 0x6b, 0x73, 0x22, 0x85,
-	0x01, 0x0a, 0x12, 0x42, 0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72, 0x6b, 0x4c, 0x69, 0x73, 0x74, 0x52,
+	0x0d, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f, 0x74, 0x73, 0x22, 0x85,
+	0x01, 0x0a, 0x12, 0x53, 0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f, 0x74, 0x4c, 0x69, 0x73, 0x74, 0x52,
 	0x65, 0x73, 0x75, 0x6c, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x12,
 	0x22, 0x0a, 0x0c, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x4d, 0x65, 0x73, 0x73,
-	0x61, 0x67, 0x65, 0x12, 0x31, 0x0a, 0x09, 0x62, 0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72, 0x6b, 0x73,
-	0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x42, 0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72,
-	0x6b, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x52, 0x09, 0x62, 0x6f, 0x6f,
-	0x6b, 0x6d, 0x61, 0x72, 0x6b, 0x73, 0x22, 0x45, 0x0a, 0x0d, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x42,
-	0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72, 0x6b, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18,
+	0x61, 0x67, 0x65, 0x12, 0x31, 0x0a, 0x09, 0x73, 0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f, 0x74, 0x73,
+	0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x53, 0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f,
+	0x74, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x52, 0x09, 0x73, 0x6e, 0x61,
+	0x70, 0x73, 0x68, 0x6f, 0x74, 0x73, 0x22, 0x45, 0x0a, 0x0d, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x53,
+	0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18,
 	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x20, 0x0a, 0x0b, 0x64,
 	0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
 	0x52, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x84, 0x01,
-	0x0a, 0x13, 0x42, 0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72, 0x6b, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x52,
+	0x0a, 0x13, 0x53, 0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x52,
 	0x65, 0x73, 0x75, 0x6c, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x12,
 	0x22, 0x0a, 0x0c, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x4d, 0x65, 0x73, 0x73,
-	0x61, 0x67, 0x65, 0x12, 0x2f, 0x0a, 0x08, 0x62, 0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72, 0x6b, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x42, 0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72, 0x6b,
-	0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x52, 0x08, 0x62, 0x6f, 0x6f, 0x6b,
-	0x6d, 0x61, 0x72, 0x6b, 0x22, 0x22, 0x0a, 0x0c, 0x4c, 0x6f, 0x61, 0x64, 0x42, 0x6f, 0x6f, 0x6b,
-	0x6d, 0x61, 0x72, 0x6b, 0x12, 0x12, 0x0a, 0x04, 0x55, 0x55, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x0c, 0x52, 0x04, 0x55, 0x55, 0x49, 0x44, 0x22, 0x52, 0x0a, 0x12, 0x42, 0x6f, 0x6f, 0x6b,
-	0x6d, 0x61, 0x72, 0x6b, 0x4c, 0x6f, 0x61, 0x64, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x12, 0x18,
+	0x61, 0x67, 0x65, 0x12, 0x2f, 0x0a, 0x08, 0x73, 0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f, 0x74, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x53, 0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f, 0x74,
+	0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x52, 0x08, 0x73, 0x6e, 0x61, 0x70,
+	0x73, 0x68, 0x6f, 0x74, 0x22, 0x22, 0x0a, 0x0c, 0x4c, 0x6f, 0x61, 0x64, 0x53, 0x6e, 0x61, 0x70,
+	0x73, 0x68, 0x6f, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x55, 0x55, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0c, 0x52, 0x04, 0x55, 0x55, 0x49, 0x44, 0x22, 0x52, 0x0a, 0x12, 0x53, 0x6e, 0x61, 0x70,
+	0x73, 0x68, 0x6f, 0x74, 0x4c, 0x6f, 0x61, 0x64, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x12, 0x18,
 	0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52,
 	0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x12, 0x22, 0x0a, 0x0c, 0x65, 0x72, 0x72, 0x6f,
 	0x72, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c,
 	0x65, 0x72, 0x72, 0x6f, 0x72, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x24, 0x0a, 0x0e,
-	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x42, 0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72, 0x6b, 0x12, 0x12,
+	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53, 0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f, 0x74, 0x12, 0x12,
 	0x0a, 0x04, 0x55, 0x55, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x55, 0x55,
-	0x49, 0x44, 0x22, 0x54, 0x0a, 0x14, 0x42, 0x6f, 0x6f, 0x6b, 0x6d, 0x61, 0x72, 0x6b, 0x44, 0x65,
+	0x49, 0x44, 0x22, 0x54, 0x0a, 0x14, 0x53, 0x6e, 0x61, 0x70, 0x73, 0x68, 0x6f, 0x74, 0x44, 0x65,
 	0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75,
 	0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63,
 	0x63, 0x65, 0x73, 0x73, 0x12, 0x22, 0x0a, 0x0c, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x4d, 0x65, 0x73,
 	0x73, 0x61, 0x67, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x65, 0x72, 0x72, 0x6f,
-	0x72, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x42, 0x3a, 0x42, 0x0e, 0x42, 0x6f, 0x6f, 0x6b,
-	0x6d, 0x61, 0x72, 0x6b, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x26, 0x67, 0x69,
+	0x72, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x42, 0x3a, 0x42, 0x0e, 0x53, 0x6e, 0x61, 0x70,
+	0x73, 0x68, 0x6f, 0x74, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x26, 0x67, 0x69,
 	0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6f, 0x76, 0x65, 0x72, 0x6d, 0x69, 0x6e,
 	0x64, 0x74, 0x65, 0x63, 0x68, 0x2f, 0x73, 0x64, 0x70, 0x2f, 0x67, 0x65, 0x6e, 0x2f, 0x73, 0x64,
 	0x70, 0x2d, 0x67, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_bookmarks_proto_rawDescOnce sync.Once
-	file_bookmarks_proto_rawDescData = file_bookmarks_proto_rawDesc
+	file_snapshots_proto_rawDescOnce sync.Once
+	file_snapshots_proto_rawDescData = file_snapshots_proto_rawDesc
 )
 
-func file_bookmarks_proto_rawDescGZIP() []byte {
-	file_bookmarks_proto_rawDescOnce.Do(func() {
-		file_bookmarks_proto_rawDescData = protoimpl.X.CompressGZIP(file_bookmarks_proto_rawDescData)
+func file_snapshots_proto_rawDescGZIP() []byte {
+	file_snapshots_proto_rawDescOnce.Do(func() {
+		file_snapshots_proto_rawDescData = protoimpl.X.CompressGZIP(file_snapshots_proto_rawDescData)
 	})
-	return file_bookmarks_proto_rawDescData
+	return file_snapshots_proto_rawDescData
 }
 
-var file_bookmarks_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
-var file_bookmarks_proto_goTypes = []interface{}{
-	(*BookmarkDescriptor)(nil),    // 0: BookmarkDescriptor
-	(*ListBookmarks)(nil),         // 1: ListBookmarks
-	(*BookmarkListResult)(nil),    // 2: BookmarkListResult
-	(*StoreBookmark)(nil),         // 3: StoreBookmark
-	(*BookmarkStoreResult)(nil),   // 4: BookmarkStoreResult
-	(*LoadBookmark)(nil),          // 5: LoadBookmark
-	(*BookmarkLoadResult)(nil),    // 6: BookmarkLoadResult
-	(*DeleteBookmark)(nil),        // 7: DeleteBookmark
-	(*BookmarkDeleteResult)(nil),  // 8: BookmarkDeleteResult
+var file_snapshots_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_snapshots_proto_goTypes = []interface{}{
+	(*SnapshotDescriptor)(nil),    // 0: SnapshotDescriptor
+	(*ListSnapshots)(nil),         // 1: ListSnapshots
+	(*SnapshotListResult)(nil),    // 2: SnapshotListResult
+	(*StoreSnapshot)(nil),         // 3: StoreSnapshot
+	(*SnapshotStoreResult)(nil),   // 4: SnapshotStoreResult
+	(*LoadSnapshot)(nil),          // 5: LoadSnapshot
+	(*SnapshotLoadResult)(nil),    // 6: SnapshotLoadResult
+	(*DeleteSnapshot)(nil),        // 7: DeleteSnapshot
+	(*SnapshotDeleteResult)(nil),  // 8: SnapshotDeleteResult
 	(*timestamppb.Timestamp)(nil), // 9: google.protobuf.Timestamp
 }
-var file_bookmarks_proto_depIdxs = []int32{
-	9, // 0: BookmarkDescriptor.created:type_name -> google.protobuf.Timestamp
-	0, // 1: BookmarkListResult.bookmarks:type_name -> BookmarkDescriptor
-	0, // 2: BookmarkStoreResult.bookmark:type_name -> BookmarkDescriptor
+var file_snapshots_proto_depIdxs = []int32{
+	9, // 0: SnapshotDescriptor.created:type_name -> google.protobuf.Timestamp
+	0, // 1: SnapshotListResult.snapshots:type_name -> SnapshotDescriptor
+	0, // 2: SnapshotStoreResult.snapshot:type_name -> SnapshotDescriptor
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -639,14 +639,14 @@ var file_bookmarks_proto_depIdxs = []int32{
 	0, // [0:3] is the sub-list for field type_name
 }
 
-func init() { file_bookmarks_proto_init() }
-func file_bookmarks_proto_init() {
-	if File_bookmarks_proto != nil {
+func init() { file_snapshots_proto_init() }
+func file_snapshots_proto_init() {
+	if File_snapshots_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_bookmarks_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*BookmarkDescriptor); i {
+		file_snapshots_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SnapshotDescriptor); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -657,8 +657,8 @@ func file_bookmarks_proto_init() {
 				return nil
 			}
 		}
-		file_bookmarks_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListBookmarks); i {
+		file_snapshots_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListSnapshots); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -669,8 +669,8 @@ func file_bookmarks_proto_init() {
 				return nil
 			}
 		}
-		file_bookmarks_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*BookmarkListResult); i {
+		file_snapshots_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SnapshotListResult); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -681,8 +681,8 @@ func file_bookmarks_proto_init() {
 				return nil
 			}
 		}
-		file_bookmarks_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StoreBookmark); i {
+		file_snapshots_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*StoreSnapshot); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -693,8 +693,8 @@ func file_bookmarks_proto_init() {
 				return nil
 			}
 		}
-		file_bookmarks_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*BookmarkStoreResult); i {
+		file_snapshots_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SnapshotStoreResult); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -705,8 +705,8 @@ func file_bookmarks_proto_init() {
 				return nil
 			}
 		}
-		file_bookmarks_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LoadBookmark); i {
+		file_snapshots_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*LoadSnapshot); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -717,8 +717,8 @@ func file_bookmarks_proto_init() {
 				return nil
 			}
 		}
-		file_bookmarks_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*BookmarkLoadResult); i {
+		file_snapshots_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SnapshotLoadResult); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -729,8 +729,8 @@ func file_bookmarks_proto_init() {
 				return nil
 			}
 		}
-		file_bookmarks_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteBookmark); i {
+		file_snapshots_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteSnapshot); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -741,8 +741,8 @@ func file_bookmarks_proto_init() {
 				return nil
 			}
 		}
-		file_bookmarks_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*BookmarkDeleteResult); i {
+		file_snapshots_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SnapshotDeleteResult); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -758,18 +758,18 @@ func file_bookmarks_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_bookmarks_proto_rawDesc,
+			RawDescriptor: file_snapshots_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_bookmarks_proto_goTypes,
-		DependencyIndexes: file_bookmarks_proto_depIdxs,
-		MessageInfos:      file_bookmarks_proto_msgTypes,
+		GoTypes:           file_snapshots_proto_goTypes,
+		DependencyIndexes: file_snapshots_proto_depIdxs,
+		MessageInfos:      file_snapshots_proto_msgTypes,
 	}.Build()
-	File_bookmarks_proto = out.File
-	file_bookmarks_proto_rawDesc = nil
-	file_bookmarks_proto_goTypes = nil
-	file_bookmarks_proto_depIdxs = nil
+	File_snapshots_proto = out.File
+	file_snapshots_proto_rawDesc = nil
+	file_snapshots_proto_goTypes = nil
+	file_snapshots_proto_depIdxs = nil
 }
