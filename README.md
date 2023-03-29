@@ -1,3 +1,14 @@
+# WIP - connect.build prototype
+
+```
+# install requirements
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
+go install github.com/bufbuild/connect-go/cmd/protoc-gen-connect-go@latest
+
+# generate protobuf,connect(go,es) stubs
+npx buf generate proto/
+```
+
 # State Description Protocol
 
 State Description Protocol is designed to allow for the serialization of the description of the current state of a computer system for the purposes of auditing, monitoring etc. It is deliberately simplistic and is designed to transmit the details of things that we don't know the importance of. For this reason it doesn't contain dedicated ways of describing files, packages etc. since it doesn't presume to know what it is describing, other than the fact that it is "state".
