@@ -209,7 +209,7 @@ message QueryError {
 // methods are:
 //
 // GET: This takes a single unique query and should only return a single item.
-//      If an item matching th parameter passed doesn't exist the server should
+//      If an item matching the parameter passed doesn't exist the server should
 //      fail
 //
 // LIST: This takes no query (or ignores it) and should return all items that it
