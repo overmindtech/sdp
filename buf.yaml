@@ -1,0 +1,8 @@
+version: v1
+name: github.com/overmindtech/sdp
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT

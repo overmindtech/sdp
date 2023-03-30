@@ -12,7 +12,7 @@ import "google/protobuf/timestamp.proto";
 //       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
 //        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
 //         ___\///////////_____\////////////_____\///______________
-option go_package = "github.com/overmindtech/sdp/go/sdp";
+option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -85,4 +85,62 @@ message DeleteBookmark {
 message BookmarkDeleteResult {
     bool success = 1;
     string errorMessage = 2;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+// a complete Bookmark with user-supplied and machine-supplied values
+message Bookmark {
+    BookmarkMetadata metadata = 1;
+    BookmarkProperties properties = 2;
+}
+
+// The user-editable parts of a Bookmark
+message BookmarkProperties {
+    // user supplied name of this bookmark
+    string name = 1;
+    // user supplied description of this bookmark
+    string description = 2;
+}
+
+// Descriptor for a bookmark
+message BookmarkMetadata {
+    // unique id to identify this bookmark
+    bytes UUID = 1;
+    // timestamp when this bookmark was created
+    google.protobuf.Timestamp created = 2;
+    // number of items in this bookmark
+    uint32 size = 3;
+}
+
+// Retrieve the list of stored query bookmarks for the currently active account.
+// Returns a BookmarkList
+message ListBookmarksRequest {
+    // TODO: pagination
+}
+
+// response format for ListBookmarks
+message ListBookmarkResponse {
+    repeated Bookmark bookmarks = 3;
+}
+
+message UpdateBookmarkRequest {
+    // unique id to identify this bookmark
+    bytes UUID = 1;
+    // new attributes for this bookmark
+    BookmarkProperties properties = 2;
+}
+
+// After a bookmark is successfully updated, this reply with the new bookmark's details is sent.
+message UpdateBookmarkResponse {
+    Bookmark bookmark = 3;
+}
+
+// Delete the bookmark with the specified ID.
+message DeleteBookmarkRequest {
+    // unique id of the bookmark to delete
+    bytes UUID = 1;
+}
+
+message DeleteBookmarkResponse {
 }

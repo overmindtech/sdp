@@ -1,0 +1,22 @@
+version: v1
+plugins:
+  - plugin: go
+    out: gen/sdp-go
+    opt:
+      - paths=source_relative
+  - plugin: connect-go
+    out: gen/sdp-go
+    opt:
+      - paths=source_relative
+  - plugin: es
+    out: gen/sdp-js/src/__generated__/
+    opt:
+      - target=ts,import_extension=.ts
+  - plugin: connect-es
+    out: gen/sdp-js/src/__generated__/
+    opt:
+      - target=ts,import_extension=.ts
+  - plugin: connect-query
+    out: gen/sdp-js/src/__generated__/
+    opt:
+      - target=ts,import_extension=.ts
