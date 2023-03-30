@@ -53,11 +53,12 @@ jobs:
           npx buf generate
 
           # add and commit the results
-          for i in gen/sdp-go gen/sdp-js; do
+          for i in sdp-go sdp-js; do
           (
-            cd $i
+            cd gen/$i
             git add -A
             git commit -m "Updated to SDP $(git describe)"
+
             # show the results
             echo "::group::$i changes"
             git show
@@ -68,9 +69,10 @@ jobs:
       - name: Push to repos
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
         run: |
-          for i in gen/sdp-go gen/sdp-js; do
+          for i in sdp-go sdp-js; do
           (
-            cd $i
+            cd gen/$i
+            git remote set-url origin https://${GIT_USER}@github.com/overmindtech/${i}.git
             git push
           )
           done
