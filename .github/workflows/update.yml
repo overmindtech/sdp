@@ -56,7 +56,7 @@ jobs:
           (
             cd gen/$i
             git add -A
-            git commit -m "Updated to SDP $(git describe)"
+            git commit -m "Updated to SDP $(git describe)" || exit 0
 
             # show the results
             echo "::group::$i changes"
