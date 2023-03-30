@@ -14,7 +14,7 @@ import "google/protobuf/duration.proto";
 //       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
 //        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
 //         ___\///////////_____\////////////_____\///______________
-option go_package = "github.com/overmindtech/sdp/go/sdp";
+option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 // Represents the health of something, the meaning of each state may depend on
 // the context in which it is used but should be reasonably obvious

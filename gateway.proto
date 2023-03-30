@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package gateway;
+
 import "bookmarks.proto";
 import "items.proto";
 import "responses.proto";
@@ -16,7 +18,14 @@ import "google/protobuf/duration.proto";
 //       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
 //        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
 //         ___\///////////_____\////////////_____\///______________
-option go_package = "github.com/overmindtech/sdp/go/sdp";
+option go_package = "github.com/overmindtech/sdp-go;sdp";
+
+// The "REST" part of the gateway service. This contains all common request/reply-style APIs for the gateway.
+service GatewayService {
+    rpc ListBookmarks(ListBookmarksRequest) returns (ListBookmarkResponse) {}
+    rpc UpdateBookmark(UpdateBookmarkRequest) returns (UpdateBookmarkResponse) {}
+    rpc DeleteBookmark(DeleteBookmarkRequest) returns (DeleteBookmarkResponse) {}
+}
 
 // A union of all request made to the gateway.
 message GatewayRequest {
