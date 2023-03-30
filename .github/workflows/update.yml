@@ -42,8 +42,8 @@ jobs:
           rm -f gen/sdp-go gen/sdp-js
 
           # replace them with full checkouts
-          git clone https://github.com/overmindtech/sdp-go.git gen/sdp-go
-          git clone https://github.com/overmindtech/sdp-js.git gen/sdp-js
+          git clone https://${GIT_USER}@github.com/overmindtech/sdp-go.git gen/sdp-go
+          git clone https://${GIT_USER}@github.com/overmindtech/sdp-js.git gen/sdp-js
 
           # remove previously generated files
           rm -Rf gen/sdp-go/*.pb.go gen/sdp-go/sdpconnect/*.connect.go
