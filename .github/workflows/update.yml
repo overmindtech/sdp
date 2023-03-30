@@ -29,10 +29,9 @@ jobs:
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
           global: true
-          name: "Dylan Ratcliffe"
-          email: "dylan@overmind.tech"
-          actor: "dylanratcliffe"
-          token: "${{ secrets.PUSH_PAT }}"
+          name: "Engineering"
+          actor: "overmindtech"
+          token: "${{ secrets.SDP_PUSH_TOKEN }}"
 
       - name: Rebuilding generation targets (sdp-go, sdp-js)
         run: |
@@ -69,11 +68,10 @@ jobs:
       - name: Push to repos
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
         run: |
+          set -x
           for i in sdp-go sdp-js; do
           (
             cd gen/$i
-            # Thanks to https://stackoverflow.com/a/69979203/4918
-            git config --unset-all http.https://github.com/.extraheader
             git push
           )
           done
