@@ -1,0 +1,160 @@
+syntax = "proto3";
+
+package changes;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/overmindtech/sdp-go;sdp";
+
+// a complete App with machine-supplied and user-supplied values
+message App {
+  // machine-generated metadata of this app
+  AppMetadata metadata = 1;
+
+  // user-supplied properties of this app
+  AppProperties properties = 2;
+}
+
+// machine-generated metadata of this app
+message AppMetadata {
+  // unique id to identify this app
+  bytes UUID = 1;
+
+  // timestamp when this app was created
+  google.protobuf.Timestamp created = 2;
+}
+
+// user-supplied properties of this app
+message AppProperties {
+  // Name of this App
+  // Example: "Contoso Manager"
+  string name = 1;
+
+  // Description of this App
+  // Example: "The Contoso Manager manages the contoso. Notable components are storage, compute and the web. Talk to Jimmy or Susan on 555-CM LEAD for more details."
+  string description = 2;
+
+  // AWS account ID for the aws-source that was configured for this application
+  // Example: "123456789123467"
+  string awsAccount = 3;
+
+  // A (public) webpage that provides the UI for this application.
+  // Example: https://www.manager.contoso.com/
+  string webEndpoint = 4;
+
+  // The API endpoint that provides the API for this application.
+  // Example: https://api.manager.contoso.com/
+  string apiEndpoint = 5;
+
+  // The owner of this app
+  // Example: Susan
+  string owner = 6;
+}
+
+// a complete Change with machine-supplied and user-supplied values
+message Change {
+  // machine-generated metadata of this change
+  ChangeMetadata metadata = 1;
+
+  // user-supplied properties of this change
+  ChangeProperties properties = 2;
+}
+
+// machine-generated metadata of this change
+message ChangeMetadata {
+  // unique id to identify this change
+  bytes UUID = 1;
+
+  // timestamp when this change was created
+  google.protobuf.Timestamp created = 2;
+}
+
+enum ChangeStatus {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_DEFINING = 1;
+  STATUS_HAPPENING = 2;
+  STATUS_PROCESSING = 3;
+  STATUS_DONE = 4;
+}
+
+// user-supplied properties of this change
+message ChangeProperties {
+  // The current status of this change.
+  ChangeStatus status = 1;
+
+  // Short title for this change.
+  // Example: "database upgrade"
+  string title = 2;
+
+  // Quick description of the change.
+  // Example: "upgrade of the database to get access to the new contoso management processor"
+  string description = 3;
+
+  // Link to the ticket for this change.
+  // Example: "http://jira.contoso-engineering.com/browse/CM-1337"
+  string ticketLink = 4;
+
+  // The owner of this change.
+  // Example: Susan
+  string owner = 5;
+
+  // A comma-separated list of emails to keep updated with the status of this change.
+  // Example: susan@contoso.com, jimmy@contoso.com
+  string ccEmails = 6;
+
+  // UUID of a bookmark for the item queries of the items affected by this change, as selected by the customer when defining the change.
+  bytes affectedItemsBookmarkUUID = 7;
+
+  // UUID of the whole-system snapshot created before the change has started.
+  bytes systemBeforeSnapshotUUID = 8;
+
+  // UUID of the whole-system snapshot created after the change has finished.
+  bytes systemAfterSnapshotUUID = 9;
+
+  // list of UUIDs for apps affected by this change.
+  repeated bytes affectedAppsUUID = 10;
+}
+
+enum OnboardingStatus {
+  ONBOARDING_STATUS_UNSPECIFIED = 0;
+  ONBOARDING_STATUS_WELCOME_PAGE = 1;
+  ONBOARDING_STATUS_CONFIGURE_AWS_INTRO = 2;
+  ONBOARDING_STATUS_CONFIGURE_AWS_PARAMS = 3;
+  ONBOARDING_STATUS_CONFIGURE_AWS_SUCCESS = 4;
+  ONBOARDING_STATUS_DEFINE_APP_PARAMS = 5;
+  ONBOARDING_STATUS_DEMO_CHANGE_PARAMS = 6;
+  ONBOARDING_STATUS_DEMO_CHANGE_GRAPH = 7;
+  ONBOARDING_STATUS_SIMULATING_CHANGE = 8;
+  ONBOARDING_STATUS_RESULTS = 9;
+  ONBOARDING_STATUS_DONE = 10;
+}
+
+// complete Onboarding information with machine-supplied and user-supplied values
+message Onboarding {
+  // machine-generated metadata of this onboarding info
+  OnboardingMetadata metadata = 1;
+
+  // user-supplied properties of this onboarding info
+  OnboardingProperties properties = 2;
+}
+
+// machine-generated metadata of this onboarding info
+message OnboardingMetadata {
+  // timestamp when this onboarding info was created
+  google.protobuf.Timestamp created = 2;
+}
+
+// user-supplied properties of this onboarding info
+message OnboardingProperties {
+  // The current status of this onboarding info.
+  OnboardingStatus status = 1;
+
+  // The UUID for the aws-source that was configured as part of onboarding
+  bytes awsSourceUUID = 2;
+
+  // The UUID of the app that was created as part of onboarding
+  bytes appUUID = 3;
+
+  // The UUID of the change that was created as part of onboarding
+  bytes changeUUID = 4;
+}
