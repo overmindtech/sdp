@@ -51,12 +51,14 @@ jobs:
           # generate the code
           npx buf generate
 
+          SDP_DESCRIBE="$(git describe)"
+
           # add and commit the results
           for i in sdp-go sdp-js; do
           (
             cd gen/$i
             git add -A
-            git commit -m "Updated to SDP $(git describe)" || exit 0
+            git commit -m "Updated to SDP ${SDP_DESCRIBE}" || exit 0
 
             # show the results
             echo "::group::$i changes"
