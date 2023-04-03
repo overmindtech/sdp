@@ -20,13 +20,6 @@ import "google/protobuf/duration.proto";
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp-go;sdp";
 
-// The "REST" part of the gateway service. This contains all common request/reply-style APIs for the gateway.
-service GatewayService {
-    rpc ListBookmarks(ListBookmarksRequest) returns (ListBookmarkResponse) {}
-    rpc UpdateBookmark(UpdateBookmarkRequest) returns (UpdateBookmarkResponse) {}
-    rpc DeleteBookmark(DeleteBookmarkRequest) returns (DeleteBookmarkResponse) {}
-}
-
 // A union of all request made to the gateway.
 message GatewayRequest {
     oneof request_type {
@@ -49,28 +42,20 @@ message GatewayRequest {
         UndoExpand undoExpand = 8;
         // TODO: CancelExpand?
 
-        // return the list of snapshots for this account
-        ListSnapshots listSnapshots = 9;
         // store the current session state as snapshot
         StoreSnapshot storeSnapshot = 10;
         // load a snapshot into the current state
         LoadSnapshot loadSnapshot = 11;
-        // delete a snapshot from the underlying storage
-        DeleteSnapshot deleteSnapshot = 12;
         // TODO: implement?
         // // cancel the loading of a snapshot
         // CancelLoadSnapshot cancelLoadSnapshot = ??;
         // // undo the loading of a snapshot
         // UndoLoadSnapshot undoLoadSnapshot = ??;
 
-        // return the list of bookmarks for this account
-        ListBookmarks listBookmarks = 13;
         // store the current set of queries as bookmarks
         StoreBookmark storeBookmark = 14;
         // load and execute a bookmark into the current state
         LoadBookmark loadBookmark = 15;
-        // delete a bookmark from the underlying storage
-        DeleteBookmark deleteBookmark = 16;
         // TODO: implement?
         // // cancel the loading of a Bookmark
         // CancelLoadBookmark cancelLoadBookmark = ??;
@@ -99,15 +84,11 @@ message GatewayResponse {
 
         Item updateItem = 9; // An item that has already been sent, but contains new data, it should be updated to reflect this version
 
-        SnapshotListResult snapshotListResult = 10;
         SnapshotStoreResult snapshotStoreResult = 11;
         SnapshotLoadResult snapshotLoadResult = 12;
-        SnapshotDeleteResult snapshotDeleteResult = 13;
 
-        BookmarkListResult bookmarkListResult = 14;
         BookmarkStoreResult bookmarkStoreResult = 15;
         BookmarkLoadResult bookmarkLoadResult = 16;
-        BookmarkDeleteResult bookmarkDeleteResult = 17;
     }
 }
 
@@ -131,4 +112,60 @@ message GatewayRequestStatus {
     // working. A request should only be considered complete when all working ==
     // 0 and postProcessingComplete == true
     bool postProcessingComplete = 4;
+}
+
+// Ask the gateway to store the current state as bookmark with the specified details.
+// Returns a BookmarkStored message when the bookmark is stored
+message StoreBookmark {
+    // user supplied name of this bookmark
+    string name = 1;
+    // user supplied description of this bookmark
+    string description = 2;
+}
+
+// After a bookmark is successfully stored, this reply with the new bookmark's details is sent.
+message BookmarkStoreResult {
+    bool success = 1;
+    string errorMessage = 2;
+    Bookmark bookmark = 3;
+}
+
+// Ask the gateway to load the specified bookmark into the current state.
+// Results are streamed to the client in the same way query results are.
+message LoadBookmark {
+    // unique id of the bookmark to load
+    bytes UUID = 1;
+}
+
+message BookmarkLoadResult {
+    bool success = 1;
+    string errorMessage = 2;
+}
+
+// Ask the gateway to store the current state as snapshot with the specified details.
+// Returns a SnapshotStored message when the snapshot is stored
+message StoreSnapshot {
+    // user supplied name of this snapshot
+    string name = 1;
+    // user supplied description of this snapshot
+    string description = 2;
+}
+
+// After a snapshot is successfully stored, this reply with the new snapshot's details is sent.
+message SnapshotStoreResult {
+    bool success = 1;
+    string errorMessage = 2;
+    Snapshot snapshot = 3;
+}
+
+// Ask the gateway to load the specified snapshot into the current state.
+// Results are streamed to the client in the same way query results are.
+message LoadSnapshot {
+    // unique id of the snapshot to load
+    bytes UUID = 1;
+}
+
+message SnapshotLoadResult {
+    bool success = 1;
+    string errorMessage = 2;
 }
