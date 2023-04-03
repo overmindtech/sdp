@@ -3,7 +3,6 @@ syntax = "proto3";
 package changes;
 
 import "google/protobuf/timestamp.proto";
-import "bookmarks.proto";
 import "items.proto";
 
 option go_package = "github.com/overmindtech/sdp-go;sdp";
@@ -164,8 +163,8 @@ message AppProperties {
   // Example: "The Contoso Manager manages the contoso. Notable components are storage, compute and the web. Talk to Jimmy or Susan on 555-CM LEAD for more details."
   string description = 2;
 
-  // Bookmark query that returns items associated with the app
-  Bookmark bookmark = 3;
+  // UUID of the bookmark query that returns all items in this app
+  bytes bookmarkUUID = 3;
 }
 
 // a complete Change with machine-supplied and user-supplied values
