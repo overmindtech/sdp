@@ -5,6 +5,33 @@ package changes;
 import "google/protobuf/timestamp.proto";
 import "items.proto";
 
+//              ______
+//           ,'"       "-._
+//         ,'              "-._ _._
+//         ;              __,-'/   |
+//        ;|           ,-' _,'"'._,.
+//        |:            _,'      |\ `.
+//        : \       _,-'         | \  `.
+//         \ \   ,-'             |  \   \
+//          \ '.         .-.     |       \
+//           \  \         "      |        :
+//            `. `.              |        |
+//              `. "-._          |        ;
+//              / |`._ `-._      L       /
+//             /  | \ `._   "-.___    _,'
+//            /   |  \_.-"-.___   """"
+//            \   :            /"""
+//             `._\_       __.'_
+//        __,--''_ ' "--'''' \_  `-._
+//  __,--'     .' /_  |   __. `-._   `-._
+// <            `.  `-.-''  __,-'     _,-'
+//  `.            `.   _,-'"      _,-'
+//    `.            ''"lka    _,-'
+//      `.                _,-'
+//        `.          _,-'
+//          `.   __,'"
+//            `'"
+// Credit: https://www.asciiart.eu/
 option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 // All the request/reply APIs for the Change/App iteration
@@ -27,107 +54,9 @@ service ChangesService {
   rpc GetChangesHome(GetChangesHomeRequest) returns (GetChangesHomeResponse);
 }
 
-message ListAppsRequest {}
-
-message ListAppsResponse {
-  repeated changes.App response = 1;
-}
-
-message CreateAppRequest {
-  changes.AppProperties newApp = 1;
-}
-
-message CreateAppResponse {
-  changes.App response = 1;
-}
-
-message GetAppRequest {
-  bytes UUID = 1;
-}
-
-message GetAppResponse {
-  changes.App response = 1;
-}
-
-message UpdateAppRequest {
-  bytes UUID = 1;
-  changes.AppProperties newAppProperties = 2;
-}
-
-message UpdateAppResponse {
-  changes.App response = 1;
-}
-
-message DeleteAppRequest {
-  bytes UUID = 1;
-}
-
-message DeleteAppResponse {}
-
-message ListChangesRequest {}
-
-message ListChangesResponse {
-  repeated changes.Change response = 1;
-}
-
-message CreateChangeRequest {
-  changes.ChangeProperties newChange = 1;
-}
-
-message CreateChangeResponse {
-  changes.Change response = 1;
-}
-
-message GetChangeRequest {
-  bytes UUID = 1;
-}
-
-message GetChangeResponse {
-  changes.Change response = 1;
-}
-
-message UpdateChangeRequest {
-  bytes UUID = 1;
-  changes.ChangeProperties newChangeProperties = 2;
-}
-
-message UpdateChangeResponse {
-  changes.Change response = 1;
-}
-
-message DeleteChangeRequest {
-  bytes UUID = 1;
-}
-
-message DeleteChangeResponse {}
-
-message GetOnboardingRequest {}
-
-message GetOnboardingResponse {
-  changes.Onboarding response = 1;
-}
-
-message UpdateOnboardingRequest {
-  changes.OnboardingProperties newOnboardingProperties = 2;
-}
-
-message UpdateOnboardingResponse {
-  changes.Onboarding response = 1;
-}
-message GetChangesHomeRequest {}
-
-message GetChangesHomeResponse {
-  oneof data {
-    GetChangesHomeData changesHome = 1;
-    changes.Onboarding onboarding = 2;
-  }
-}
-
-message GetChangesHomeData {
-  string owner = 1;
-  repeated changes.Change recentChanges = 2;
-  repeated changes.App recentApps = 3;
-}
+//////////
+// Apps //
+//////////
 
 // a complete App with machine-supplied and user-supplied values
 message App {
@@ -167,6 +96,64 @@ message AppProperties {
   bytes bookmarkUUID = 3;
 }
 
+////////////////////////////
+// Requests and Responses //
+////////////////////////////
+
+// list all apps
+message ListAppsRequest {}
+
+message ListAppsResponse {
+  repeated changes.App apps = 1;
+}
+
+// create a new app
+message CreateAppRequest {
+  changes.AppProperties properties = 1;
+}
+
+message CreateAppResponse {
+  changes.App app = 1;
+}
+
+// get the details of an existing app
+message GetAppRequest {
+  bytes UUID = 1;
+}
+
+message GetAppResponse {
+  changes.App app = 1;
+}
+
+// update an expsting app
+message UpdateAppRequest {
+  bytes UUID = 1;
+  changes.AppProperties properties = 2;
+}
+
+message UpdateAppResponse {
+  changes.App app = 1;
+}
+
+// delete an app
+message DeleteAppRequest {
+  bytes UUID = 1;
+}
+
+message DeleteAppResponse {}
+
+/////////////
+// Changes //
+/////////////
+
+enum ChangeStatus {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_DEFINING = 1;
+  STATUS_HAPPENING = 2;
+  STATUS_PROCESSING = 3;
+  STATUS_DONE = 4;
+}
+
 // a complete Change with machine-supplied and user-supplied values
 message Change {
   // machine-generated metadata of this change
@@ -183,14 +170,6 @@ message ChangeMetadata {
 
   // timestamp when this change was created
   google.protobuf.Timestamp created = 2;
-}
-
-enum ChangeStatus {
-  STATUS_UNSPECIFIED = 0;
-  STATUS_DEFINING = 1;
-  STATUS_HAPPENING = 2;
-  STATUS_PROCESSING = 3;
-  STATUS_DONE = 4;
 }
 
 // user-supplied properties of this change
@@ -230,6 +209,56 @@ message ChangeProperties {
   // list of UUIDs for apps affected by this change.
   repeated bytes affectedAppsUUID = 10;
 }
+
+////////////////////////////
+// Requests and Responses //
+////////////////////////////
+
+// list all changes
+message ListChangesRequest {}
+
+message ListChangesResponse {
+  repeated changes.Change changes = 1;
+}
+
+// create a new change
+message CreateChangeRequest {
+  changes.ChangeProperties properties = 1;
+}
+
+message CreateChangeResponse {
+  changes.Change change = 1;
+}
+
+// get the details of a specific change
+message GetChangeRequest {
+  bytes UUID = 1;
+}
+
+message GetChangeResponse {
+  changes.Change change = 1;
+}
+
+// update an existing change
+message UpdateChangeRequest {
+  bytes UUID = 1;
+  changes.ChangeProperties properties = 2;
+}
+
+message UpdateChangeResponse {
+  changes.Change change = 1;
+}
+
+// delete a change
+message DeleteChangeRequest {
+  bytes UUID = 1;
+}
+
+message DeleteChangeResponse {}
+
+////////////////
+// Onboarding //
+////////////////
 
 enum OnboardingStatus {
   ONBOARDING_STATUS_UNSPECIFIED = 0;
@@ -273,4 +302,48 @@ message OnboardingProperties {
 
   // The UUID of the change that was created as part of onboarding
   bytes changeUUID = 4;
+}
+
+////////////////////////////
+// Requests and Responses //
+////////////////////////////
+
+// get the onboarding status
+message GetOnboardingRequest {}
+
+message GetOnboardingResponse {
+  changes.Onboarding onboarding = 1;
+}
+
+// update onboarding status
+message UpdateOnboardingRequest {
+  changes.OnboardingProperties properties = 2;
+}
+
+message UpdateOnboardingResponse {
+  changes.Onboarding onboarding = 1;
+}
+
+//////////////////
+// Changes Home //
+//////////////////
+
+
+////////////////////////////
+// Requests and Responses //
+////////////////////////////
+
+message GetChangesHomeRequest {}
+
+message GetChangesHomeResponse {
+  oneof data {
+    GetChangesHomeData changesHome = 1;
+    changes.Onboarding onboarding = 2;
+  }
+}
+
+message GetChangesHomeData {
+  string owner = 1;
+  repeated changes.Change recentChanges = 2;
+  repeated changes.App recentApps = 3;
 }

@@ -3,15 +3,21 @@ syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 import "items.proto";
 
-// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
-//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
-//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_
-//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__
-//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____
-//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________
-//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
-//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
-//         ___\///////////_____\////////////_____\///______________
+//          ___        .---------.._
+//   ______!fsc!_....-' .g8888888p. '-------....._
+// .'          //     .g8:       :8p..---....___ \'.
+// | Unnamed  //  ()  d88:       :88b|==========! !|
+// |         //       888:       :888|==========| !|
+// |___      \\_______'T88888888888P''----------'//|   
+// |   \       """"""""""""""""""""""""""""""""""/ |   
+// |    !...._____      .="""=.   .[]    ____...!  |   
+// |   /               ! .g$p. !   .[]          :  |   
+// |  !               :  $$$$$  :  .[]          :  |   
+// |  !                ! 'T$P' !   .[]           '.|   
+// |   \__              "=._.="   .()        __    |   
+// |.--'  '----._______________________.----'  '--.|
+// '._____________________________________________.'
+// Credit: https://www.asciiart.eu/
 option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 service SnapshotsService {
@@ -81,7 +87,7 @@ message CreateSnapshotResponse {
 
 // get the details of a specific snapshot
 message GetSnapshotRequest {
-    bytes uuid = 1;
+    bytes UUID = 1;
 }
 
 message GetSnapshotResponse {
@@ -90,7 +96,7 @@ message GetSnapshotResponse {
 
 // updates the properties of an existing snapshot
 message UpdateSnapshotRequest {
-    bytes uuid = 1;
+    bytes UUID = 1;
     SnapshotProperties properties = 2;
 }
 
@@ -101,7 +107,7 @@ message UpdateSnapshotResponse {
 
 // deletes a given snapshot
 message DeleteSnapshotRequest {
-    bytes uuid = 1;
+    bytes UUID = 1;
 }
 
 message DeleteSnapshotResponse {}
