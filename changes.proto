@@ -3,6 +3,7 @@ syntax = "proto3";
 package changes;
 
 import "google/protobuf/timestamp.proto";
+import "items.proto";
 
 option go_package = "github.com/overmindtech/sdp-go;sdp";
 
@@ -144,6 +145,12 @@ message AppMetadata {
 
   // timestamp when this app was created
   google.protobuf.Timestamp created = 2;
+
+  // items that are part of the app
+  repeated Reference items = 3;
+
+  // te last time that the list of items was updated
+  google.protobuf.Timestamp itemsLastUpdated = 4;
 }
 
 // user-supplied properties of this app
@@ -156,21 +163,8 @@ message AppProperties {
   // Example: "The Contoso Manager manages the contoso. Notable components are storage, compute and the web. Talk to Jimmy or Susan on 555-CM LEAD for more details."
   string description = 2;
 
-  // AWS account ID for the aws-source that was configured for this application
-  // Example: "123456789123467"
-  string awsAccount = 3;
-
-  // A (public) webpage that provides the UI for this application.
-  // Example: https://www.manager.contoso.com/
-  string webEndpoint = 4;
-
-  // The API endpoint that provides the API for this application.
-  // Example: https://api.manager.contoso.com/
-  string apiEndpoint = 5;
-
-  // The owner of this app
-  // Example: Susan
-  string owner = 6;
+  // UUID of the bookmark query that returns all items in this app
+  bytes bookmarkUUID = 3;
 }
 
 // a complete Change with machine-supplied and user-supplied values
