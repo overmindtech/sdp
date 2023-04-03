@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-
+import "items.proto";
 
 // _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
 //  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
@@ -14,79 +14,18 @@ import "google/protobuf/timestamp.proto";
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp-go;sdp";
 
+service BookmarksService {
+    rpc ListBookmarks(ListBookmarksRequest) returns (ListBookmarkResponse);
+    rpc CreateBookmark(CreateBookmarkRequest) returns (CreateBookmarkResponse);
+    rpc GetBookmark(GetBookmarkRequest) returns (GetBookmarkResponse);
+    rpc UpdateBookmark(UpdateBookmarkRequest) returns (UpdateBookmarkResponse);
+    rpc DeleteBookmark(DeleteBookmarkRequest) returns (DeleteBookmarkResponse);
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // bookmark handling
 //
 // the gateway can store, retrieve, list and delete bookmarks of queries
-///////////////////////////////////////////////////////////////////////////////
-
-// Descriptor for a bookmark
-message BookmarkDescriptor {
-    // unique id to identify this bookmark
-    bytes UUID = 1;
-    // timestamp when this bookmark was created
-    google.protobuf.Timestamp created = 2;
-    // user supplied name of this bookmark
-    string name = 3;
-    // user supplied description of this bookmark
-    string description = 4;
-    // number of items in this bookmark
-    uint32 size = 5;
-}
-
-// Retrieve the list of stored query bookmarks for the currently active account.
-// Returns a BookmarkList
-message ListBookmarks {
-    // TODO: pagination
-}
-
-// response format for ListBookmarks
-message BookmarkListResult {
-    bool success = 1;
-    string errorMessage = 2;
-    repeated BookmarkDescriptor bookmarks = 3;
-}
-
-// Ask the gateway to store the current state as bookmark with the specified details.
-// Returns a BookmarkStored message when the bookmark is stored
-message StoreBookmark {
-    // user supplied name of this bookmark
-    string name = 1;
-    // user supplied description of this bookmark
-    string description = 2;
-}
-
-// After a bookmark is successfully stored, this reply with the new bookmark's details is sent.
-message BookmarkStoreResult {
-    bool success = 1;
-    string errorMessage = 2;
-    BookmarkDescriptor bookmark = 3;
-}
-
-// Ask the gateway to load the specified bookmark into the current state.
-// Results are streamed to the client in the same way query results are.
-message LoadBookmark {
-    // unique id of the bookmark to load
-    bytes UUID = 1;
-}
-
-message BookmarkLoadResult {
-    bool success = 1;
-    string errorMessage = 2;
-}
-
-// Delete the bookmark with the specified ID.
-message DeleteBookmark {
-    // unique id of the bookmark to delete
-    bytes UUID = 1;
-}
-
-message BookmarkDeleteResult {
-    bool success = 1;
-    string errorMessage = 2;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 
 // a complete Bookmark with user-supplied and machine-supplied values
@@ -101,6 +40,10 @@ message BookmarkProperties {
     string name = 1;
     // user supplied description of this bookmark
     string description = 2;
+    // queries that make up the bookmark
+    repeated Query queries = 3;
+    // Items that should be excluded from the bookmark's results
+    repeated Reference excludedItems = 4;
 }
 
 // Descriptor for a bookmark
@@ -109,21 +52,40 @@ message BookmarkMetadata {
     bytes UUID = 1;
     // timestamp when this bookmark was created
     google.protobuf.Timestamp created = 2;
-    // number of items in this bookmark
-    uint32 size = 3;
 }
 
-// Retrieve the list of stored query bookmarks for the currently active account.
-// Returns a BookmarkList
+////////////////////////////
+// Requests and Responses //
+////////////////////////////
+
+// list all bookmarks
 message ListBookmarksRequest {
     // TODO: pagination
 }
 
-// response format for ListBookmarks
 message ListBookmarkResponse {
     repeated Bookmark bookmarks = 3;
 }
 
+// creates a new bookmark
+message CreateBookmarkRequest {
+    BookmarkProperties properties = 1;
+}
+
+message CreateBookmarkResponse {
+    Bookmark bookmark = 1;
+}
+
+// gets a specific bookmark
+message GetBookmarkRequest {
+    bytes uuid = 1;
+}
+
+message GetBookmarkResponse {
+    Bookmark bookmark = 1;
+}
+
+// updates an existing bookmark
 message UpdateBookmarkRequest {
     // unique id to identify this bookmark
     bytes UUID = 1;
@@ -131,7 +93,6 @@ message UpdateBookmarkRequest {
     BookmarkProperties properties = 2;
 }
 
-// After a bookmark is successfully updated, this reply with the new bookmark's details is sent.
 message UpdateBookmarkResponse {
     Bookmark bookmark = 3;
 }

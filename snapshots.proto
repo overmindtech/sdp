@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-
+import "items.proto";
 
 // _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
 //  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
@@ -14,6 +14,13 @@ import "google/protobuf/timestamp.proto";
 //         ___\///////////_____\////////////_____\///______________
 option go_package = "github.com/overmindtech/sdp-go;sdp";
 
+service SnapshotsService {
+    rpc ListSnapshots(ListSnapshotsRequest) returns (ListSnapshotResponse);
+    rpc CreateSnapshot(CreateSnapshotRequest) returns (CreateSnapshotResponse);
+    rpc GetSnapshot(GetSnapshotRequest) returns (GetSnapshotResponse);
+    rpc UpdateSnapshot(UpdateSnapshotRequest) returns (UpdateSnapshotResponse);
+    rpc DeleteSnapshot(DeleteSnapshotRequest) returns (DeleteSnapshotResponse);
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // snapshot handling
@@ -22,68 +29,79 @@ option go_package = "github.com/overmindtech/sdp-go;sdp";
 // query results.
 ///////////////////////////////////////////////////////////////////////////////
 
-// Descriptor for a snapshot
-message SnapshotDescriptor {
+message Snapshot {
+    SnapshotMetadata metadata = 1;
+    SnapshotProperties properties = 2;
+}
+
+message SnapshotProperties {
+    // name of this snapshot
+    string name = 1;
+    // description of this snapshot
+    string description = 2;
+    // queries that make up the snapshot
+    repeated Query queries = 3;
+    // items that should be excluded from the snapshot's results
+    repeated Reference excludedItems = 4;
+    // items stored in the snapshot
+    repeated Item items = 5;
+}
+
+message SnapshotMetadata {
     // unique id to identify this snapshot
     bytes UUID = 1;
     // timestamp when this snapshot was created
     google.protobuf.Timestamp created = 2;
-    // user supplied name of this snapshot
-    string name = 3;
-    // user supplied description of this snapshot
-    string description = 4;
-    // number of items in this snapshot
-    uint32 size = 5;
+    // the number of items in this snapshot
+    uint32 size = 3;
 }
 
-// Retrieve the list of stored query snapshots for the currently active account.
-// Returns a SnapshotList
-message ListSnapshots {
-    // TODO: pagination
+////////////////////////////
+// Requests and Responses //
+////////////////////////////
+
+// lists all snapshots
+message ListSnapshotsRequest {}
+
+message ListSnapshotResponse {
+    // the list of all snapshots
+    repeated Snapshot snapshots = 1;
 }
 
-// response format for ListSnapshots
-message SnapshotListResult {
-    bool success = 1;
-    string errorMessage = 2;
-    repeated SnapshotDescriptor snapshots = 3;
+// creates a new snapshot
+message CreateSnapshotRequest {
+    // properties of the new snapshot
+    SnapshotProperties properties = 1;
 }
 
-// Ask the gateway to store the current state as snapshot with the specified details.
-// Returns a SnapshotStored message when the snapshot is stored
-message StoreSnapshot {
-    // user supplied name of this snapshot
-    string name = 1;
-    // user supplied description of this snapshot
-    string description = 2;
+message CreateSnapshotResponse {
+    // the newly created snapshot 
+    Snapshot snapshot = 1;
 }
 
-// After a snapshot is successfully stored, this reply with the new snapshot's details is sent.
-message SnapshotStoreResult {
-    bool success = 1;
-    string errorMessage = 2;
-    SnapshotDescriptor snapshot = 3;
+// get the details of a specific snapshot
+message GetSnapshotRequest {
+    bytes uuid = 1;
 }
 
-// Ask the gateway to load the specified snapshot into the current state.
-// Results are streamed to the client in the same way query results are.
-message LoadSnapshot {
-    // unique id of the snapshot to load
-    bytes UUID = 1;
+message GetSnapshotResponse {
+    Snapshot snapshot = 1;
 }
 
-message SnapshotLoadResult {
-    bool success = 1;
-    string errorMessage = 2;
+// updates the properties of an existing snapshot
+message UpdateSnapshotRequest {
+    bytes uuid = 1;
+    SnapshotProperties properties = 2;
 }
 
-// Delete the snapshot with the specified ID.
-message DeleteSnapshot {
-    // unique id of the snapshot to delete
-    bytes UUID = 1;
+message UpdateSnapshotResponse {
+    // the updated version of the snapshot
+    Snapshot snapshot = 1;
 }
 
-message SnapshotDeleteResult {
-    bool success = 1;
-    string errorMessage = 2;
+// deletes a given snapshot
+message DeleteSnapshotRequest {
+    bytes uuid = 1;
 }
+
+message DeleteSnapshotResponse {}

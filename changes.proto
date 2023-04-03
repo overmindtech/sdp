@@ -9,27 +9,27 @@ option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 // All the request/reply APIs for the Change/App iteration
 service ChangesService {
-  rpc ListApp(ListAppRequest) returns (ListAppResponse) {}
-  rpc CreateApp(CreateAppRequest) returns (CreateAppResponse) {}
-  rpc GetApp(GetAppRequest) returns (GetAppResponse) {}
-  rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse) {}
-  rpc DeleteApp(DeleteAppRequest) returns (DeleteAppResponse) {}
+  rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
+  rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
+  rpc GetApp(GetAppRequest) returns (GetAppResponse);
+  rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
+  rpc DeleteApp(DeleteAppRequest) returns (DeleteAppResponse);
 
-  rpc ListChange(ListChangeRequest) returns (ListChangeResponse) {}
-  rpc CreateChange(CreateChangeRequest) returns (CreateChangeResponse) {}
-  rpc GetChange(GetChangeRequest) returns (GetChangeResponse) {}
-  rpc UpdateChange(UpdateChangeRequest) returns (UpdateChangeResponse) {}
-  rpc DeleteChange(DeleteChangeRequest) returns (DeleteChangeResponse) {}
+  rpc ListChanges(ListChangesRequest) returns (ListChangesResponse);
+  rpc CreateChange(CreateChangeRequest) returns (CreateChangeResponse);
+  rpc GetChange(GetChangeRequest) returns (GetChangeResponse);
+  rpc UpdateChange(UpdateChangeRequest) returns (UpdateChangeResponse);
+  rpc DeleteChange(DeleteChangeRequest) returns (DeleteChangeResponse);
 
-  rpc GetOnboarding(GetOnboardingRequest) returns (GetOnboardingResponse) {}
-  rpc UpdateOnboarding(UpdateOnboardingRequest) returns (UpdateOnboardingResponse) {}
+  rpc GetOnboarding(GetOnboardingRequest) returns (GetOnboardingResponse);
+  rpc UpdateOnboarding(UpdateOnboardingRequest) returns (UpdateOnboardingResponse);
 
-  rpc GetChangesHome(GetChangesHomeRequest) returns (GetChangesHomeResponse) {}
+  rpc GetChangesHome(GetChangesHomeRequest) returns (GetChangesHomeResponse);
 }
 
-message ListAppRequest {}
+message ListAppsRequest {}
 
-message ListAppResponse {
+message ListAppsResponse {
   repeated changes.App response = 1;
 }
 
@@ -64,9 +64,9 @@ message DeleteAppRequest {
 
 message DeleteAppResponse {}
 
-message ListChangeRequest {}
+message ListChangesRequest {}
 
-message ListChangeResponse {
+message ListChangesResponse {
   repeated changes.Change response = 1;
 }
 
