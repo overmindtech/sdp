@@ -58,8 +58,6 @@ message SnapshotMetadata {
     bytes UUID = 1;
     // timestamp when this snapshot was created
     google.protobuf.Timestamp created = 2;
-    // the number of items in this snapshot
-    uint32 size = 3;
 }
 
 ////////////////////////////
