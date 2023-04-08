@@ -23,6 +23,7 @@ enum Health {
   HEALTH_OK = 1; // Functioning normally
   HEALTH_WARNING = 2; // Functioning, but degraded
   HEALTH_ERROR = 3; // Not functioning
+  HEALTH_PENDING = 4; // Health state is transitioning, such as when something is first provisioned 
 }
 
 // This is the same as Item within the package with a couple of exceptions, no
