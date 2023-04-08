@@ -59,6 +59,7 @@ jobs:
           for i in sdp-go sdp-js; do
           (
             cd gen/$i
+            git pull
             git add -A
             git commit -m "Updated to SDP ${SDP_DESCRIBE}" || exit 0
 
