@@ -127,7 +127,7 @@ message StoreBookmark {
 message BookmarkStoreResult {
     bool success = 1;
     string errorMessage = 2;
-    Bookmark bookmark = 3;
+    bookmarks.Bookmark bookmark = 3;
 }
 
 // Ask the gateway to load the specified bookmark into the current state.
@@ -155,7 +155,7 @@ message StoreSnapshot {
 message SnapshotStoreResult {
     bool success = 1;
     string errorMessage = 2;
-    Snapshot snapshot = 3;
+    snapshots.Snapshot snapshot = 3;
 }
 
 // Ask the gateway to load the specified snapshot into the current state.
