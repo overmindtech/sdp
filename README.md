@@ -226,17 +226,19 @@ This has been removed in favour of the wildcard subscription to `return.item.>`.
 
 ## Building
 
-First install the dependencies
+First install the dependencies:
 
 ```
-brew install protobuf@3
-brew link --overwrite protobuf@3
-brew install protoc-gen-go node typescript
+npm i
+
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install github.com/bufbuild/connect-go/cmd/protoc-gen-connect-go@latest
 ```
 
-Each target language has it's own build script in the `build` directory. For example:
+Run `buf` through `npx` to generate the stubs:
 
 ```shell
-./build/go.sh
-./build/typescript.sh
+npx buf generate
 ```
+
+> Note: depending on your use case, symlink or checkout the `sdp-js` and `sdp-go` repositories into the `gen/` directory. See `sdp/.github/workflows/update.yml` for details.

@@ -73,13 +73,16 @@ message AppMetadata {
   bytes UUID = 1;
 
   // timestamp when this app was created
-  google.protobuf.Timestamp created = 2;
+  google.protobuf.Timestamp createdAt = 2;
+
+  // timestamp when this app was last updated
+  google.protobuf.Timestamp updatedAt = 3;
 
   // items that are part of the app
-  repeated Reference items = 3;
+  repeated Reference items = 4;
 
-  // te last time that the list of items was updated
-  google.protobuf.Timestamp itemsLastUpdated = 4;
+  // the last time that the list of items was updated
+  google.protobuf.Timestamp itemsLastUpdated = 5;
 }
 
 // user-supplied properties of this app
@@ -169,7 +172,10 @@ message ChangeMetadata {
   bytes UUID = 1;
 
   // timestamp when this change was created
-  google.protobuf.Timestamp created = 2;
+  google.protobuf.Timestamp createdAt = 2;
+
+  // timestamp when this change was last updated
+  google.protobuf.Timestamp updatedAt = 3;
 }
 
 // user-supplied properties of this change
