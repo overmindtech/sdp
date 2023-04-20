@@ -144,7 +144,7 @@ message BookmarkLoadResult {
     string errorMessage = 2;
 
     // UUIDs of all queries that have been started as a result of loading this bookmark
-    repeated bytes startedQueries = 3;
+    repeated bytes startedQueryUUIDs = 3;
 }
 
 // Ask the gateway to store the current state as snapshot with the specified details.
