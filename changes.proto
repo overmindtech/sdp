@@ -41,6 +41,7 @@ service ChangesService {
   rpc GetApp(GetAppRequest) returns (GetAppResponse);
   rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
   rpc DeleteApp(DeleteAppRequest) returns (DeleteAppResponse);
+  rpc ListAppChanges(ListAppChangesRequest) returns (ListAppChangesResponse);
 
   rpc ListChanges(ListChangesRequest) returns (ListChangesResponse);
   rpc CreateChange(CreateChangeRequest) returns (CreateChangeResponse);
@@ -144,6 +145,17 @@ message DeleteAppRequest {
 }
 
 message DeleteAppResponse {}
+
+// list all changes for an app
+message ListAppChangesRequest {
+  // The UUID of the app to list changes for
+  bytes UUID = 1;
+}
+
+message ListAppChangesResponse {
+  // The list of changes rel
+  repeated changes.Change changes = 1;
+}
 
 /////////////
 // Changes //
