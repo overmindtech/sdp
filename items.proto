@@ -23,7 +23,7 @@ enum Health {
   HEALTH_OK = 1; // Functioning normally
   HEALTH_WARNING = 2; // Functioning, but degraded
   HEALTH_ERROR = 3; // Not functioning
-  HEALTH_PENDING = 4; // Health state is transitioning, such as when something is first provisioned 
+  HEALTH_PENDING = 4; // Health state is transitioning, such as when something is first provisioned
 }
 
 // This is the same as Item within the package with a couple of exceptions, no
@@ -159,9 +159,44 @@ message Query {
   string errorSubject = 18;
 }
 
+// QueryStatus informs the client of status updates of all queries running in this session.
+message QueryStatus {
+  // UUID of the query
+  bytes UUID = 1;
+
+  // The error type. Any types in here will be gracefully handled unless the
+  // type os "OTHER"
+  enum Status {
+    // the status has not been specified
+    UNSPECIFIED = 0;
+
+    // the query has been started
+    STARTED = 1;
+
+    // TODO: add more detailed progress information here (number of items sent? number of sub-queries triggered and their status?)
+    // the query is progressing
+    // PROGRESSING = 2;
+    reserved 2;
+
+    // the query has been cancelled.
+    // This is a final state.
+    CANCELLED = 3;
+
+    // the query has finished with an error status. expect a separate QueryError describing that.
+    // This is a final state.
+    // TODO: fold the error details into this message
+    ERRORED = 4;
+
+    // The query has finished and all results have been sent over the wire
+    // This is a final state.
+    FINISHED = 5;
+  }
+  Status status = 2;
+}
+
 // QueryError is sent back when an item query fails
 message QueryError {
-  // UUID if the item query that this response is in relation to (in binary
+  // UUID of the item query that this response is in relation to (in binary
   // format)
   bytes UUID = 1;
 

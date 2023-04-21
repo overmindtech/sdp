@@ -89,6 +89,8 @@ message GatewayResponse {
 
         BookmarkStoreResult bookmarkStoreResult = 15;
         BookmarkLoadResult bookmarkLoadResult = 16;
+
+        QueryStatus queryStatus = 17; // Status of requested queries
     }
 }
 
@@ -140,6 +142,9 @@ message LoadBookmark {
 message BookmarkLoadResult {
     bool success = 1;
     string errorMessage = 2;
+
+    // UUIDs of all queries that have been started as a result of loading this bookmark
+    repeated bytes startedQueryUUIDs = 3;
 }
 
 // Ask the gateway to store the current state as snapshot with the specified details.
