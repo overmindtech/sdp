@@ -123,6 +123,8 @@ message StoreBookmark {
     string name = 1;
     // user supplied description of this bookmark
     string description = 2;
+    // a correlation ID to match up requests and responses. set this to a value unique per connection
+    bytes msgID = 3;
 }
 
 // After a bookmark is successfully stored, this reply with the new bookmark's details is sent.
@@ -130,6 +132,8 @@ message BookmarkStoreResult {
     bool success = 1;
     string errorMessage = 2;
     bookmarks.Bookmark bookmark = 3;
+    // a correlation ID to match up requests and responses. this field returns the contents of the request's msgID
+    bytes msgID = 4;
 }
 
 // Ask the gateway to load the specified bookmark into the current state.
@@ -137,6 +141,8 @@ message BookmarkStoreResult {
 message LoadBookmark {
     // unique id of the bookmark to load
     bytes UUID = 1;
+    // a correlation ID to match up requests and responses. set this to a value unique per connection
+    bytes msgID = 2;
 }
 
 message BookmarkLoadResult {
@@ -145,6 +151,8 @@ message BookmarkLoadResult {
 
     // UUIDs of all queries that have been started as a result of loading this bookmark
     repeated bytes startedQueryUUIDs = 3;
+    // a correlation ID to match up requests and responses. this field returns the contents of the request's msgID
+    bytes msgID = 4;
 }
 
 // Ask the gateway to store the current state as snapshot with the specified details.
@@ -154,6 +162,8 @@ message StoreSnapshot {
     string name = 1;
     // user supplied description of this snapshot
     string description = 2;
+    // a correlation ID to match up requests and responses. set this to a value unique per connection
+    bytes msgID = 3;
 }
 
 // After a snapshot is successfully stored, this reply with the new snapshot's details is sent.
@@ -161,6 +171,8 @@ message SnapshotStoreResult {
     bool success = 1;
     string errorMessage = 2;
     snapshots.Snapshot snapshot = 3;
+    // a correlation ID to match up requests and responses. this field returns the contents of the request's msgID
+    bytes msgID = 4;
 }
 
 // Ask the gateway to load the specified snapshot into the current state.
@@ -168,9 +180,13 @@ message SnapshotStoreResult {
 message LoadSnapshot {
     // unique id of the snapshot to load
     bytes UUID = 1;
+    // a correlation ID to match up requests and responses. set this to a value unique per connection
+    bytes msgID = 2;
 }
 
 message SnapshotLoadResult {
     bool success = 1;
     string errorMessage = 2;
+    // a correlation ID to match up requests and responses. this field returns the contents of the request's msgID
+    bytes msgID = 4;
 }
