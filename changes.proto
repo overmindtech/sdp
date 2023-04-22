@@ -48,6 +48,21 @@ service ChangesService {
   rpc UpdateChange(UpdateChangeRequest) returns (UpdateChangeResponse);
   rpc DeleteChange(DeleteChangeRequest) returns (DeleteChangeResponse);
 
+  // Calculates the blast radius of a change using the
+  // `affectedItemsBookmarkUUID` as the starting point. If the
+  // `affectedItemsBookmarkUUID` is blank, this will return an error. Executing
+  // this RPC will move the change to the `STATUS_DEFINING` state.
+  rpc CalculateBlastRadius(CalculateBlastRadiusRequest) returns (stream CalculateBlastRadiusResponse);
+
+  // Executing this RPC take a snapshot of the current blast radius and store it
+  // in `systemBeforeSnapshotUUID` and then advance the status to
+  // `STATUS_HAPPENING`. It can only be called once per change.
+  rpc StartChnage(StartChangeRequest) returns (stream StartChangeResponse);
+
+  // Takes the "after" snapshot, stores it in `systemAfterSnapshotUUID` and
+  // andvances the change status to `STATUS_DONE`
+  rpc EndChange(EndChangeRequest) returns (stream EndChangeResponse);
+
   rpc GetOnboarding(GetOnboardingRequest) returns (GetOnboardingResponse);
   rpc UpdateOnboarding(UpdateOnboardingRequest) returns (UpdateOnboardingResponse);
 
@@ -268,6 +283,63 @@ message DeleteChangeRequest {
 }
 
 message DeleteChangeResponse {}
+
+message CalculateBlastRadiusRequest {}
+
+message CalculateBlastRadiusResponse {
+  enum State {
+    // The blast radius is being calculated.
+    STATE_DISCOVERING = 0;
+    // The blast radius has been calculated and is being saved
+    STATE_SAVING = 1;
+    // Determining which apps are within the blast radius
+    STATE_FINDING_APPS = 2;
+    // Everything is complete
+    STATE_DONE = 3;
+  }
+  
+  State state = 1;
+
+  uint32 numItems = 2;
+  uint32 NumEdges = 3;
+}
+
+message StartChangeRequest {}
+
+message StartChangeResponse {
+  enum State {
+    // Snapshot is being taken
+    STATE_TAKING_SNAPSHOT = 0;
+    // Snapshot is being saved
+    STATE_SAVING_SNAPSHOT = 1;
+    // Everything is complete
+    STATE_DONE = 2;
+  }
+
+  State state = 1;
+
+  uint32 numItems = 2;
+  uint32 NumEdges = 3;
+}
+
+message EndChangeRequest {}
+
+message EndChangeResponse {
+  enum State {
+    // Snapshot is being taken
+    STATE_TAKING_SNAPSHOT = 0;
+    // Snapshot is being saved
+    STATE_SAVING_SNAPSHOT = 1;
+    // Everything is complete
+    STATE_DONE = 2;
+  }
+
+  State state = 1;
+  
+  uint32 numItems = 2;
+  uint32 NumEdges = 3;
+}
+
 
 ////////////////
 // Onboarding //
