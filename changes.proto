@@ -203,8 +203,15 @@ message ChangeProperties {
   // Example: susan@contoso.com, jimmy@contoso.com
   string ccEmails = 6;
 
-  // UUID of a bookmark for the item queries of the items affected by this change, as selected by the customer when defining the change.
+  // UUID of a bookmark for the item queries of the items *directly* affected by
+  // this change. This might be parsed from a terrform plam, added from the API,
+  // parsed from a freeform ticket description etc.
   bytes affectedItemsBookmarkUUID = 7;
+
+  // UUID of a bookmark for the item queries of the items *indirectly* affected
+  // by this change i.e. the blast radius. This will be determined
+  // automatically, but can refined by the user.
+  bytes blastRadiusBookmarkUUID = 11;
 
   // UUID of the whole-system snapshot created before the change has started.
   bytes systemBeforeSnapshotUUID = 8;
