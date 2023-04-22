@@ -36,16 +36,26 @@ option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 // All the request/reply APIs for the Change/App iteration
 service ChangesService {
+  // Lists all apps
   rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
+  // Creates a new app
   rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
+  // Gets the details of an existing app
   rpc GetApp(GetAppRequest) returns (GetAppResponse);
+  // Updates an existing app
   rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
+  // Deletes an app
   rpc DeleteApp(DeleteAppRequest) returns (DeleteAppResponse);
 
+  // Lists all changes
   rpc ListChanges(ListChangesRequest) returns (ListChangesResponse);
+  // Creates a new change
   rpc CreateChange(CreateChangeRequest) returns (CreateChangeResponse);
+  // Gets the details of an existing change
   rpc GetChange(GetChangeRequest) returns (GetChangeResponse);
+  // Updates an existing change
   rpc UpdateChange(UpdateChangeRequest) returns (UpdateChangeResponse);
+  // Deletes a change
   rpc DeleteChange(DeleteChangeRequest) returns (DeleteChangeResponse);
 
   // Calculates the blast radius of a change using the
@@ -60,7 +70,7 @@ service ChangesService {
   rpc StartChnage(StartChangeRequest) returns (stream StartChangeResponse);
 
   // Takes the "after" snapshot, stores it in `systemAfterSnapshotUUID` and
-  // andvances the change status to `STATUS_DONE`
+  // advances the change status to `STATUS_DONE`
   rpc EndChange(EndChangeRequest) returns (stream EndChangeResponse);
 
   rpc GetOnboarding(GetOnboardingRequest) returns (GetOnboardingResponse);
