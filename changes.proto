@@ -67,7 +67,7 @@ service ChangesService {
   // Executing this RPC take a snapshot of the current blast radius and store it
   // in `systemBeforeSnapshotUUID` and then advance the status to
   // `STATUS_HAPPENING`. It can only be called once per change.
-  rpc StartChnage(StartChangeRequest) returns (stream StartChangeResponse);
+  rpc StartChange(StartChangeRequest) returns (stream StartChangeResponse);
 
   // Takes the "after" snapshot, stores it in `systemAfterSnapshotUUID` and
   // advances the change status to `STATUS_DONE`
