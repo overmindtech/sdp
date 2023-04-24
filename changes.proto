@@ -296,7 +296,13 @@ message DeleteChangeRequest {
 message DeleteChangeResponse {}
 
 message CalculateBlastRadiusRequest {
+  // ID of the change to calculate the blast radius for.
   bytes changeUUID = 1;
+  // If true, the blast radius will be calculated again, even if it was already.
+  // Otherwise if the blast radius has already been calculated (i.e. the status
+  // is `DEFINING` and `blastRadiusBookmarkUUID` is set) an error will be
+  // returned.
+  bool force = 2;
 }
 
 message CalculateBlastRadiusResponse {
