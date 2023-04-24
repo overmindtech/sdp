@@ -214,12 +214,15 @@ message ChangeMetadata {
 
   // timestamp when this change was last updated
   google.protobuf.Timestamp updatedAt = 3;
+
+  // The current status of this change. This is changed by the lifecycle
+  // functions such as `StartChange` and `EndChange`.
+  ChangeStatus status = 4;
 }
 
 // user-supplied properties of this change
 message ChangeProperties {
-  // The current status of this change.
-  ChangeStatus status = 1;
+  reserved 1;
 
   // Short title for this change.
   // Example: "database upgrade"
