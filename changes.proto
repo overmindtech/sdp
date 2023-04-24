@@ -36,17 +36,43 @@ option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 // All the request/reply APIs for the Change/App iteration
 service ChangesService {
+  // Lists all apps
   rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
+  // Creates a new app
   rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
+  // Gets the details of an existing app
   rpc GetApp(GetAppRequest) returns (GetAppResponse);
+  // Updates an existing app
   rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
+  // Deletes an app
   rpc DeleteApp(DeleteAppRequest) returns (DeleteAppResponse);
 
+  // Lists all changes
   rpc ListChanges(ListChangesRequest) returns (ListChangesResponse);
+  // Creates a new change
   rpc CreateChange(CreateChangeRequest) returns (CreateChangeResponse);
+  // Gets the details of an existing change
   rpc GetChange(GetChangeRequest) returns (GetChangeResponse);
+  // Updates an existing change
   rpc UpdateChange(UpdateChangeRequest) returns (UpdateChangeResponse);
+  // Deletes a change
   rpc DeleteChange(DeleteChangeRequest) returns (DeleteChangeResponse);
+
+  // Calculates the blast radius of a change using the
+  // `affectedItemsBookmarkUUID` as the starting point. If the
+  // `affectedItemsBookmarkUUID` is blank, this will return an error.
+  // Returns a stream of status updates. The response stream closes when all calculating has been done.
+  // Executing this RPC will move the Change to the `STATUS_DEFINING` state or return an error.
+  rpc CalculateBlastRadius(CalculateBlastRadiusRequest) returns (stream CalculateBlastRadiusResponse);
+
+  // Executing this RPC take a snapshot of the current blast radius and store it
+  // in `systemBeforeSnapshotUUID` and then advance the status to
+  // `STATUS_HAPPENING`. It can only be called once per change.
+  rpc StartChange(StartChangeRequest) returns (stream StartChangeResponse);
+
+  // Takes the "after" snapshot, stores it in `systemAfterSnapshotUUID` and
+  // advances the change status to `STATUS_DONE`
+  rpc EndChange(EndChangeRequest) returns (stream EndChangeResponse);
 
   rpc GetOnboarding(GetOnboardingRequest) returns (GetOnboardingResponse);
   rpc UpdateOnboarding(UpdateOnboardingRequest) returns (UpdateOnboardingResponse);
@@ -215,8 +241,15 @@ message ChangeProperties {
   // Example: susan@contoso.com, jimmy@contoso.com
   string ccEmails = 6;
 
-  // UUID of a bookmark for the item queries of the items affected by this change, as selected by the customer when defining the change.
+  // UUID of a bookmark for the item queries of the items *directly* affected by
+  // this change. This might be parsed from a terrform plam, added from the API,
+  // parsed from a freeform ticket description etc.
   bytes affectedItemsBookmarkUUID = 7;
+
+  // UUID of a bookmark for the item queries of the items *indirectly* affected
+  // by this change i.e. the blast radius. This will be determined
+  // automatically, but can refined by the user.
+  bytes blastRadiusBookmarkUUID = 11;
 
   // UUID of the whole-system snapshot created before the change has started.
   bytes systemBeforeSnapshotUUID = 8;
@@ -273,6 +306,75 @@ message DeleteChangeRequest {
 }
 
 message DeleteChangeResponse {}
+
+message CalculateBlastRadiusRequest {
+  // ID of the change to calculate the blast radius for.
+  bytes changeUUID = 1;
+  // If true, the blast radius will be calculated again, even if it was already.
+  // Otherwise if the blast radius has already been calculated (i.e. the status
+  // is `DEFINING` and `blastRadiusBookmarkUUID` is set) an error will be
+  // returned.
+  bool force = 2;
+}
+
+message CalculateBlastRadiusResponse {
+  enum State {
+    // The blast radius is being calculated.
+    STATE_DISCOVERING = 0;
+    // The blast radius has been calculated and is being saved
+    STATE_SAVING = 1;
+    // Determining which apps are within the blast radius
+    STATE_FINDING_APPS = 2;
+    // Everything is complete
+    STATE_DONE = 3;
+  }
+  
+  State state = 1;
+
+  uint32 numItems = 2;
+  uint32 NumEdges = 3;
+}
+
+message StartChangeRequest {
+  bytes changeUUID = 1;
+}
+
+message StartChangeResponse {
+  enum State {
+    // Snapshot is being taken
+    STATE_TAKING_SNAPSHOT = 0;
+    // Snapshot is being saved
+    STATE_SAVING_SNAPSHOT = 1;
+    // Everything is complete
+    STATE_DONE = 2;
+  }
+
+  State state = 1;
+
+  uint32 numItems = 2;
+  uint32 NumEdges = 3;
+}
+
+message EndChangeRequest {
+  bytes changeUUID = 1;
+}
+
+message EndChangeResponse {
+  enum State {
+    // Snapshot is being taken
+    STATE_TAKING_SNAPSHOT = 0;
+    // Snapshot is being saved
+    STATE_SAVING_SNAPSHOT = 1;
+    // Everything is complete
+    STATE_DONE = 2;
+  }
+
+  State state = 1;
+  
+  uint32 numItems = 2;
+  uint32 NumEdges = 3;
+}
+
 
 ////////////////
 // Onboarding //
