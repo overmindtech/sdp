@@ -337,7 +337,9 @@ message StartChangeResponse {
   uint32 NumEdges = 3;
 }
 
-message EndChangeRequest {}
+message EndChangeRequest {
+  bytes changeUUID = 1;
+}
 
 message EndChangeResponse {
   enum State {
