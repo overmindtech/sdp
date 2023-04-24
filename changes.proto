@@ -295,7 +295,9 @@ message DeleteChangeRequest {
 
 message DeleteChangeResponse {}
 
-message CalculateBlastRadiusRequest {}
+message CalculateBlastRadiusRequest {
+  bytes changeUUID = 1;
+}
 
 message CalculateBlastRadiusResponse {
   enum State {
@@ -315,7 +317,9 @@ message CalculateBlastRadiusResponse {
   uint32 NumEdges = 3;
 }
 
-message StartChangeRequest {}
+message StartChangeRequest {
+  bytes changeUUID = 1;
+}
 
 message StartChangeResponse {
   enum State {
