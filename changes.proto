@@ -41,7 +41,6 @@ service ChangesService {
   rpc GetApp(GetAppRequest) returns (GetAppResponse);
   rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
   rpc DeleteApp(DeleteAppRequest) returns (DeleteAppResponse);
-  rpc ListAppChanges(ListAppChangesRequest) returns (ListAppChangesResponse);
 
   rpc ListChanges(ListChangesRequest) returns (ListChangesResponse);
   rpc CreateChange(CreateChangeRequest) returns (CreateChangeResponse);
@@ -53,6 +52,7 @@ service ChangesService {
   rpc UpdateOnboarding(UpdateOnboardingRequest) returns (UpdateOnboardingResponse);
 
   rpc GetChangesHome(GetChangesHomeRequest) returns (GetChangesHomeResponse);
+  rpc ListAppChanges(ListAppChangesRequest) returns (ListAppChangesResponse);
 }
 
 //////////
