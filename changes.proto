@@ -60,8 +60,9 @@ service ChangesService {
 
   // Calculates the blast radius of a change using the
   // `affectedItemsBookmarkUUID` as the starting point. If the
-  // `affectedItemsBookmarkUUID` is blank, this will return an error. Executing
-  // this RPC will move the change to the `STATUS_DEFINING` state.
+  // `affectedItemsBookmarkUUID` is blank, this will return an error.
+  // Returns a stream of status updates. The response stream closes when all calculating has been done.
+  // Executing this RPC will move the Change to the `STATUS_DEFINING` state or return an error.
   rpc CalculateBlastRadius(CalculateBlastRadiusRequest) returns (stream CalculateBlastRadiusResponse);
 
   // Executing this RPC take a snapshot of the current blast radius and store it
