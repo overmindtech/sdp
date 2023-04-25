@@ -464,7 +464,7 @@ message UpdateOnboardingResponse {
 
 message SimulateChangeRequest {
   // The ID of the change to simulate
-  bytes ChangeUUID = 1;
+  bytes changeUUID = 1;
 }
 
 message SimulateChangeResponse {
