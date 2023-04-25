@@ -188,10 +188,19 @@ message ListAppChangesResponse {
 /////////////
 
 enum ChangeStatus {
+  // The change has been created, but the blast radius has not yet been
+  // calculated. The blast radius can be calculated using the
+  // `CalculateBlastRadius` RPC.
   STATUS_UNSPECIFIED = 0;
+  // The blast radius has been calculated, but the chnage has not yet started.
+  // The change can be started using the `StartChange` RPC.
   STATUS_DEFINING = 1;
+  // The change is in progress. The change can be ended using the `EndChange`
+  // RPC.
   STATUS_HAPPENING = 2;
+  // The change has been ended, but the results have not yet been processed.
   STATUS_PROCESSING = 3;
+  // The change has been ended and the results have been processed.
   STATUS_DONE = 4;
 }
 
@@ -214,12 +223,15 @@ message ChangeMetadata {
 
   // timestamp when this change was last updated
   google.protobuf.Timestamp updatedAt = 3;
+
+  // The current status of this change. This is changed by the lifecycle
+  // functions such as `StartChange` and `EndChange`.
+  ChangeStatus status = 4;
 }
 
 // user-supplied properties of this change
 message ChangeProperties {
-  // The current status of this change.
-  ChangeStatus status = 1;
+  reserved 1;
 
   // Short title for this change.
   // Example: "database upgrade"
