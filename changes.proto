@@ -77,6 +77,12 @@ service ChangesService {
   rpc GetOnboarding(GetOnboardingRequest) returns (GetOnboardingResponse);
   rpc UpdateOnboarding(UpdateOnboardingRequest) returns (UpdateOnboardingResponse);
 
+  // Simulates a change without the user actually having to do anything. The
+  // change specified in the request should be in the `STATUS_DEFINING` state.
+  // It will be moved to the `STATUS_DONE` state after the simulation is
+  // complete.
+  rpc SimulateChange(SimulateChangeRequest) returns (stream SimulateChangeResponse);
+
   rpc GetChangesHome(GetChangesHomeRequest) returns (GetChangesHomeResponse);
   rpc ListAppChanges(ListAppChangesRequest) returns (ListAppChangesResponse);
 }
@@ -454,6 +460,21 @@ message UpdateOnboardingRequest {
 
 message UpdateOnboardingResponse {
   changes.Onboarding onboarding = 1;
+}
+
+message SimulateChangeRequest {
+  // The ID of the change to simulate
+  bytes ChangeUUID = 1;
+}
+
+message SimulateChangeResponse {
+  // Whether the simulation is complete
+  bool done = 1;
+
+  // How far through the simulation process we are. This will be pretty
+  // apprioximate as it's not expected to take very long and is more to give the
+  // sense of progress than to be an accurate measure
+  uint32 percentComplete = 2;
 }
 
 //////////////////
