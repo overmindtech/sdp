@@ -197,17 +197,17 @@ enum ChangeStatus {
   // The change has been created, but the blast radius has not yet been
   // calculated. The blast radius can be calculated using the
   // `CalculateBlastRadius` RPC.
-  STATUS_UNSPECIFIED = 0;
+  CHANGE_STATUS_UNSPECIFIED = 0;
   // The blast radius has been calculated, but the chnage has not yet started.
   // The change can be started using the `StartChange` RPC.
-  STATUS_DEFINING = 1;
+  CHANGE_STATUS_DEFINING = 1;
   // The change is in progress. The change can be ended using the `EndChange`
   // RPC.
-  STATUS_HAPPENING = 2;
+  CHANGE_STATUS_HAPPENING = 2;
   // The change has been ended, but the results have not yet been processed.
-  STATUS_PROCESSING = 3;
+  CHANGE_STATUS_PROCESSING = 3;
   // The change has been ended and the results have been processed.
-  STATUS_DONE = 4;
+  CHANGE_STATUS_DONE = 4;
 }
 
 // a complete Change with machine-supplied and user-supplied values
@@ -337,16 +337,18 @@ message CalculateBlastRadiusRequest {
 
 message CalculateBlastRadiusResponse {
   enum State {
+    // No state has been specified
+    STATE_UNSPECIFIED = 0;
     // The blast radius is being calculated.
-    STATE_DISCOVERING = 0;
+    STATE_DISCOVERING = 1;
     // The blast radius has been calculated and is being saved
-    STATE_SAVING = 1;
+    STATE_SAVING = 2;
     // Determining which apps are within the blast radius
-    STATE_FINDING_APPS = 2;
+    STATE_FINDING_APPS = 3;
     // Everything is complete
-    STATE_DONE = 3;
+    STATE_DONE = 4;
   }
-  
+
   State state = 1;
 
   uint32 numItems = 2;
@@ -359,12 +361,14 @@ message StartChangeRequest {
 
 message StartChangeResponse {
   enum State {
+    // No state has been specified
+    STATE_UNSPECIFIED = 0;
     // Snapshot is being taken
-    STATE_TAKING_SNAPSHOT = 0;
+    STATE_TAKING_SNAPSHOT = 1;
     // Snapshot is being saved
-    STATE_SAVING_SNAPSHOT = 1;
+    STATE_SAVING_SNAPSHOT = 2;
     // Everything is complete
-    STATE_DONE = 2;
+    STATE_DONE = 3;
   }
 
   State state = 1;
@@ -379,20 +383,21 @@ message EndChangeRequest {
 
 message EndChangeResponse {
   enum State {
+    // No state has been specified
+    STATE_UNSPECIFIED = 0;
     // Snapshot is being taken
-    STATE_TAKING_SNAPSHOT = 0;
+    STATE_TAKING_SNAPSHOT = 1;
     // Snapshot is being saved
-    STATE_SAVING_SNAPSHOT = 1;
+    STATE_SAVING_SNAPSHOT = 2;
     // Everything is complete
-    STATE_DONE = 2;
+    STATE_DONE = 3;
   }
 
   State state = 1;
-  
+
   uint32 numItems = 2;
   uint32 NumEdges = 3;
 }
-
 
 ////////////////
 // Onboarding //
@@ -486,7 +491,6 @@ message SimulateChangeResponse {
 //////////////////
 // Changes Home //
 //////////////////
-
 
 ////////////////////////////
 // Requests and Responses //
