@@ -5,6 +5,8 @@ import "google/protobuf/timestamp.proto";
 
 package account;
 
+option go_package = "github.com/overmindtech/sdp-go;sdp";
+
 //                            _
 //       .::::::::::.        -(_)====u         .::::::::::.
 //     .::::''''''::::.                      .::::''''''::::.
