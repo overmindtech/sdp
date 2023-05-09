@@ -1,9 +1,8 @@
 syntax = "proto3";
 
+import "google/protobuf/duration.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/duration.proto";
-
 
 // _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
 //  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
@@ -26,6 +25,42 @@ enum Health {
   HEALTH_PENDING = 4; // Health state is transitioning, such as when something is first provisioned
 }
 
+// This message stores additional information on Edges (and edge-like constructs) to determine how configuration changes can impact
+// the linked items:
+// |   in  |  out  | result
+// |-------|-------|----------------------
+// | false | false | no change in any item can affect the other
+// | false | true  | a change to this item can affect its linked items
+// |       |       | example: a change to an EC2 instance can affect its DNS name (in the sense that other items depending on that DNS name will see the impact)
+// | true  | false | a change to linked items can affect this item
+// |       |       | example: changing the KMS key used by a DynamoDB table can impact the table, but no change to the table can impact the key
+// | true  | true  | changes on boths sides of the link can affect the other
+// |       |       | example: changes to both EC2 Instances and their volumes can affect the other side of the relation.
+message BlastPropagation {
+  // is true if changes on linked items can affect this item
+  bool in = 0;
+  // is true if changes on this item can affect linked items
+  bool out = 1;
+}
+
+// An annotated query to indicate potential linked items.
+message LinkedItemQuery {
+  // the query that would find linked items
+  Query query = 0;
+
+  // how configuration changes (i.e. the "blast") propagates over this link
+  BlastPropagation blastPropagation = 1;
+}
+
+// An annotated reference to list linked items.
+message LinkedItem {
+  // the linked item
+  Reference item = 0;
+
+  // how configuration changes (i.e. the "blast") propagates over this link
+  BlastPropagation blastPropagation = 1;
+}
+
 // This is the same as Item within the package with a couple of exceptions, no
 // real reason why this whole thing couldn't be modelled in protobuf though if
 // required. Just need to decide what if anything should remain private
@@ -44,10 +79,10 @@ message Item {
 
   // Not all items will have relatedItems we are are using a two byte
   // integer to save one byte integers for more common things
-  repeated Query linkedItemQueries = 16;
+  repeated LinkedItemQuery linkedItemQueries = 16;
 
   // Linked items
-  repeated Reference linkedItems = 17;
+  repeated LinkedItem linkedItems = 17;
 
   // (optional) Represents the health of the item. Only items that have a
   // clearly relevant health attribute should return a value for health
@@ -111,11 +146,20 @@ message Query {
   // What query should be passed to that method
   string query = 3;
 
-  // How deeply to link items. A value of 0 will mean that items are not linked.
-  // To resolve linked items "infinitely" simply set this to a high number, with
-  // the highest being 4,294,967,295. While this isn't truly *infinite*, chances
-  // are that it is effectively the same, think six degrees of separation etc.
-  uint32 linkDepth = 4;
+  // Defines how this query should behave when finding new items
+  message RecursionBehaviour {
+    // How deeply to link items. A value of 0 will mean that items are not linked.
+    // To resolve linked items "infinitely" simply set this to a high number, with
+    // the highest being 4,294,967,295. While this isn't truly *infinite*, chances
+    // are that it is effectively the same, think six degrees of separation etc.
+    uint32 linkDepth = 1;
+
+    // set to true to only follow links that propagate configuration change impact
+    bool followOnlyBlastPropagation = 2;
+  }
+
+  // Defines how this query should behave when finding new items
+  RecursionBehaviour recursionBehaviour = 4;
 
   // The scope for which we are requesting. To query all scopes use the the
   // wildcard '*'
@@ -330,6 +374,8 @@ message Reference {
 message Edge {
   Reference from = 1;
   Reference to = 2;
+
+  BlastPropagation blastPropagation = 3;
 }
 
 // ReverseLinksRequest Is used to find linked item queries for item with
@@ -355,7 +401,7 @@ message ReverseLinksRequest {
 message ReverseLinksResponse {
   // The item queries that should be executed in order to find items that link
   // to the requested item
-  repeated Query linkedItemQueries = 1;
+  repeated LinkedItemQuery linkedItemQueries = 1;
 
   // An error, if present. If not this will be an empty string
   string error = 2;
