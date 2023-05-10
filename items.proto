@@ -26,7 +26,10 @@ enum Health {
 }
 
 // This message stores additional information on Edges (and edge-like constructs) to determine how configuration changes can impact
-// the linked items:
+// the linked items.
+//
+//  Blast Propagation options:
+// |-------|-------|----------------------
 // |   in  |  out  | result
 // |-------|-------|----------------------
 // | false | false | no change in any item can affect the other
@@ -38,27 +41,27 @@ enum Health {
 // |       |       | example: changes to both EC2 Instances and their volumes can affect the other side of the relation.
 message BlastPropagation {
   // is true if changes on linked items can affect this item
-  bool in = 0;
+  bool in = 1;
   // is true if changes on this item can affect linked items
-  bool out = 1;
+  bool out = 2;
 }
 
 // An annotated query to indicate potential linked items.
 message LinkedItemQuery {
   // the query that would find linked items
-  Query query = 0;
+  Query query = 1;
 
   // how configuration changes (i.e. the "blast") propagates over this link
-  BlastPropagation blastPropagation = 1;
+  BlastPropagation blastPropagation = 2;
 }
 
 // An annotated reference to list linked items.
 message LinkedItem {
   // the linked item
-  Reference item = 0;
+  Reference item = 1;
 
   // how configuration changes (i.e. the "blast") propagates over this link
-  BlastPropagation blastPropagation = 1;
+  BlastPropagation blastPropagation = 2;
 }
 
 // This is the same as Item within the package with a couple of exceptions, no
