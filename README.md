@@ -194,6 +194,23 @@ Cancellation requests for specific scopes should use this subject to send their 
 
 This subject hosts the reverse linker, users should send a `ReverseLinksRequest` to this subject (with a response inbox). The reverse linker will the respond with a `ReverseLinksResponse`
 
+## Lifecycle APIs
+
+Some APIs drive server-side lifecycle/workflow state. This section captures their behavior.
+
+```mermaid
+---
+title: ChangeStatus
+---
+stateDiagram-v2
+    [*] --> UNSPECIFIED: CreateChange()
+    UNSPECIFIED --> DEFINING: CalculateBlastRadius()
+    DEFINING --> HAPPENING: StartChange()
+    HAPPENING --> PROCESSING: EndChange()
+    PROCESSING --> DONE: Server-side processing completes
+    DONE --> [*]
+```
+
 ## Errors
 
 Errors that are encountered as part of a request will be sent on the `errorSubject` which which will be named with the following convention: `return.error.{inbox}`. A given request may have zero or many errors, depending on the number of sources that are consulted in order to complete the request. If all sources fail, the responder will respond with a status of `ERROR`, however as long as some sources were able to complete, the responder will respond with `COMPLETE`.
