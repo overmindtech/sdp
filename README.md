@@ -206,8 +206,8 @@ stateDiagram-v2
     [*] --> UNSPECIFIED: CreateChange()
     UNSPECIFIED --> DEFINING: CalculateBlastRadius()
     DEFINING --> HAPPENING: StartChange()
-    HAPPENING --> PROCESSING: time passing?
-    PROCESSING --> DONE: EndChange()
+    HAPPENING --> PROCESSING: EndChange()
+    PROCESSING --> DONE: Server-side processing completes
     DONE --> [*]
 ```
 
