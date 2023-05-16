@@ -397,6 +397,9 @@ message ReverseLinksRequest {
 
   // The timeout for this request
   google.protobuf.Duration timeout = 2;
+
+  // set to true to only return links that propagate configuration change impact
+  bool followOnlyBlastPropagation = 3;
 }
 
 // ReverseLinks Represents linked item queries that can be run and will result
