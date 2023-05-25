@@ -40,6 +40,9 @@ service ChangesService {
   rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
   // Creates a new app
   rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
+  // Creates an app using just a URL as input. This automatically creates and
+  // sets the bookmark UUID, along with the url for display in the GUI
+  rpc CreateSimpleApp(CreateSimpleAppRequest) returns (CreateSimpleAppResponse);
   // Gets the details of an existing app
   rpc GetApp(GetAppRequest) returns (GetAppResponse);
   // Updates an existing app
@@ -65,8 +68,15 @@ service ChangesService {
   // Executing this RPC will move the Change to the `STATUS_DEFINING` state or return an error.
   rpc CalculateBlastRadius(CalculateBlastRadiusRequest) returns (stream CalculateBlastRadiusResponse);
 
-  rpc GetOnboarding(GetOnboardingRequest) returns (GetOnboardingResponse);
-  rpc UpdateOnboarding(UpdateOnboardingRequest) returns (UpdateOnboardingResponse);
+  // Executing this RPC take a snapshot of the current blast radius and store it
+  // in `systemBeforeSnapshotUUID` and then advance the status to
+  // `STATUS_HAPPENING`. It can only be called once per change.
+  rpc StartChange(StartChangeRequest) returns (stream StartChangeResponse);
+
+  // Takes the "after" snapshot, stores it in `systemAfterSnapshotUUID`, calculates
+  // the change diff and stores it as a list of DiffedItems and
+  // advances the change status to `STATUS_DONE`
+  rpc EndChange(EndChangeRequest) returns (stream EndChangeResponse);
 
   // Simulates a change without the user actually having to do anything. The
   // change specified in the request should be in the `STATUS_DEFINING` state.
@@ -74,161 +84,213 @@ service ChangesService {
   // complete.
   rpc SimulateChange(SimulateChangeRequest) returns (stream SimulateChangeResponse);
 
+  // Returns a list of change summaries, designed for use in the changes home page
   rpc GetChangesHome(GetChangesHomeRequest) returns (GetChangesHomeResponse);
+
+
+  rpc GetOnboarding(GetOnboardingRequest) returns (GetOnboardingResponse);
+  rpc UpdateOnboarding(UpdateOnboardingRequest) returns (UpdateOnboardingResponse);
+
+  // Lists all apps, designed for use in the apps home page
+  rpc ListHomeApps(ListHomeAppsRequest) returns (ListHomeAppsResponse);
+
+  // Lists all changes, designed for use in the changes home page
+  rpc ListHomeChanges(ListHomeChangesRequest) returns (ListHomeChangesResponse);
+
+  // Gets a summary of an app, used when a user clicks on a given app
+  rpc GetAppSummary(GetAppSummaryRequest) returns (GetAppSummaryResponse);
+
+  // Lists all changes affecting an app
   rpc ListAppChanges(ListAppChangesRequest) returns (ListAppChangesResponse);
 
+  // Lists all changes affecting an app, returning only a summary of each change
+  // rather than the full details
+  rpc ListAppChangesSummary(ListAppChangesSummaryRequest) returns (ListAppChangesSummaryResponse);
 
-  /////////////////////////////////////////////////////////////////////////////
-  // View Specifics
-  /////////////////////////////////////////////////////////////////////////////
+  // This sets the items that are changing in a given change, and updates the
+  // blast radius. In the backend this will convert the references to GET
+  // requests, save them to a bookmar, and set this as the
+  // changingItemsBookmarkUUID in the change itself before triggering a blast
+  // radius calculation
+  rpc UpdateChangingItems(UpdateChangingItemsRequest) returns (stream CalculateBlastRadiusResponse);
 
-  ///// Home View
-  rpc GetHomeApps() returns (repeated AppSummary);
-  rpc GetHomeChanges() returns (repeated ChangeSummary);
+  // Returns a list of apps that are affected by this change. This is calculated
+  // by looking at the blast radius snapshot and finding all apps that have
+  // items in the snapshot.
+  rpc GetAffectedApps(GetAffectedAppsRequest) returns (GetAffectedAppsResponse);
 
-  ///// App View - Main
-  rpc GetAppSummary(AppId) returns (AppSummary);
-  rpc GetChangesAffectingApp(AppId) returns (repeated ChangeSummary);
+  // Gets the diff summary for all items that were planned to change as part of
+  // this change. This includes the high level details of the item, and the
+  // status (e.g. changed, deleted) but not the diff itself
+  rpc ListChangingItemsSummary(ListChangingItemsSummaryRequest) returns (ListChangingItemsSummaryResponse);
 
-  ///// Create Change - CreateChange
-  // see CRUD
-  // Select Types
-  // rpc GetItemTypes() returns (repeated string) // already exists in in sdp-js
-  // "Select the items you want to change";
-  // Executing this RPC will move the Change to the `STATUS_DEFINING` state or return an error.
-  // returns a stream of status updates for a progress "bar"
-  rpc UpdateChangingItems(uuid changeUUID, repeated Reference) returns (stream CalculateBlastRadiusResponse);
+  // Gets the audit log for a given change
+  rpc GetChangeAuditLog(GetChangeAuditLogRequest) returns (GetChangeAuditLogResponse);
 
-  // Review Change - Change Details
-  // rpc GetChangeSummary(ChangeId) returns (ChangeSummary);
-  // use rpc GetChange() to get all data
-
-  // Review Change - Affected Items
-  // for "You will change": render queries from GetBookmark(changingItemsBookmarkUUID)
-  // the queries will all be GET queries with linkdepth=0
-
-  // for Potential Blast Radius - Apps
-  rpc GetAffectedApps(uuid changeUUID) returns (repeated AppSummary);
-  // this will take a while, running CalculateBlastRadius in the background
-
-  // for Potential Blast Radius - Items: look at the gateway session results from loading the blastRadiusSnapshotUUID into the graph
-
-  // for the Graph: load/construct from the blastRadiusSnapshotUUID
-
-  // Review Change - "Start Change"
-  // Executing this RPC take a snapshot of the current blast radius and store it
-  // in `systemBeforeSnapshotUUID` and then advance the status to
-  // `STATUS_HAPPENING`. It can only be called once per change.
-  rpc StartChange(StartChangeRequest) returns (stream StartChangeResponse);
-
-  // Review Change - Complete Review
-  // Takes the "after" snapshot, stores it in `systemAfterSnapshotUUID`, calculates
-  // the change diff and stores it as a list of DiffedItems and
-  // advances the change status to `STATUS_DONE`
-  rpc EndChange(EndChangeRequest) returns (stream EndChangeResponse);
-
-  ///// Change View
-
-  // Change will always be in `STATUS_DONE`
-  // use rpc `GetChange()` to get all attribute data
-
-  // for "Items you changed": item status of the results of the queries in
-  // `changingItemsBookmarkUUID` as captured in the `systemAfterSnapshotUUID`
-  rpc GetChangedItemsStatus(changeID) returns(repeated ItemStatus);
-
-  // Change Timeline (formerly known as Process Tree)
-  rpc GetChangeAuditLog(changeID) returns (repeated ChangeAuditLogEntry);
-
-  // Affected apps
-  // see `rpc GetAffectedApps(uuid changeUUID) returns (repeated AppSummary);` above
-
-  // view in changes graph link
-  // use `systemAfterSnapshotUUID` from the change for seeding the graph
-
-  ///// Changes Graph
-  // items you changed
-  // use rpc `GetChangedItemsStatus(changeID)`
-
-  // graph, sidebar and attributes data
-  rpc GetDiffedGraph(changeId) returns (GetDiffedGraphResponse);
+  // Gets the full diff of everything that changed as part of this "change".
+  // This includes all items and also edges between them
+  rpc GetDiff(GetDiffRequest) returns (GetDiffResponse);
 }
 
-message GetDiffedGraphResponse {
-  repeated DiffedItem diffedItem=1;
-  repeated Edge afterEdge=2;
+message GetDiffRequest {
+  bytes changeUUID = 1;
 }
 
-message DiffedItem {
-  string type = 1;
-  string uniqueAttributeValue = 2;
-  string scope = 5;
-  ItemDiffStatus changed; // Unchanged, Created, Updated, Deleted
-
-  Item before
-  Item after
+message GetDiffResponse {
+  repeated ItemDiff items = 1;
+  repeated Edge edges = 2;
 }
-// alternatly we could go full item history timeline,
-// but we decided that would be a step too far for the time
-// allotted until the AWS Summit in two weeks
-// message ItemWithHistory {
-//   string type = 1;
-//   string uniqueAttributeValue = 2;
-//   string scope = 5;
 
-//   message ItemHistoryEntry {
-//     ItemAttributes attributes = 3;
-//     Metadata metadata = 4;
-//     repeated LinkedItemQuery linkedItemQueries = 16;
-//     repeated LinkedItem linkedItems = 17;
-//     optional Health health = 18;
-//   }
+message GetChangeAuditLogRequest {
+  bytes changeUUID = 1;
+}
 
-//   repeated ItemHistoryEntry
-// }
+message GetChangeAuditLogResponse {
+  repeated ChangeAuditLogEntry entries = 1;
+}
 
-message ItemStatus {
-  string type;
-  string name;
-  HealthStatus health; // Pending, Good, Warning, Error
-  ItemDiffStatus changed; // Unchanged, Created, Updated, Deleted
+message ListChangingItemsSummaryRequest {
+  bytes changeUUID = 1;
+}
+
+message ListChangingItemsSummaryResponse {
+  repeated ItemDiffSummary items = 1;
+}
+
+message GetAffectedAppsRequest {
+  bytes changeUUID = 1;
+}
+
+message GetAffectedAppsResponse {
+  repeated changes.AppSummary apps = 1;
+}
+
+message UpdateChangingItemsRequest {
+  // The change to update
+  bytes changeUUID = 1;
+
+  // References to the items that are changing
+  repeated Reference changingItems = 2;
+}
+
+message ListAppChangesSummaryRequest {
+  bytes appUUID = 1;
+}
+
+message ListAppChangesSummaryResponse {
+  repeated ChangeSummary changes = 1;
+}
+
+message GetAppSummaryRequest {
+  bytes UUID = 1;
+}
+
+message GetAppSummaryResponse {
+  changes.AppSummary app = 1;
+}
+
+message ListHomeChangesRequest {}
+message ListHomeChangesResponse {
+  repeated ChangeSummary changes = 1;
+}
+
+message ListHomeAppsRequest {}
+message ListHomeAppsResponse {
+  repeated AppSummary apps = 1;
+}
+
+message ItemDiffSummary {
+  // Editor's node: I'm using references here rather than just directly
+  // embedding the name, uniqueAttributeValue and scope becuase the reference
+  // structs have some methods on them which it might be useful to use (like
+  // `String()`), and that some methods will accept a reference as a parameter
+  // and it doesn't make sense to have to re-construct one if you already have
+  // all the required data
+  
+  // A reference to the item that this diff is related to
+  items.Reference item = 1;
+  
+  // The staus of the item
+  ItemDiffStatus status = 4;
+
+  // The health of the item currently (as opposed to before the change)
+  items.Health healthAfter = 5;
+}
+
+enum ItemDiffStatus {
+  ITEM_DIFF_STATUS_UNSPECIFIED = 0;
+  ITEM_DIFF_STATUS_UNCHANGED = 1;
+  ITEM_DIFF_STATUS_CREATED = 2;
+  ITEM_DIFF_STATUS_UPDATED = 3;
+  ITEM_DIFF_STATUS_DELETED = 4;
+}
+
+message ItemDiff {
+  // A reference to the item that this diff is related to
+  items.Reference item = 1;
+  
+  // The staus of the item
+  ItemDiffStatus status = 2;
+
+  items.Item before = 3;
+  items.Item after = 4;
 }
 
 message ChangeAuditLogEntry {
-  ChangeStatus status;
-  string statusMessage;
-  timestamp happenedAt;
-  string actorName;
-}
+  // The status that the change was in when this event happened
+  ChangeStatus status = 1;
 
-message AppsSummary {
-  bytes UUID = 1;
-  string name = 2;
-  string description = 3;
-  int32 numAffectedItems = 4;
-  int32 numChangesAffecting = 5;
-  google.protobuf.Timestamp createdAt = 6;
-  string creatorName = 7;
-  string creatorLink = 8;
-  string apiEndpoint = 9;
-  bytes bookmarkUUID = 10;
-}
+  // The message that describes this event
+  string statusMessage = 2;
 
-message ChangeSummary {
-  bytes UUID = 1;
-  string title = 2;
-  ChangeStatus status = 3;
-  string ticketLink = 4;
-  google.protobuf.Timestamp createdAt = 5;
-  string creatorName = 6;
-  string creatorLink = 7;
-  int32 numAffectedApps = 8;
-  int32 numAffectedItems = 9;
-}
+  // The time that this event happened
+  google.protobuf.Timestamp happenedAt = 3;
 
+  // The name of the user that performed this action
+  string actorName = 4;
+}
 
 //////////
 // Apps //
 //////////
+
+message AppSummary {
+  // unique id to identify this app
+  bytes UUID = 1;
+
+  // Name of this App
+  // Example: "Contoso Manager"
+  string name = 2;
+
+  // Description of this App Example: "The Contoso Manager manages the contoso.
+  // Notable components are storage, compute and the web. Talk to Jimmy or Susan
+  // on 555-CM LEAD for more details."
+  string description = 3;
+  
+  // number of changes that have affected this app
+  int32 numChangesAffecting = 4;
+  
+  // the number of items that make up this app
+  int32 numItems = 5;
+
+  // timestamp when this app was created
+  google.protobuf.Timestamp createdAt = 6;
+
+  // The name of the person that created the app
+  string creatorName = 7;
+
+  // I'm going to omit the creatorLink for now, since it's not clear what it
+  // should be. It could be a link to the user's profile page, but that's not
+  // really a thing yet
+  // string creatorLink = 8;
+
+  // the url for this app. This will only be set if the app was created using
+  // the `CreateSimpleApp` RPC.
+  string url = 9;
+
+  // UUID of the bookmark query that returns all items in this app
+  bytes bookmarkUUID = 10;
+}
 
 // a complete App with machine-supplied and user-supplied values
 message App {
@@ -251,15 +313,23 @@ message AppMetadata {
   google.protobuf.Timestamp updatedAt = 3;
 
   // number of items that are part of the app (results of bookmarkUUID)
-  // TODO: store/cache in database
   int32 numItems = 4;
 
   // the last time that the list of items was updated
   google.protobuf.Timestamp itemsLastUpdated = 5;
 
   // number of changes that have affected this app
-  // TODO: store/cache in database
-  int32 numChanges = 6;
+  int32 numChangesAffecting = 6;
+
+  // the number of items that make up this app
+  int32 numItems = 8;
+
+  // the name of the person that created the app
+  string creatorName = 7;
+
+  // the url for this app. This will only be set if the app was created using
+  // the `CreateSimpleApp` RPC.
+  string url = 9;
 }
 
 // user-supplied properties of this app
@@ -268,8 +338,9 @@ message AppProperties {
   // Example: "Contoso Manager"
   string name = 1;
 
-  // Description of this App
-  // Example: "The Contoso Manager manages the contoso. Notable components are storage, compute and the web. Talk to Jimmy or Susan on 555-CM LEAD for more details."
+  // Description of this App Example: "The Contoso Manager manages the contoso.
+  // Notable components are storage, compute and the web. Talk to Jimmy or Susan
+  // on 555-CM LEAD for more details."
   string description = 2;
 
   // UUID of the bookmark query that returns all items in this app
@@ -293,6 +364,19 @@ message CreateAppRequest {
 }
 
 message CreateAppResponse {
+  changes.App app = 1;
+}
+
+message CreateSimpleAppRequest {
+  // The name of the app
+  string name = 1;
+  // The description of the app
+  string description = 2;
+  // The URL of the app
+  string url = 3;
+}
+
+message CreateSimpleAppResponse {
   changes.App app = 1;
 }
 
@@ -329,7 +413,7 @@ message ListAppChangesRequest {
 }
 
 message ListAppChangesResponse {
-  // The list of changes rel
+  // The list of changes related to an app
   repeated changes.Change changes = 1;
 }
 
@@ -352,6 +436,40 @@ enum ChangeStatus {
   CHANGE_STATUS_PROCESSING = 3;
   // The change has been ended and the results have been processed.
   CHANGE_STATUS_DONE = 4;
+}
+
+// A smaller summary of a change
+message ChangeSummary {
+  // unique id to identify this change
+  bytes UUID = 1;
+
+  // Short title for this change.
+  // Example: "database upgrade"
+  string title = 2;
+
+  // The current status of this change. This is changed by the lifecycle
+  // functions such as `StartChange` and `EndChange`.
+  ChangeStatus status = 3;
+
+  // Link to the ticket for this change.
+  // Example: "http://jira.contoso-engineering.com/browse/CM-1337"
+  string ticketLink = 4;
+
+  // timestamp when this change was created
+  google.protobuf.Timestamp createdAt = 5;
+
+  // The name of the user that created the change
+  string creatorName = 6;
+
+  // I'm going to omit the creatorLink for now, since it's not clear what it
+  // should be
+  // string creatorLink = 7;
+
+  // The number of apps that will be affected by this change
+  int32 numAffectedApps = 8;
+
+  // The number of items in the blast radius if this change 
+  int32 numAffectedItems = 9;
 }
 
 // a complete Change with machine-supplied and user-supplied values
@@ -378,29 +496,52 @@ message ChangeMetadata {
   // functions such as `StartChange` and `EndChange`.
   ChangeStatus status = 4;
 
-  // view changes by items
-  int32 numUnchangedItems
-  int32 numCreatedItems
-  int32 numChangedItems
-  int32 numDeletedItems
+  // The name of the user that created the change
+  string creatorName = 5;
 
-  // Change View - view changes by item diffs
-  // descoped
-  // int32 numUnchangedDiffs
-  // int32 numCreatedDiffs
-  // int32 numChangedDiffs
-  // int32 numDeletedDiffs
+  // The number of apps that will be affected by this change
+  int32 numAffectedApps = 6;
 
-  // Change View - Health Summary
-  message HealthStats {
-    int32 base;
-    int32 added;
-    int32 removed;
+  // The number of items in the blast radius if this change 
+  int32 numAffectedItems = 7;
+
+  // I'm going to omit the creatorLink for now, since it's not clear what it
+  // should be
+  // string creatorLink = 7;
+
+  // The number of items within the blast radius that were not affected by this
+  // change
+  int32 numUnchangedItems = 8;
+
+  // The number of items that were created as part of this change
+  int32 numCreatedItems = 9;
+
+  // The number of items that were updated as part of this change
+  int32 numUpdatedItems = 10;
+
+  // The number of items that were deleted as part of this change
+  int32 numDeletedItems = 11;
+
+  // Represents the current state of a given health state, and the amount that
+  // it has changed. This doesn't just look at the change in total number of
+  // items, but also the number of items that have been added and removed, even
+  // if they were to add to the same number
+  message HealthChange {
+    // The number of items that were added to this health state as part of the
+    // change
+    int32 added = 1;
+    // The number of items that were removed them this health state as part of
+    // the change
+    int32 removed = 2;
+    // The final number of items that were in this health state
+    int32 finalTotal = 3;
   }
-  HealthStats numPendingHealths
-  HealthStats numGoodHealths
-  HealthStats numWarningHealths
-  HealthStats numErrorHealths
+
+  HealthChange UnknownHealthChange = 12;
+  HealthChange OkHealthChange = 13;
+  HealthChange WarningHealthChange = 14;
+  HealthChange ErrorHealthChange = 15;
+  HealthChange PendingHealthChange = 16;
 }
 
 // user-supplied properties of this change
@@ -522,6 +663,9 @@ message CalculateBlastRadiusResponse {
   uint32 numItems = 2;
   uint32 numEdges = 3;
 
+  // If we wanted to display the graph as it loads (which would be pretty cool)
+  // we could do something like the below. For now it's out of scope for AWS
+  // summit as we're not going to get the time
   // oneof response_type {
   //   Item newItem = 2; // A new item that has been discovered
   //   Edge newEdge = 3; // A new edge between two items
