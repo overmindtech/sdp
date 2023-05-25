@@ -3,6 +3,7 @@ syntax = "proto3";
 import "google/protobuf/duration.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
+import "responses.proto";
 
 // _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
 //  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
@@ -190,6 +191,14 @@ message Query {
   // query including all linking needs to be done in 10s, not 10s for *each*
   // query
   google.protobuf.Duration timeout = 8;
+}
+
+message QueryResponse {
+  oneof response_type {
+    Item newItem = 2; // A new item that has been discovered
+    Response response = 3; // Status update
+    QueryError error = 4; // An error has been encountered
+  }
 }
 
 // QueryStatus informs the client of status updates of all queries running in this session.
