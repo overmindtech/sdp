@@ -109,7 +109,7 @@ service ChangesService {
 
   // This sets the items that are changing in a given change, and updates the
   // blast radius. In the backend this will convert the references to GET
-  // requests, save them to a bookmar, and set this as the
+  // requests, save them to a bookmark, and set this as the
   // changingItemsBookmarkUUID in the change itself before triggering a blast
   // radius calculation
   rpc UpdateChangingItems(UpdateChangingItemsRequest) returns (stream CalculateBlastRadiusResponse);
