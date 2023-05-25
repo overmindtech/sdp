@@ -208,13 +208,13 @@ message ItemDiffSummary {
   // all the required data
   
   // A reference to the item that this diff is related to
-  items.Reference item = 1;
+  Reference item = 1;
   
   // The staus of the item
   ItemDiffStatus status = 4;
 
   // The health of the item currently (as opposed to before the change)
-  items.Health healthAfter = 5;
+  Health healthAfter = 5;
 }
 
 enum ItemDiffStatus {
@@ -227,13 +227,13 @@ enum ItemDiffStatus {
 
 message ItemDiff {
   // A reference to the item that this diff is related to
-  items.Reference item = 1;
+  Reference item = 1;
   
   // The staus of the item
   ItemDiffStatus status = 2;
 
-  items.Item before = 3;
-  items.Item after = 4;
+  Item before = 3;
+  Item after = 4;
 }
 
 message ChangeAuditLogEntry {
@@ -312,8 +312,8 @@ message AppMetadata {
   // timestamp when this app was last updated
   google.protobuf.Timestamp updatedAt = 3;
 
-  // number of items that are part of the app (results of bookmarkUUID)
-  int32 numItems = 4;
+  // items that are part of the app
+  repeated Reference items = 4;
 
   // the last time that the list of items was updated
   google.protobuf.Timestamp itemsLastUpdated = 5;
