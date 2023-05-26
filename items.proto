@@ -3,7 +3,6 @@ syntax = "proto3";
 import "google/protobuf/duration.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
-import "responses.proto";
 
 // _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
 //  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
@@ -191,14 +190,20 @@ message Query {
   // query including all linking needs to be done in 10s, not 10s for *each*
   // query
   google.protobuf.Duration timeout = 8;
-}
 
-message QueryResponse {
-  oneof response_type {
-    Item newItem = 2; // A new item that has been discovered
-    Response response = 3; // Status update
-    QueryError error = 4; // An error has been encountered
-  }
+  // The below fields are used when a query is made over the NATS network and
+  // the requester needs to specify where the results of that query should be
+  // sent. These subjects will be used in addition to the defaults and are
+  // usually just dynamically generated inboxes
+
+  // Subject that items resulting from the query should be sent to
+  string itemSubject = 16;
+
+  // Subject that both interim and final responses should be sent to
+  string responseSubject = 17;
+
+  // Subject that errors will be sent to
+  string errorSubject = 18;
 }
 
 // QueryStatus informs the client of status updates of all queries running in this session.

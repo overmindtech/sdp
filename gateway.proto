@@ -57,8 +57,6 @@ message GatewayRequest {
         // load and execute a bookmark into the current state
         LoadBookmark loadBookmark = 15;
 
-        // BlastRadiusBookmark calculateBlastRadius = 16;
-        // TODO: implement?
         // // cancel the loading of a Bookmark
         // CancelLoadBookmark cancelLoadBookmark = ??;
         // // undo the loading of a Bookmark
