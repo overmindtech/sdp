@@ -338,7 +338,7 @@ message AppProperties {
   // Example: "Contoso Manager"
   string name = 1;
 
-  // Description of this App Example: "The Contoso Manager manages the contoso.
+  // Description of this App. Example: "The Contoso Manager manages the contoso.
   // Notable components are storage, compute and the web. Talk to Jimmy or Susan
   // on 555-CM LEAD for more details."
   string description = 2;
