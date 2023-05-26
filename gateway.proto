@@ -56,7 +56,7 @@ message GatewayRequest {
         StoreBookmark storeBookmark = 14;
         // load and execute a bookmark into the current state
         LoadBookmark loadBookmark = 15;
-        // TODO: implement?
+
         // // cancel the loading of a Bookmark
         // CancelLoadBookmark cancelLoadBookmark = ??;
         // // undo the loading of a Bookmark
