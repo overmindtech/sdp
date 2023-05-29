@@ -156,31 +156,9 @@ All sources should listen on a subject named with the above naming conventions f
 
 Dots are valid in scope names and should be used for logical serration as above.
 
-### `return.response.{inbox}`
+### `query.{uuid}`
 
-Responses to a request should be sent on this topic, with `{inbox}` being replaced with a randomly generated string. This is specified in the `Query` itself. e.g.
-
-```json
-{
-  "type": "person",
-  "method": 0,
-  "query": "Dylan",
-  "linkDepth": 4,
-  "scope": "global",
-  "UUID": "bcee962c-ca60-479b-8a96-ab970d878392",
-  "itemSubject": "return.item._INBOX.712ab421", // Items will be sent here
-  "responseSubject": "return.response._INBOX.978af6de", // Responses will be sent here
-  "errorSubject": "return.error._INBOX.48aaf4ba" // Responses will be sent here
-}
-```
-
-### `return.item.{inbox}`
-
-Items should be sent to this topic as part of a request, with `{inbox}` being replaced with a randomly generated string. This is specified in the `Query` itself as above
-
-### `return.error.{inbox}`
-
-Errors that are encountered as part of the request will ne sent on this subject, with `{inbox}` being replaced with a randomly generated string. This is specified in the `Query` itself as above
+All items, errors and status updates get sent over a subject named after the Query's UUID. This UUID should be in five groups separated by hyphens, in the form 8-4-4-4-12 for a total of 36 characters, with all letters being lower case e.g. `bcee962c-ca60-479b-8a96-ab970d878392` See `QueryResponse`.
 
 ### `cancel.all`
 
@@ -213,11 +191,11 @@ stateDiagram-v2
 
 ## Errors
 
-Errors that are encountered as part of a request will be sent on the `errorSubject` which which will be named with the following convention: `return.error.{inbox}`. A given request may have zero or many errors, depending on the number of sources that are consulted in order to complete the request. If all sources fail, the responder will respond with a status of `ERROR`, however as long as some sources were able to complete, the responder will respond with `COMPLETE`.
+Errors that are encountered as part of a request will be sent as `QueryResult` on the `query.{uuid}` subject. A given request may have zero or many errors, depending on the number of sources that are consulted in order to complete the request. If all sources fail, the responder will respond with a status of `ERROR`, however as long as some sources were able to complete, the responder will respond with `COMPLETE`.
 
 It is up to the client to determine how best to surface errors to the user depending on the use case.
 
-Sources that encountered errors will send errors on the `errorSubject` of type: `QueryError`. The structure of these errors is:
+Sources that encountered errors will send errors on the `query.{uuid}` subject of type: `QueryError`. The structure of these errors is:
 
 * `UUID`: The UUID of the item request that caused the error
 * `errorType`: The error type (enum)
@@ -230,16 +208,6 @@ Sources that encountered errors will send errors on the `errorSubject` of type: 
 * `sourceName`: The name of the source that raised the error
 * `itemType`: The type of item that was being queried
 * `responderName`: The responder which encountered the error
-
-### Deprecated Subjects
-
-#### `items.all`
-
-This has been removed in favour of the wildcard subscription to `return.item.>`
-
-#### `items.{scope}`
-
-This has been removed in favour of the wildcard subscription to `return.item.>`. Not that this doesn't allow for subscribing to items from only one scope since the inboxes are random, but I can't currently see a use for that anyway.
 
 ## Building
 
