@@ -36,6 +36,9 @@ service BookmarksService {
     rpc GetBookmark(GetBookmarkRequest) returns (GetBookmarkResponse);
     rpc UpdateBookmark(UpdateBookmarkRequest) returns (UpdateBookmarkResponse);
     rpc DeleteBookmark(DeleteBookmarkRequest) returns (DeleteBookmarkResponse);
+
+    // a helper method to find all affected apps for a given blast radius snapshot
+    rpc GetAffectedBookmarks(GetAffectedBookmarksRequest) returns (GetAffectedBookmarksResponse);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -120,4 +123,16 @@ message DeleteBookmarkRequest {
 }
 
 message DeleteBookmarkResponse {
+}
+
+message GetAffectedBookmarksRequest {
+    // the snapshot to consider
+    bytes snapshotUUID = 1;
+    // the bookmarks to filter
+    repeated bytes bookmarkUUIDs = 2;
+}
+
+message GetAffectedBookmarksResponse {
+    // the bookmarks that intersected with the snapshot
+    repeated bytes bookmarkUUIDs = 1;
 }

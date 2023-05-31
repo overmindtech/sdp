@@ -206,10 +206,10 @@ message ItemDiffSummary {
   // `String()`), and that some methods will accept a reference as a parameter
   // and it doesn't make sense to have to re-construct one if you already have
   // all the required data
-  
+
   // A reference to the item that this diff is related to
   Reference item = 1;
-  
+
   // The staus of the item
   ItemDiffStatus status = 4;
 
@@ -228,7 +228,7 @@ enum ItemDiffStatus {
 message ItemDiff {
   // A reference to the item that this diff is related to
   Reference item = 1;
-  
+
   // The staus of the item
   ItemDiffStatus status = 2;
 
@@ -266,10 +266,10 @@ message AppSummary {
   // Notable components are storage, compute and the web. Talk to Jimmy or Susan
   // on 555-CM LEAD for more details."
   string description = 3;
-  
+
   // number of changes that have affected this app
   int32 numChangesAffecting = 4;
-  
+
   // the number of items that make up this app
   int32 numItems = 5;
 
@@ -468,7 +468,7 @@ message ChangeSummary {
   // The number of apps that will be affected by this change
   int32 numAffectedApps = 8;
 
-  // The number of items in the blast radius if this change 
+  // The number of items in the blast radius if this change
   int32 numAffectedItems = 9;
 }
 
@@ -502,7 +502,7 @@ message ChangeMetadata {
   // The number of apps that will be affected by this change
   int32 numAffectedApps = 6;
 
-  // The number of items in the blast radius if this change 
+  // The number of items in the blast radius if this change
   int32 numAffectedItems = 7;
 
   // I'm going to omit the creatorLink for now, since it's not clear what it
