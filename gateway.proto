@@ -2,10 +2,8 @@ syntax = "proto3";
 
 package gateway;
 
-import "bookmarks.proto";
 import "items.proto";
 import "responses.proto";
-import "snapshots.proto";
 import "google/protobuf/duration.proto";
 
 
@@ -131,9 +129,13 @@ message StoreBookmark {
 message BookmarkStoreResult {
     bool success = 1;
     string errorMessage = 2;
-    bookmarks.Bookmark bookmark = 3;
+
+    // Previously contained the entire bookmark, instead we now only send the ID
+    reserved 3;
     // a correlation ID to match up requests and responses. this field returns the contents of the request's msgID
     bytes msgID = 4;
+    // UUID of the newly created bookmark
+    bytes bookmarkID = 5;
 }
 
 // Ask the gateway to load the specified bookmark into the current state.
@@ -170,9 +172,13 @@ message StoreSnapshot {
 message SnapshotStoreResult {
     bool success = 1;
     string errorMessage = 2;
-    snapshots.Snapshot snapshot = 3;
+    
+    // Previously contained the entire snapshot, instead we now only send the ID
+    reserved 3; 
+
     // a correlation ID to match up requests and responses. this field returns the contents of the request's msgID
     bytes msgID = 4;
+    bytes snapshotID = 5; // The UUID of the newly stored snapshot
 }
 
 // Ask the gateway to load the specified snapshot into the current state.
