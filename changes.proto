@@ -468,7 +468,7 @@ message ChangeSummary {
   // The number of apps that will be affected by this change
   int32 numAffectedApps = 8;
 
-  // The number of items in the blast radius if this change
+  // The number of items in the blast radius of this change
   int32 numAffectedItems = 9;
 }
 
@@ -747,6 +747,9 @@ message Onboarding {
 message OnboardingMetadata {
   // timestamp when this onboarding info was created
   google.protobuf.Timestamp created = 2;
+
+  // whether or not the user already has an AWS source configured
+  bool hasAwsSource = 3;
 }
 
 // user-supplied properties of this onboarding info
