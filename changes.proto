@@ -719,7 +719,7 @@ message EndChangeResponse {
 ////////////////
 // Onboarding //
 ////////////////
-// 
+
 enum OnboardingStatus {
   ONBOARDING_STATUS_UNSPECIFIED = 0;
   ONBOARDING_STATUS_ADD_AWS_ACCOUNT = 1;
