@@ -27,7 +27,7 @@ service ApiKeyService {
     // allows AUth0 to actually generate an access token
     rpc CreateAPIKey(CreateAPIKeyRequest) returns (stream CreateAPIKeyResponse);
     rpc GetAPIKey(GetAPIKeyRequest) returns (GetAPIKeyResponse);
-    rpc ListAPIKeys(ListAPIKeysRequest) returns (ListAPIoKeysResponse);
+    rpc ListAPIKeys(ListAPIKeysRequest) returns (ListAPIKeysResponse);
     rpc DeleteAPIKey(DeleteAPIKeyRequest) returns (DeleteAPIKeyResponse);
 
     // Exchanges an Overmind API key for an Oauth access token. That token can
