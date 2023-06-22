@@ -36,15 +36,15 @@ service ApiKeyService {
 
     // Callback URL
     //
-    // There will also need to be a normal HTTP endpoint (not connect) that
+    // There will also need to be a normal HTTP endpoint (not Connect) that
     // handles the callbacks from Auth0 as these aren't in a format that Connect
     // supports. We will need to host an endpoint with a URL such as:
     //
-    //     /apikey/callback/{UUID}
+    //     /apikey/oauthcallback
     //
     // A request might then look like:
     //
-    //     GET /apikey/callback/{uuid}?code={authorizationCode}&state=xyzABC123
+    //     GET /apikey/oauthcallback?code={authorizationCode}&state={uuid}
     //
     // We would then take the code and pass it to the /oauth/token endpoint at
     // Auth0 and get an access token and a refresh token. We can then save these
@@ -129,9 +129,14 @@ message CreateAPIKeyResponse {
     APIKey key = 1;
 
     // The URL that the user should visit in order to authorize the newly
-    // created key. This will allow Auth0 to generate the access and refresh
-    // tokens and pass them to the API server. The user will be redirected back to the frontend once
-    // this process is complete
+    // created key. This will allow Auth0 to generate a code that will be passed
+    // to the API server via a callback. This code is then exchanged by the API
+    // server for an access token and refresh token. The user will be redirected
+    // back to the frontend once this process is complete.
+    //
+    // The authorizeURL will contain a `state` paremeter which is a UUID that
+    // can be used to look up the API key in the database once the callback is
+    // received
     string authorizeURL = 2;
 }
 
