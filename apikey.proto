@@ -23,8 +23,8 @@ option go_package = "github.com/overmindtech/sdp-go;sdp";
 //
 service ApiKeyService {
     // Creates an API key, pending access token generation from Auth0. The key
-    // cannot be used until the user has been redirected to the given URLwhich
-    // allows AUth0 to actually generate an access token
+    // cannot be used until the user has been redirected to the given URL which
+    // allows Auth0 to actually generate an access token
     rpc CreateAPIKey(CreateAPIKeyRequest) returns (stream CreateAPIKeyResponse);
     rpc GetAPIKey(GetAPIKeyRequest) returns (GetAPIKeyResponse);
     rpc ListAPIKeys(ListAPIKeysRequest) returns (ListAPIKeysResponse);
@@ -37,7 +37,7 @@ service ApiKeyService {
     // Callback URL
     //
     // There will also need to be a normal HTTP endpoint (not connect) that
-    // handles the callbacks from Auth0as these aren't in a format that Connect
+    // handles the callbacks from Auth0 as these aren't in a format that Connect
     // supports. We will need to host an endpoint with a URL such as:
     //
     //     /apikey/callback/{UUID}
@@ -111,17 +111,6 @@ message APIKeyProperties {
 // API Calls //
 ///////////////
 
-message ExchangeKeyForTokenRequest {
-    // The API Key that you want to exchange for an Oauth access token
-    string apiKey = 1;
-}
-
-message ExchangeKeyForTokenResponse {
-    // The access token that can now be use to authenticate to Overmind and its
-    // APIs
-    string accessToken = 1;
-}
-
 message CreateAPIKeyRequest {
     // The name of the key to create
     string name = 1;
@@ -139,7 +128,7 @@ message CreateAPIKeyResponse {
 
     // The URL that the user should visit in order to authorize the newly
     // created key. This will allow Auth0 to generate the access and refresh
-    // tokens and pass them to the API server. The user will be redirected once
+    // tokens and pass them to the API server. The user will be redirected back to the frontend once
     // this process is complete
     string authorizeURL = 2;
 }
@@ -165,3 +154,14 @@ message DeleteAPIKeyRequest {
 }
 
 message DeleteAPIKeyResponse {}
+
+message ExchangeKeyForTokenRequest {
+    // The API Key that you want to exchange for an Oauth access token
+    string apiKey = 1;
+}
+
+message ExchangeKeyForTokenResponse {
+    // The access token that can now be use to authenticate to Overmind and its
+    // APIs
+    string accessToken = 1;
+}
