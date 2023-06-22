@@ -118,8 +118,10 @@ message CreateAPIKeyRequest {
     // The scopes that the key should have
     repeated string scopes = 2;
 
-    // The URL that the user should be redirected to after authorizing the key
-    string redirectURL = 3;
+    // The URL that the user should be redirected to after the whole process is
+    // over. This should be a page in the frontend, probably the one they
+    // started from, but could also be a detail page for this particular API key
+    string finalFrontendRedirecty = 3;
 }
 
 message CreateAPIKeyResponse {
