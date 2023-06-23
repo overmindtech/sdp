@@ -1,0 +1,174 @@
+syntax = "proto3";
+
+package apikeys;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/overmindtech/sdp-go;sdp";
+
+// ooo,    .---.
+// o`  o   /    |\________________
+// o`   'oooo()  | ________   _   _)
+// `oo   o` \    |/        | | | |
+//  `ooo'   `---'         "-" |_|
+//                                hjw
+// Credit: https://www.asciiart.eu/
+
+// The API Key Service is designed to give services like CI, webhooks etc. a
+// simple non-rotating secret that they can use when calling out to Overmind.
+// In order to keep the auth as simple as possible, these API keys don't
+// actually confer any access themselves, they need to be exchanged for an Oauth
+// access token using this API. The server will then return the client a valid
+// token that they can then use for subsequent requests
+//
+service ApiKeyService {
+    // Creates an API key, pending access token generation from Auth0. The key
+    // cannot be used until the user has been redirected to the given URL which
+    // allows Auth0 to actually generate an access token
+    rpc CreateAPIKey(CreateAPIKeyRequest) returns (stream CreateAPIKeyResponse);
+    rpc GetAPIKey(GetAPIKeyRequest) returns (GetAPIKeyResponse);
+    rpc ListAPIKeys(ListAPIKeysRequest) returns (ListAPIKeysResponse);
+    rpc DeleteAPIKey(DeleteAPIKeyRequest) returns (DeleteAPIKeyResponse);
+
+    // Exchanges an Overmind API key for an Oauth access token. That token can
+    // then be used to access all other Overmind APIs
+    rpc ExchangeKeyForToken(ExchangeKeyForTokenRequest) returns (ExchangeKeyForTokenResponse);
+
+    // Callback URL
+    //
+    // There will also need to be a normal HTTP endpoint (not Connect) that
+    // handles the callbacks from Auth0 as these aren't in a format that Connect
+    // supports. We will need to host an endpoint with a URL such as:
+    //
+    //     /apikey/oauthcallback
+    //
+    // A request might then look like:
+    //
+    //     GET /apikey/oauthcallback?code={authorizationCode}&state={uuid}
+    //
+    // We would then take the code and pass it to the /oauth/token endpoint at
+    // Auth0 and get an access token and a refresh token. We can then save these
+    // in the database, and redirect the user (302) to whatever URL they
+    // requested to be directed to in the first place
+}
+
+/////////////
+// Objects //
+/////////////
+
+message APIKey {
+    APIKeyMetadata metadata = 1;
+    APIKeyProperties properties = 2;
+}
+
+enum KeyStatus {
+    KEY_STATUS_UNKNOWN = 0;
+
+    // This means the key has been created but we have not yet received the
+    // callback from Auth0 which allows us to fetch the access token
+    KEY_STATUS_UNAUTHORIZED = 1;
+
+    // Key is ready for use
+    KEY_STATUS_READY = 2;
+
+    // There was an error getting the access token from Auth0
+    KEY_STATUS_ERROR = 3;
+
+    // The API key has been revoked
+    KEY_STATUS_REVOKED = 4;
+}
+
+message APIKeyMetadata {
+    // The ID of this API key
+    bytes uuid = 1;
+
+    // When the API Key was created
+    google.protobuf.Timestamp created = 2;
+
+    // The last time the API key was exchanged for an access token
+    google.protobuf.Timestamp lastUsed = 3;
+
+    // The actual API key
+    string key = 4;
+
+    // The list of scopes that this token has access to
+    repeated string scopes = 5;
+
+    // The status of the key
+    KeyStatus status = 6;
+
+    // The error encountered when authorizing the key. This will only be set if
+    // the status is ERROR
+    string error = 7;
+}
+
+message APIKeyProperties {
+    // The name of the API key
+    string name = 1;
+}
+
+///////////////
+// API Calls //
+///////////////
+
+message CreateAPIKeyRequest {
+    // The name of the key to create
+    string name = 1;
+
+    // The scopes that the key should have
+    repeated string scopes = 2;
+
+    // The URL that the user should be redirected to after the whole process is
+    // over. This should be a page in the frontend, probably the one they
+    // started from, but could also be a detail page for this particular API key
+    string finalFrontendRedirect = 3;
+}
+
+message CreateAPIKeyResponse {
+    // Details of the newly created API Key
+    APIKey key = 1;
+
+    // The URL that the user should visit in order to authorize the newly
+    // created key. This will allow Auth0 to generate a code that will be passed
+    // to the API server via a callback. This code is then exchanged by the API
+    // server for an access token and refresh token. The user will be redirected
+    // back to the frontend once this process is complete.
+    //
+    // The authorizeURL will contain a `state` paremeter which is a UUID that
+    // can be used to look up the API key in the database once the callback is
+    // received
+    string authorizeURL = 2;
+}
+
+message GetAPIKeyRequest {
+    // The UUID of the API Key to get
+    bytes uuid = 1;
+}
+
+message GetAPIKeyResponse {
+    APIKey key = 1;
+}
+
+message ListAPIKeysRequest {}
+
+message ListAPIKeysResponse {
+    repeated APIKey keys = 1;
+}
+
+message DeleteAPIKeyRequest {
+    // The UUID of the API key to delete
+    bytes uuid = 1;
+}
+
+message DeleteAPIKeyResponse {}
+
+message ExchangeKeyForTokenRequest {
+    // The API Key that you want to exchange for an Oauth access token
+    string apiKey = 1;
+}
+
+message ExchangeKeyForTokenResponse {
+    // The access token that can now be use to authenticate to Overmind and its
+    // APIs
+    string accessToken = 1;
+}
