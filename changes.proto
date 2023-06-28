@@ -61,6 +61,10 @@ service ChangesService {
   // Deletes a change
   rpc DeleteChange(DeleteChangeRequest) returns (DeleteChangeResponse);
 
+  // Ask the gateway to refresh all internal caches and status slots
+  // The RPC will return immediately doing all processing in the background
+  rpc RefreshState(RefreshStateRequest) returns (RefreshStateResponse);
+
   // Calculates the blast radius of a change using the
   // `changingItemsBookmarkUUID` as the starting point. If the
   // `changingItemsBookmarkUUID` is blank, this will return an error.
@@ -633,6 +637,10 @@ message DeleteChangeRequest {
 }
 
 message DeleteChangeResponse {}
+
+message RefreshStateRequest {}
+
+message RefreshStateResponse {}
 
 message CalculateBlastRadiusRequest {
   // ID of the change to calculate the blast radius for.
