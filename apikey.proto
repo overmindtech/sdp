@@ -25,7 +25,7 @@ service ApiKeyService {
     // Creates an API key, pending access token generation from Auth0. The key
     // cannot be used until the user has been redirected to the given URL which
     // allows Auth0 to actually generate an access token
-    rpc CreateAPIKey(CreateAPIKeyRequest) returns (stream CreateAPIKeyResponse);
+    rpc CreateAPIKey(CreateAPIKeyRequest) returns (CreateAPIKeyResponse);
     rpc GetAPIKey(GetAPIKeyRequest) returns (GetAPIKeyResponse);
     rpc ListAPIKeys(ListAPIKeysRequest) returns (ListAPIKeysResponse);
     rpc DeleteAPIKey(DeleteAPIKeyRequest) returns (DeleteAPIKeyResponse);
