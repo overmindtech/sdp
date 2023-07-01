@@ -27,6 +27,7 @@ service ApiKeyService {
     // allows Auth0 to actually generate an access token
     rpc CreateAPIKey(CreateAPIKeyRequest) returns (CreateAPIKeyResponse);
     rpc GetAPIKey(GetAPIKeyRequest) returns (GetAPIKeyResponse);
+    rpc UpdateAPIKey(UpdateAPIKeyRequest) returns (UpdateAPIKeyResponse);
     rpc ListAPIKeys(ListAPIKeysRequest) returns (ListAPIKeysResponse);
     rpc DeleteAPIKey(DeleteAPIKeyRequest) returns (DeleteAPIKeyResponse);
 
@@ -146,6 +147,19 @@ message GetAPIKeyRequest {
 }
 
 message GetAPIKeyResponse {
+    APIKey key = 1;
+}
+
+message UpdateAPIKeyRequest {
+    // The UUID of the API key to update
+    bytes uuid = 1;
+
+    // New properties to update
+    APIKeyProperties properties = 2;
+}
+
+message UpdateAPIKeyResponse {
+    // The updated API key
     APIKey key = 1;
 }
 
