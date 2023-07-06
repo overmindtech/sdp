@@ -197,11 +197,11 @@ message GetAppSummaryResponse {
 }
 
 message GetAppSummariesRequest {
-  repeated bytes UUID = 1;
+  repeated bytes UUIDs = 1;
 }
 
 message GetAppSummariesResponse {
-  repeated changes.AppSummary app = 1;
+  repeated changes.AppSummary apps = 1;
 }
 
 message ListHomeChangesRequest {}
