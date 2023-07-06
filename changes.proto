@@ -104,6 +104,9 @@ service ChangesService {
   // Gets a summary of an app, used when a user clicks on a given app
   rpc GetAppSummary(GetAppSummaryRequest) returns (GetAppSummaryResponse);
 
+  // Gets a summaries of a list of apps
+  rpc GetAppSummaries(GetAppSummariesRequest) returns (GetAppSummariesResponse);
+
   // Lists all changes affecting an app
   rpc ListAppChanges(ListAppChangesRequest) returns (ListAppChangesResponse);
 
@@ -191,6 +194,14 @@ message GetAppSummaryRequest {
 
 message GetAppSummaryResponse {
   changes.AppSummary app = 1;
+}
+
+message GetAppSummariesRequest {
+  repeated bytes UUID = 1;
+}
+
+message GetAppSummariesResponse {
+  repeated changes.AppSummary app = 1;
 }
 
 message ListHomeChangesRequest {}
