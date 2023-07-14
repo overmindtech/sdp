@@ -18,8 +18,8 @@
   "homepage": "https://github.com/overmindtech/sdp#readme",
   "devDependencies": {
     "@bufbuild/buf": "^1.15.0-1",
-    "@bufbuild/protoc-gen-connect-es": "^0.10.0",
-    "@bufbuild/protoc-gen-connect-query": "^0.3.0",
+    "@bufbuild/protoc-gen-connect-es": "^0.11.0",
+    "@bufbuild/protoc-gen-connect-query": "^0.4.0",
     "@bufbuild/protoc-gen-es": "^1.2.0"
   }
 }
