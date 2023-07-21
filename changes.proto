@@ -88,10 +88,6 @@ service ChangesService {
   // complete.
   rpc SimulateChange(SimulateChangeRequest) returns (stream SimulateChangeResponse);
 
-  // Returns a list of change summaries, designed for use in the changes home page
-  rpc GetChangesHome(GetChangesHomeRequest) returns (GetChangesHomeResponse);
-
-
   rpc GetOnboarding(GetOnboardingRequest) returns (GetOnboardingResponse);
   rpc UpdateOnboarding(UpdateOnboardingRequest) returns (UpdateOnboardingResponse);
 
@@ -820,27 +816,4 @@ message SimulateChangeResponse {
   // apprioximate as it's not expected to take very long and is more to give the
   // sense of progress than to be an accurate measure
   uint32 percentComplete = 2;
-}
-
-//////////////////
-// Changes Home //
-//////////////////
-
-////////////////////////////
-// Requests and Responses //
-////////////////////////////
-
-message GetChangesHomeRequest {}
-
-message GetChangesHomeResponse {
-  oneof data {
-    GetChangesHomeData changesHome = 1;
-    changes.Onboarding onboarding = 2;
-  }
-}
-
-message GetChangesHomeData {
-  string owner = 1;
-  repeated changes.Change recentChanges = 2;
-  repeated changes.App recentApps = 3;
 }
