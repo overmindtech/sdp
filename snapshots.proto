@@ -3,6 +3,7 @@ syntax = "proto3";
 package snapshots;
 
 import "google/protobuf/timestamp.proto";
+import "bookmarks.proto";
 import "items.proto";
 
 //          ___        .---------.._
@@ -10,13 +11,13 @@ import "items.proto";
 // .'          //     .g8:       :8p..---....___ \'.
 // | Unnamed  //  ()  d88:       :88b|==========! !|
 // |         //       888:       :888|==========| !|
-// |___      \\_______'T88888888888P''----------'//|   
-// |   \       """"""""""""""""""""""""""""""""""/ |   
-// |    !...._____      .="""=.   .[]    ____...!  |   
-// |   /               ! .g$p. !   .[]          :  |   
-// |  !               :  $$$$$  :  .[]          :  |   
-// |  !                ! 'T$P' !   .[]           '.|   
-// |   \__              "=._.="   .()        __    |   
+// |___      \\_______'T88888888888P''----------'//|
+// |   \       """"""""""""""""""""""""""""""""""/ |
+// |    !...._____      .="""=.   .[]    ____...!  |
+// |   /               ! .g$p. !   .[]          :  |
+// |  !               :  $$$$$  :  .[]          :  |
+// |  !                ! 'T$P' !   .[]           '.|
+// |   \__              "=._.="   .()        __    |
 // |.--'  '----._______________________.----'  '--.|
 // '._____________________________________________.'
 // Credit: https://www.asciiart.eu/
@@ -28,6 +29,9 @@ service SnapshotsService {
     rpc GetSnapshot(GetSnapshotRequest) returns (GetSnapshotResponse);
     rpc UpdateSnapshot(UpdateSnapshotRequest) returns (UpdateSnapshotResponse);
     rpc DeleteSnapshot(DeleteSnapshotRequest) returns (DeleteSnapshotResponse);
+
+    // retrieve the initial data for the example change
+    rpc GetInitialData(GetInitialDataRequest) returns (GetInitialDataResponse);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -81,7 +85,7 @@ message CreateSnapshotRequest {
 }
 
 message CreateSnapshotResponse {
-    // the newly created snapshot 
+    // the newly created snapshot
     Snapshot snapshot = 1;
 }
 
@@ -111,3 +115,12 @@ message DeleteSnapshotRequest {
 }
 
 message DeleteSnapshotResponse {}
+
+// get the initial data
+message GetInitialDataRequest {
+}
+
+message GetInitialDataResponse {
+    Snapshot blastRadiusSnapshot = 1;
+    bookmarks.Bookmark changingItemsBookmark = 2;
+}
