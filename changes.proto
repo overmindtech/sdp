@@ -61,6 +61,9 @@ service ChangesService {
   // Deletes a change
   rpc DeleteChange(DeleteChangeRequest) returns (DeleteChangeResponse);
 
+  // Get the timeline of changes for a given change
+  rpc GetChangeTimeline(GetChangeTimelineRequest) returns (GetChangeTimelineResponse);
+
   // Ask the gateway to refresh all internal caches and status slots
   // The RPC will return immediately doing all processing in the background
   rpc RefreshState(RefreshStateRequest) returns (RefreshStateResponse);
@@ -133,6 +136,29 @@ service ChangesService {
   // Gets the full diff of everything that changed as part of this "change".
   // This includes all items and also edges between them
   rpc GetDiff(GetDiffRequest) returns (GetDiffResponse);
+}
+
+message GetChangeTimelineRequest {
+  bytes changeUUID = 1;
+}
+
+message GetChangeTimelineResponse {
+  repeated ChangeTimelineEntry entries = 1;
+}
+
+message ChangeTimelineEntry {
+  // The status that this event should be associated with. Usually this would be
+  // the status that the changed ended up in as a result of this action
+  ChangeStatus status = 1;
+
+  // The message that describes this event
+  string statusMessage = 2;
+
+  // The time that this event happened
+  google.protobuf.Timestamp happenedAt = 3;
+
+  // The name of the user that performed this action
+  string actorName = 4;
 }
 
 message GetDiffRequest {
