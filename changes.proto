@@ -166,8 +166,16 @@ message GetDiffRequest {
 }
 
 message GetDiffResponse {
-  repeated ItemDiff items = 1;
+  // Changes to items that were used to calculate the blast radius, i.e. items
+  // we expected to change
+  repeated ItemDiff expectedItems = 1;
+  
+  // Items that changed within the blast radius, but that weren't used to
+  // calculate it i.e. unexpected changes
+  repeated ItemDiff unexpectedItems = 3;
+  
   repeated Edge edges = 2;
+  
 }
 
 message GetChangeAuditLogRequest {
