@@ -175,7 +175,6 @@ message GetDiffResponse {
   repeated ItemDiff unexpectedItems = 3;
   
   repeated Edge edges = 2;
-  
 }
 
 message GetChangeAuditLogRequest {
