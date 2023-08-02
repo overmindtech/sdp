@@ -130,9 +130,6 @@ service ChangesService {
   // status (e.g. changed, deleted) but not the diff itself
   rpc ListChangingItemsSummary(ListChangingItemsSummaryRequest) returns (ListChangingItemsSummaryResponse);
 
-  // Gets the audit log for a given change
-  rpc GetChangeAuditLog(GetChangeAuditLogRequest) returns (GetChangeAuditLogResponse);
-
   // Gets the full diff of everything that changed as part of this "change".
   // This includes all items and also edges between them
   rpc GetDiff(GetDiffRequest) returns (GetDiffResponse);
@@ -169,20 +166,12 @@ message GetDiffResponse {
   // Changes to items that were used to calculate the blast radius, i.e. items
   // we expected to change
   repeated ItemDiff expectedItems = 1;
-  
+
   // Items that changed within the blast radius, but that weren't used to
   // calculate it i.e. unexpected changes
   repeated ItemDiff unexpectedItems = 3;
-  
+
   repeated Edge edges = 2;
-}
-
-message GetChangeAuditLogRequest {
-  bytes changeUUID = 1;
-}
-
-message GetChangeAuditLogResponse {
-  repeated ChangeAuditLogEntry entries = 1;
 }
 
 message ListChangingItemsSummaryRequest {
@@ -278,20 +267,6 @@ message ItemDiff {
 
   Item before = 3;
   Item after = 4;
-}
-
-message ChangeAuditLogEntry {
-  // The status that the change was in when this event happened
-  ChangeStatus status = 1;
-
-  // The message that describes this event
-  string statusMessage = 2;
-
-  // The time that this event happened
-  google.protobuf.Timestamp happenedAt = 3;
-
-  // The name of the user that performed this action
-  string actorName = 4;
 }
 
 //////////
