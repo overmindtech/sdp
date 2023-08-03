@@ -52,6 +52,8 @@ service ChangesService {
 
   // Lists all changes
   rpc ListChanges(ListChangesRequest) returns (ListChangesResponse);
+  // list all changes in a specific status
+  rpc ListChangesByStatus(ListChangesByStatusRequest) returns (ListChangesByStatusResponse);
   // Creates a new change
   rpc CreateChange(CreateChangeRequest) returns (CreateChangeResponse);
   // Gets the details of an existing change
@@ -615,6 +617,15 @@ message ChangeProperties {
 message ListChangesRequest {}
 
 message ListChangesResponse {
+  repeated changes.Change changes = 1;
+}
+
+// list all changes in a specific status
+message ListChangesByStatusRequest {
+  ChangeStatus status = 1;
+}
+
+message ListChangesByStatusResponse {
   repeated changes.Change changes = 1;
 }
 
