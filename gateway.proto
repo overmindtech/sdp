@@ -145,6 +145,8 @@ message LoadBookmark {
     bytes UUID = 1;
     // a correlation ID to match up requests and responses. set this to a value unique per connection
     bytes msgID = 2;
+    // set to true to force fetching fresh data
+    bool skipCache = 3;
 }
 
 message BookmarkLoadResult {
@@ -172,9 +174,9 @@ message StoreSnapshot {
 message SnapshotStoreResult {
     bool success = 1;
     string errorMessage = 2;
-    
+
     // Previously contained the entire snapshot, instead we now only send the ID
-    reserved 3; 
+    reserved 3;
 
     // a correlation ID to match up requests and responses. this field returns the contents of the request's msgID
     bytes msgID = 4;
