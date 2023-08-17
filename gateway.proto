@@ -146,7 +146,7 @@ message LoadBookmark {
     // a correlation ID to match up requests and responses. set this to a value unique per connection
     bytes msgID = 2;
     // set to true to force fetching fresh data
-    bool skipCache = 3;
+    bool ignoreCache = 3;
 }
 
 message BookmarkLoadResult {
