@@ -795,11 +795,7 @@ message OnboardingProperties {
   // The UUID of the change that was created as part of onboarding
   bytes changeUUID = 4;
 
-  // List of items that the user should be able to select when simulating their
-  // change. These should be gathered by the frontend and should be items that
-  // are within 1 link of the application that the user defined so that we know
-  // we can find the app as part of the blast radius
-  repeated Item selectableItems = 5;
+  reserved 5;
 }
 
 ////////////////////////////
