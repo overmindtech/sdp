@@ -4,6 +4,10 @@ jobs:
   golang:
     name: Update Libraries
     runs-on: ubuntu-latest
+
+    env:
+      GOEXPERIMENT: loopvar
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -12,6 +16,7 @@ jobs:
       - uses: actions/setup-go@v4
         with:
           go-version: 1.x
+          check-latest: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
