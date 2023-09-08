@@ -491,6 +491,9 @@ message ChangeSummary {
 
   // The number of items in the blast radius of this change
   int32 numAffectedItems = 9;
+
+  // The number of edges in the blast radius of this change
+  int32 numAffectedEdges = 10;
 }
 
 // a complete Change with machine-supplied and user-supplied values
@@ -525,6 +528,9 @@ message ChangeMetadata {
 
   // The number of items in the blast radius if this change
   int32 numAffectedItems = 7;
+
+  // The number of edges in the blast radius if this change
+  int32 numAffectedEdges = 17;
 
   // I'm going to omit the creatorLink for now, since it's not clear what it
   // should be
