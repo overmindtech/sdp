@@ -184,13 +184,7 @@ message Query {
   // representation
   bytes UUID = 7;
 
-  // The timeout for this query. This will affect both the initial query, and
-  // also any linked item queries that are executed as part of it. This means
-  // that if a query has a timeout of 10s, and takes 2s to complete, the linked
-  // item queries should have a remaining timeout of 8s meaning that the entire
-  // query including all linking needs to be done in 10s, not 10s for *each*
-  // query
-  google.protobuf.Duration timeout = 8;
+  reserved 8;
 
   // The deadline for this query. When the deadline elapses, results become
   // irrelevant for the sender and any processing can stop. The deadline gets
@@ -397,8 +391,7 @@ message ReverseLinksRequest {
   // The item that you would like to find reverse links for
   Reference item = 1;
 
-  // The timeout for this request
-  google.protobuf.Duration timeout = 2;
+  reserved 2;
 
   // set to true to only return links that propagate configuration change impact
   bool followOnlyBlastPropagation = 3;
