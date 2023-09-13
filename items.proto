@@ -191,6 +191,13 @@ message Query {
   // query including all linking needs to be done in 10s, not 10s for *each*
   // query
   google.protobuf.Duration timeout = 8;
+
+  // The deadline for this query. When the deadline elapses, results become
+  // irrelevant for the sender and any processing can stop. The deadline gets
+  // propagated to all related queries (e.g. for linked items) and processes.
+  // Note: there is currently a migration going on from timeouts to durations,
+  // so depending on which service is hit, either one is evaluated.
+  google.protobuf.Timestamp deadline = 9;
 }
 
 message QueryResponse {
@@ -395,6 +402,13 @@ message ReverseLinksRequest {
 
   // set to true to only return links that propagate configuration change impact
   bool followOnlyBlastPropagation = 3;
+
+  // The deadline for this request. When the deadline elapses, results become
+  // irrelevant for the requestor and any processing can stop. The deadline gets
+  // propagated to all related requests and processes. Note: there is currently
+  // a migration going on from timeouts to durations, so depending on which
+  // service is hit, either one is evaluated.
+  google.protobuf.Timestamp deadline = 4;
 }
 
 // ReverseLinks Represents linked item queries that can be run and will result
