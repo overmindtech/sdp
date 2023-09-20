@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/struct.proto";
-import "google/protobuf/timestamp.proto";    
+import "google/protobuf/timestamp.proto";
 
 package account;
 
@@ -74,12 +74,12 @@ message CreateAccountResponse {
 
 message AdminGetAccountRequest {
     // The name of the account to get
-    string name = 1; 
+    string name = 1;
 }
 
 message DeleteAccountRequest {
     // The name of the account to delete
-    string name = 1;     
+    string name = 1;
 }
 message DeleteAccountResponse {}
 
@@ -229,7 +229,7 @@ message CreateSourceResponse {
 }
 
 message GetSourceRequest {
-    bytes UUID = 1; 
+    bytes UUID = 1;
 }
 
 message GetSourceResponse {
@@ -254,8 +254,17 @@ message DeleteSourceRequest {
 
 message DeleteSourceResponse {}
 
-message KeepaliveSourcesRequest {}
-message KeepaliveSourcesResponse {}
+message KeepaliveSourcesRequest {
+    // Set to true to have the API call wait until the source is up and healthy
+    bool waitForHealthy = 1;
+}
+message KeepaliveSourcesResponse {
+    // returns true if any of the sources did not come up in time
+    bool failed = 1;
+
+    // returns an indication of why not all sources were healthy
+    string error = 2;
+}
 
 message CreateTokenRequest {
     // The Public NKey of the user that is requesting a token
