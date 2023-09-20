@@ -259,11 +259,6 @@ message KeepaliveSourcesRequest {
     bool waitForHealthy = 1;
 }
 message KeepaliveSourcesResponse {
-    // returns true if any of the sources did not come up in time
-    bool failed = 1;
-
-    // returns an indication of why not all sources were healthy
-    string error = 2;
 }
 
 message CreateTokenRequest {
