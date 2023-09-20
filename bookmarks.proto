@@ -31,6 +31,7 @@ import "items.proto";
 option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 service BookmarksService {
+    // returns all bookmarks of the current user. note that this does not include the actual bookmark data, use GetBookmark for that
     rpc ListBookmarks(ListBookmarksRequest) returns (ListBookmarkResponse);
     rpc CreateBookmark(CreateBookmarkRequest) returns (CreateBookmarkResponse);
     rpc GetBookmark(GetBookmarkRequest) returns (GetBookmarkResponse);
