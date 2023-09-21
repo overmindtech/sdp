@@ -5,6 +5,7 @@ package gateway;
 import "items.proto";
 import "responses.proto";
 import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
 
 
 // _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
@@ -147,6 +148,8 @@ message LoadBookmark {
     bytes msgID = 2;
     // set to true to force fetching fresh data
     bool ignoreCache = 3;
+    // The time at which the gateway should stop processing the queries spawned by this request
+    google.protobuf.Timestamp deadline = 4;
 }
 
 message BookmarkLoadResult {
