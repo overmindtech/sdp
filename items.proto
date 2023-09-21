@@ -340,6 +340,8 @@ message Expand {
   // request. It should be stored as 128 bytes, as opposed to the textual
   // representation
   bytes UUID = 3;
+  // The time at which the gateway should stop processing the queries spawned by this request
+  google.protobuf.Timestamp deadline = 4;
 }
 
 // This message is sent to the gateway to instruct it to "undo" an Expand. This
