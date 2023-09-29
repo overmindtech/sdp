@@ -31,9 +31,11 @@ import "items.proto";
 option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 service BookmarksService {
-    // returns all bookmarks of the current user. note that this does not include the actual bookmark data, use GetBookmark for that
+    // ListBookmarks returns all bookmarks of the current user. note that this does not include the actual bookmark data, use GetBookmark for that
     rpc ListBookmarks(ListBookmarksRequest) returns (ListBookmarkResponse);
+    // CreateBookmark creates a new bookmark
     rpc CreateBookmark(CreateBookmarkRequest) returns (CreateBookmarkResponse);
+    // GetBookmark returns the bookmark with the given UUID. This can also return snapshots as bookmarks and will strip the stored items from the response.
     rpc GetBookmark(GetBookmarkRequest) returns (GetBookmarkResponse);
     rpc UpdateBookmark(UpdateBookmarkRequest) returns (UpdateBookmarkResponse);
     rpc DeleteBookmark(DeleteBookmarkRequest) returns (DeleteBookmarkResponse);
