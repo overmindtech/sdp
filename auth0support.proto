@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+import "account.proto";
+
+package auth0support;
+
+option go_package = "github.com/overmindtech/sdp-go;sdp";
+
+//   |`-._/\_.-`|
+//   |    ||    |
+//   |___o()o___|
+//   |__((<>))__|
+//   \   o\/o   /
+//    \   ||   /
+//     \  ||  /
+// jgs  '.||.'
+//
+// Credit: https://www.asciiart.eu/
+
+// The auth0 support service contains the endpoints used by Auth0 Actions to
+// post updates and receive additional information into Auth0.
+service Auth0Support {
+    // create a new user on first login
+    rpc CreateUser(Auth0CreateUserRequest) returns (Auth0CreateUserResponse);
+
+    // Updates sources to keep them running in the background. This is called on
+    // login by auth0 to give us a chance to boot up sources while the app is
+    // loading.
+    rpc KeepaliveSources(account.AdminKeepaliveSourcesRequest) returns (account.KeepaliveSourcesResponse);
+}
+
+message Auth0CreateUserRequest {
+    string user_id = 1;
+    string email = 2;
+}
+message Auth0CreateUserResponse {
+    string org_id = 1;
+}
