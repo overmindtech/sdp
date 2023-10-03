@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+package invites;
+
+option go_package = "github.com/overmindtech/sdp-go;sdp";
+
+//         _
+//        |E]
+//      .-|=====-.
+//      | | MAIL |
+//      |________|___
+//           ||
+//           ||
+//           ||   www                %%%
+//    vwv    ||   )_(,;;;,        ,;,\_/ www
+//    )_(    ||   \|/ \_/         )_(\|  (_)
+//    \|   \ || /\\|/  |/         \| \|// |
+// ___\|//jgs||//_\V/_\|//_______\\|//V/\\|/__
+//
+// Credit: https://www.asciiart.eu/
+
+// provides all operations for inviting people to an organization
+service InviteService {
+    rpc CreateInvite(CreateInviteRequest) returns (CreateInviteResponse);
+    rpc ListInvites(ListInvitesRequest) returns (ListInvitesResponse);
+    rpc RevokeInvite(RevokeInviteRequest) returns (RevokeInviteResponse);
+}
+
+message CreateInviteRequest {
+    repeated string emails = 1;
+}
+message CreateInviteResponse {
+}
+
+message Invite {
+    string email = 1;
+
+    enum InviteStatus {
+        INVITE_STATUS_UNSPECIFIED = 0;
+        // The user has been invited but has not yet accepted
+        INVITE_STATUS_INVITED = 1;
+        // The user has accepted the invitation
+        INVITE_STATUS_ACCEPTED = 2;
+    }
+    InviteStatus status = 2;
+}
+
+message ListInvitesRequest {
+}
+message ListInvitesResponse {
+    repeated Invite invites = 1;
+}
+
+message RevokeInviteRequest {
+    string email = 1;
+}
+message RevokeInviteResponse {
+}
