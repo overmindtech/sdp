@@ -35,6 +35,7 @@ service Auth0Support {
 message Auth0CreateUserRequest {
     string user_id = 1;
     string email = 2;
+    string name = 3;
 }
 message Auth0CreateUserResponse {
     string org_id = 1;
