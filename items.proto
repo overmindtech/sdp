@@ -91,6 +91,11 @@ message Item {
   // (optional) Represents the health of the item. Only items that have a
   // clearly relevant health attribute should return a value for health
   optional Health health = 18;
+
+  // Arbitrary key-value pairs that can be used to store additional information.
+  // These tags are retrieved from the source and map to the target's definition
+  // of a tag (e.g. AWS tags, Kubernetes labels, etc.)
+  map<string, string> tags = 19;
 }
 
 // ItemAttributes represents the known attributes for an item. These are likely
