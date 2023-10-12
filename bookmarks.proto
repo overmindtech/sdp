@@ -64,6 +64,10 @@ message BookmarkProperties {
     repeated Query queries = 3;
     // Items that should be excluded from the bookmark's results
     repeated Reference excludedItems = 4;
+    // Whether this bookmark is a system bookmark. System bookmarks are hidden
+    // from list results and can therefore only be accessed by their UUID.
+    // Bookmarks created by users are not system bookmarks.
+    bool isSystem = 5;
 }
 
 // Descriptor for a bookmark
