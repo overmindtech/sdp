@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+import "items.proto";
+import "google/protobuf/timestamp.proto";
+
+package revlink;
+
+option go_package = "github.com/overmindtech/sdp-go;sdp";
+
+//         .n.                     |
+//        /___\          _.---.  \ _ /
+//        [|||]         (_._ ) )--;_) =-
+//        [___]           '---'.__,' \
+//        }-=-{                    |
+//        |-" |
+//        |.-"|                p
+// ~^=~^~-|_.-|~^-~^~ ~^~ -^~^~|\ ~^-~^~-
+// ^   .=.| _.|__  ^       ~  /| \
+//  ~ /:. \" _|_/\    ~      /_|__\  ^
+// .-/::.  |   |""|-._    ^   ~~~~
+//   `===-'-----'""`  '-.              ~
+//                  __.-'      ^
+// Credit: https://www.asciiart.eu/
+
+service RevlinkService {
+    // Gets reverse links for a given item
+    rpc GetReverseLinks(GetReverseLinksRequest) returns (GetReverseLinksResponse);
+
+    // Ingests a stream of gateway responses
+    rpc IngestGatewayResponses(stream IngestGatewayResponseRequest) returns (IngestGatewayResponsesResponse);
+}
+
+message GetReverseLinksRequest {
+    // The account that the item belongs to
+    string account = 1;
+
+    // The item that you would like to find reverse links for
+    Reference item = 2;
+
+    // set to true to only return links that propagate configuration change impact
+    bool followOnlyBlastPropagation = 3;
+}
+
+message GetReverseLinksResponse {
+  // The item queries that should be executed in order to find items that link
+  // to the requested item
+  repeated LinkedItemQuery linkedItemQueries = 1;
+}
+
+message IngestGatewayResponseRequest {
+    // The account that the response belongs to
+    string account = 1;
+
+    // The response type to ingest
+    oneof response_type {
+        Item newItem = 2; // A new item that has been discovered
+        Edge newEdge = 3; // A new edge between two items
+    }
+}
+
+message IngestGatewayResponsesResponse {
+    int32 numItemsReceived = 1;
+    int32 numEdgesReceived = 2;
+}
