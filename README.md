@@ -168,10 +168,6 @@ This subject exists to allow cancellation requests to be sent. Cancellations sho
 
 Cancellation requests for specific scopes should use this subject to send their cancellation requests
 
-### `reverse.links`
-
-This subject hosts the reverse linker, users should send a `ReverseLinksRequest` to this subject (with a response inbox). The reverse linker will the respond with a `ReverseLinksResponse`
-
 ## Lifecycle APIs
 
 Some APIs drive server-side lifecycle/workflow state. This section captures their behavior.
