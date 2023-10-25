@@ -217,7 +217,7 @@ First install the dependencies:
 npm i
 
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-go install github.com/bufbuild/connect-go/cmd/protoc-gen-connect-go@latest
+go install connectrpc.com/connect/cmd/protoc-gen-connect-go@latest
 ```
 
 Run `buf` through `npx` to generate the stubs:
