@@ -547,6 +547,9 @@ message ChangeMetadata {
   // The number of items that were updated as part of this change
   int32 numUpdatedItems = 10;
 
+  // The number of items that were replaced as part of this change
+  int32 numReplacedItems = 18;
+
   // The number of items that were deleted as part of this change
   int32 numDeletedItems = 11;
 
