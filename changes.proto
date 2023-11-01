@@ -122,6 +122,14 @@ service ChangesService {
   // radius calculation
   rpc UpdateChangingItems(UpdateChangingItemsRequest) returns (stream CalculateBlastRadiusResponse);
 
+  // This sets the item diffs that are changing in a given change, and updates
+  // the blast radius. In the backend this will save the item diffs for later
+  // display and use the item's references to fabricate a bookmark, and set this
+  // as changingItemsBookmarkUUID in the change itself before triggering a blast
+  // radius calculation. Note that not all of the changing items have to exist
+  // in our current sources.
+  rpc UpdatePlannedChanges(UpdatePlannedChangesRequest) returns (stream CalculateBlastRadiusResponse);
+
   // Returns a list of apps that are affected by this change. This is calculated
   // by looking at the blast radius snapshot and finding all apps that have
   // items in the snapshot.
@@ -198,6 +206,23 @@ message UpdateChangingItemsRequest {
 
   // References to the items that are changing
   repeated Reference changingItems = 2;
+}
+
+message MappedItemDiff {
+  // The item that is changing and any know changes to it
+  ItemDiff item = 1;
+
+  // a mapping query that can be used to find the item. this can be empty if the
+  // submitter does not know how to map this item.
+  optional Query mappingQuery = 2;
+}
+
+message UpdatePlannedChangesRequest {
+  // The change to update
+  bytes changeUUID = 1;
+
+  // the changing items
+  repeated MappedItemDiff changingItems = 2;
 }
 
 message ListAppChangesSummaryRequest {
@@ -617,6 +642,9 @@ message ChangeProperties {
 
   // list of UUIDs for apps affected by this change.
   repeated bytes affectedAppsUUID = 10;
+
+  // a list of item diffs that were planned to be changed as part of this change. For all items that we could map, the ItemDiff.Reference will be set to the actual item found.
+  repeated ItemDiff plannedChanges = 12;
 }
 
 ////////////////////////////
