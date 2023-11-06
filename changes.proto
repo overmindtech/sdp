@@ -902,4 +902,11 @@ message RiskCalculationStatus {
   }
 
   Status status = 1;
+  
+  // A message that should be rendered along with the status. This won't be
+  // shown when the status is `STATUS_DONE` since nothing went wrong. But it
+  // will be shown for:
+  //   - `STATUS_SKIPPED`: The reason it was skipped
+  //   - `STATUS_ERROR`: Details of the error
+  string message = 2;
 }
