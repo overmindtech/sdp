@@ -896,9 +896,8 @@ message RiskCalculationStatus {
     STATUS_UNSPECIFIED = 0;
     STATUS_INPROGRESS = 1;
     STATUS_SKIPPED = 2;
-    STATUS_INVALID = 3;
-    STATUS_DONE = 4;
-    STATUS_ERROR = 5;
+    STATUS_DONE = 3;
+    STATUS_ERROR = 4;
   }
 
   Status status = 1;
