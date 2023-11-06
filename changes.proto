@@ -598,6 +598,8 @@ message ChangeMetadata {
   HealthChange WarningHealthChange = 14;
   HealthChange ErrorHealthChange = 15;
   HealthChange PendingHealthChange = 16;
+  RiskCalculationStatus RiskCalculationStatus = 19;
+  repeated Risk risks = 20;
 }
 
 // user-supplied properties of this change
@@ -885,11 +887,11 @@ message Risk {
 
   string title = 1;
   Severity severity = 2;
-  optional string description = 3;
+  string description = 3;
   repeated Reference relatedItems = 4;
 }
 
-message ChangeRiskStatus {
+message RiskCalculationStatus {
   enum Status {
     STATUS_UNSPECIFIED = 0;
     STATUS_INPROGRESS = 1;
