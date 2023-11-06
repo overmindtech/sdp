@@ -870,3 +870,34 @@ message SimulateChangeResponse {
   // sense of progress than to be an accurate measure
   uint32 percentComplete = 2;
 }
+
+/////////////
+//  Risks  //
+/////////////
+
+message Risk {
+  enum Severity {
+    SEVERITY_UNSPECIFIED = 0;
+    SEVERITY_LOW = 1;
+    SEVERITY_MEDIUM = 2;
+    SEVERITY_HIGH = 3;
+  }
+
+  string title = 1;
+  Severity severity = 2;
+  optional string description = 3;
+  repeated Reference relatedItems = 4;
+}
+
+message ChangeRiskStatus {
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_INPROGRESS = 1;
+    STATUS_SKIPPED = 2;
+    STATUS_INVALID = 3;
+    STATUS_DONE = 4;
+    STATUS_ERROR = 5;
+  }
+
+  Status status = 1;
+}
