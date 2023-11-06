@@ -598,6 +598,8 @@ message ChangeMetadata {
   HealthChange WarningHealthChange = 14;
   HealthChange ErrorHealthChange = 15;
   HealthChange PendingHealthChange = 16;
+  RiskCalculationStatus RiskCalculationStatus = 19;
+  repeated Risk risks = 20;
 }
 
 // user-supplied properties of this change
@@ -869,4 +871,40 @@ message SimulateChangeResponse {
   // apprioximate as it's not expected to take very long and is more to give the
   // sense of progress than to be an accurate measure
   uint32 percentComplete = 2;
+}
+
+/////////////
+//  Risks  //
+/////////////
+
+message Risk {
+  enum Severity {
+    SEVERITY_UNSPECIFIED = 0;
+    SEVERITY_LOW = 1;
+    SEVERITY_MEDIUM = 2;
+    SEVERITY_HIGH = 3;
+  }
+
+  string title = 1;
+  Severity severity = 2;
+  string description = 3;
+  repeated Reference relatedItems = 4;
+}
+
+message RiskCalculationStatus {
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_INPROGRESS = 1;
+    STATUS_SKIPPED = 2;
+    STATUS_DONE = 3;
+    STATUS_ERROR = 4;
+  }
+
+  Status status = 1;
+  
+  // A message that should be rendered along with the status. This won't be
+  // shown when the status is `STATUS_DONE` since nothing went wrong. But other
+  // status could show this message e.g. if a calculation was skipped because
+  // the user opted out or didn't have enough credits
+  string message = 2;
 }
