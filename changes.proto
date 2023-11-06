@@ -904,9 +904,8 @@ message RiskCalculationStatus {
   Status status = 1;
   
   // A message that should be rendered along with the status. This won't be
-  // shown when the status is `STATUS_DONE` since nothing went wrong. But it
-  // will be shown for:
-  //   - `STATUS_SKIPPED`: The reason it was skipped
-  //   - `STATUS_ERROR`: Details of the error
+  // shown when the status is `STATUS_DONE` since nothing went wrong. But other
+  // status could show this message e.g. if a calculation was skipped because
+  // the user opted out or didn't have enough credits
   string message = 2;
 }
