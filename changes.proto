@@ -520,6 +520,15 @@ message ChangeSummary {
 
   // The number of edges in the blast radius of this change
   int32 numAffectedEdges = 10;
+  
+  // The number of low risks in this change
+  int32 numLowRisk = 11;
+
+  // The number of medium risks in this change
+  int32 numMediumRisk = 12;
+
+  // The number of high risks in this change
+  int32 numHighRisk = 13;
 }
 
 // a complete Change with machine-supplied and user-supplied values
@@ -598,8 +607,18 @@ message ChangeMetadata {
   HealthChange WarningHealthChange = 14;
   HealthChange ErrorHealthChange = 15;
   HealthChange PendingHealthChange = 16;
-  RiskCalculationStatus RiskCalculationStatus = 19;
+
+  RiskCalculationStatus riskCalculationStatus = 19;
   repeated Risk risks = 20;
+
+  // The number of low risks in this change
+  int32 numLowRisk = 21;
+
+  // The number of medium risks in this change
+  int32 numMediumRisk = 22;
+
+  // The number of high risks in this change
+  int32 numHighRisk = 23;
 }
 
 // user-supplied properties of this change
