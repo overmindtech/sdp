@@ -522,7 +522,7 @@ message ChangeSummary {
   int32 numAffectedEdges = 10;
   
   // Risk status to show in changes list
-  RiskCalculationStatus RiskCalculationStatus = 11;
+  RiskCalculationStatus riskCalculationStatus = 11;
 
   // The Risks associated with change
   repeated Risk risks = 12;
@@ -604,7 +604,7 @@ message ChangeMetadata {
   HealthChange WarningHealthChange = 14;
   HealthChange ErrorHealthChange = 15;
   HealthChange PendingHealthChange = 16;
-  RiskCalculationStatus RiskCalculationStatus = 19;
+  RiskCalculationStatus riskCalculationStatus = 19;
   repeated Risk risks = 20;
 }
 
