@@ -520,6 +520,12 @@ message ChangeSummary {
 
   // The number of edges in the blast radius of this change
   int32 numAffectedEdges = 10;
+  
+  // Risk status to show in changes list
+  RiskCalculationStatus RiskCalculationStatus = 11;
+
+  // The Risks associated with change
+  repeated Risk risks = 12;
 }
 
 // a complete Change with machine-supplied and user-supplied values
