@@ -904,6 +904,7 @@ message Risk {
     SEVERITY_HIGH = 3;
   }
 
+  bytes riskUUID = 5;
   string title = 1;
   Severity severity = 2;
   string description = 3;
