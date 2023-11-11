@@ -33,10 +33,18 @@ service Auth0Support {
 }
 
 message Auth0CreateUserRequest {
+    // The Auth0 User ID
     string user_id = 1;
+    // The user's email address
     string email = 2;
-    string name = 3;
+    // The user's full name
+    string name = 3 [deprecated=true];
+    // Whether the user's email address has been verified
     bool email_verified = 4;
+    // The user's first name
+    string first_name = 5;
+    // The user's last name
+    string last_name = 6;
 }
 message Auth0CreateUserResponse {
     string org_id = 1;
