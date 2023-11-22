@@ -520,7 +520,7 @@ message ChangeSummary {
 
   // The number of edges in the blast radius of this change
   int32 numAffectedEdges = 10;
-  
+
   // The number of low risks in this change
   int32 numLowRisk = 11;
 
@@ -666,6 +666,12 @@ message ChangeProperties {
 
   // a list of item diffs that were planned to be changed as part of this change. For all items that we could map, the ItemDiff.Reference will be set to the actual item found.
   repeated ItemDiff plannedChanges = 12;
+
+  // The raw plan output for calculating the change's risks.
+  string rawPlan = 13;
+
+  // The code changes of this change for calculating the change's risks.
+  string codeChanges = 14;
 }
 
 ////////////////////////////
@@ -921,7 +927,7 @@ message RiskCalculationStatus {
   }
 
   Status status = 1;
-  
+
   // A message that should be rendered along with the status. This won't be
   // shown when the status is `STATUS_DONE` since nothing went wrong. But other
   // status could show this message e.g. if a calculation was skipped because
