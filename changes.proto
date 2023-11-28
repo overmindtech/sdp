@@ -3,7 +3,10 @@ syntax = "proto3";
 package changes;
 
 import "google/protobuf/timestamp.proto";
+
+import "bookmarks.proto";
 import "items.proto";
+import "snapshots.proto";
 
 //              ______
 //           ,'"       "-._
@@ -58,6 +61,8 @@ service ChangesService {
   rpc CreateChange(CreateChangeRequest) returns (CreateChangeResponse);
   // Gets the details of an existing change
   rpc GetChange(GetChangeRequest) returns (GetChangeResponse);
+  // Gets the all data of an existing change for archival
+  rpc GetChangeArchive(GetChangeArchiveRequest) returns (GetChangeArchiveResponse);
   // Updates an existing change
   rpc UpdateChange(UpdateChangeRequest) returns (UpdateChangeResponse);
   // Deletes a change
@@ -933,4 +938,26 @@ message RiskCalculationStatus {
   // status could show this message e.g. if a calculation was skipped because
   // the user opted out or didn't have enough credits
   string message = 2;
+}
+
+////////////////
+//  Archival  //
+////////////////
+
+message ChangeArchive {
+  Change Change = 1;
+  optional bookmarks.Bookmark changingItemsBookmark = 2;
+  optional snapshots.Snapshot blastRadiusSnapshot = 3;
+  optional snapshots.Snapshot systemBeforeSnapshot = 4;
+  optional snapshots.Snapshot systemAfterSnapshot = 5;
+  repeated App affectedApps = 6;
+  repeated ChangeTimelineEntry timeline = 7;
+}
+
+message GetChangeArchiveRequest {
+  bytes UUID = 1;
+}
+
+message GetChangeArchiveResponse {
+  ChangeArchive changeArchive = 1;
 }
