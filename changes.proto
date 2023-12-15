@@ -187,7 +187,7 @@ message GetDiffResponse {
   repeated Edge edges = 2;
 
   // Items that were planned to be changed, but were not changed
-  repeated ItemDiff unexpectedUnchangedItems = 4;
+  repeated ItemDiff missingItems = 4;
 }
 
 message ListChangingItemsSummaryRequest {
