@@ -20,6 +20,6 @@
     "@bufbuild/buf": "^1.15.0-1",
     "@bufbuild/protoc-gen-es": "^1.2.0",
     "@connectrpc/protoc-gen-connect-es": "^1.1.2",
-    "@connectrpc/protoc-gen-connect-query": "^0.6.0"
+    "@connectrpc/protoc-gen-connect-query": "^1.0.0"
   }
 }
