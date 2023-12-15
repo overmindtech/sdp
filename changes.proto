@@ -663,7 +663,7 @@ message ChangeProperties {
   string ccEmails = 6;
 
   // UUID of a bookmark for the item queries of the items *directly* affected by
-  // this change. This might be parsed from a terraform plam, added from the API,
+  // this change. This might be parsed from a terraform plan, added from the API,
   // parsed from a freeform ticket description etc.
   bytes changingItemsBookmarkUUID = 7;
 
