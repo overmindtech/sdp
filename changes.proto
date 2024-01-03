@@ -215,7 +215,7 @@ message UpdateChangingItemsRequest {
 }
 
 message MappedItemDiff {
-  // The item that is changing and any know changes to it
+  // The item that is changing and any known changes to it
   ItemDiff item = 1;
 
   // a mapping query that can be used to find the item. this can be empty if the
