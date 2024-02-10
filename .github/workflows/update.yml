@@ -5,9 +5,6 @@ jobs:
     name: Update Libraries
     runs-on: ubuntu-latest
 
-    env:
-      GOEXPERIMENT: loopvar
-
     steps:
       - uses: actions/checkout@v4
         with:
