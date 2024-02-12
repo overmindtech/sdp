@@ -615,29 +615,6 @@ message ChangeMetadata {
   HealthChange WarningHealthChange = 14;
   HealthChange ErrorHealthChange = 15;
   HealthChange PendingHealthChange = 16;
-
-  // The status of the risk calculation
-  RiskCalculationStatus riskCalculationStatus = 19;
-
-  // The risks that are related to this change
-  repeated Risk risks = 20;
-
-  // The number of low risks in this change
-  int32 numLowRisk = 21;
-
-  // The number of medium risks in this change
-  int32 numMediumRisk = 22;
-
-  // The number of high risks in this change
-  int32 numHighRisk = 23;
-
-  // A list of references to the items that taken into account when calculating
-  // risks. Due to inherent limitations in the way we calculate risks, for large
-  // changes we might need to consider only a subset of the blast radius. This
-  // means that risks might be missed if they relate to items that weren't
-  // considered. This list is used to show the user which items were considered,
-  // and which were not.
-  repeated Reference sampledItemsForRiskCalculation = 24;
 }
 
 // user-supplied properties of this change
