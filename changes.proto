@@ -61,6 +61,8 @@ service ChangesService {
   rpc CreateChange(CreateChangeRequest) returns (CreateChangeResponse);
   // Gets the details of an existing change
   rpc GetChange(GetChangeRequest) returns (GetChangeResponse);
+  // Gets the risks and risk calculation status of an existing change
+  rpc GetChangeRisks(GetChangeRisksRequest) returns (GetChangeRisksResponse);
   // Gets the all data of an existing change for archival
   rpc GetChangeArchive(GetChangeArchiveRequest) returns (GetChangeArchiveResponse);
   // Updates an existing change
@@ -613,29 +615,6 @@ message ChangeMetadata {
   HealthChange WarningHealthChange = 14;
   HealthChange ErrorHealthChange = 15;
   HealthChange PendingHealthChange = 16;
-
-  // The status of the risk calculation
-  RiskCalculationStatus riskCalculationStatus = 19;
-
-  // The risks that are related to this change
-  repeated Risk risks = 20;
-
-  // The number of low risks in this change
-  int32 numLowRisk = 21;
-
-  // The number of medium risks in this change
-  int32 numMediumRisk = 22;
-
-  // The number of high risks in this change
-  int32 numHighRisk = 23;
-
-  // A list of references to the items that taken into account when calculating
-  // risks. Due to inherent limitations in the way we calculate risks, for large
-  // changes we might need to consider only a subset of the blast radius. This
-  // means that risks might be missed if they relate to items that weren't
-  // considered. This list is used to show the user which items were considered,
-  // and which were not.
-  repeated Reference sampledItemsForRiskCalculation = 24;
 }
 
 // user-supplied properties of this change
@@ -727,6 +706,50 @@ message GetChangeRequest {
 
 message GetChangeResponse {
   changes.Change change = 1;
+}
+
+// get the details of a specific change
+message GetChangeRisksRequest {
+  bytes UUID = 1;
+}
+
+message GetChangeRisksResponse {
+  // The status of the risk calculation
+  RiskCalculationStatus riskCalculationStatus = 1;
+
+  // The description of the current step within the STATUS_INPROGRESS status.
+  // This will only be populated when the status is STATUS_INPROGRESS
+  string stepDescription = 2;
+
+  // The current step within the STATUS_INPROGRESS status. These give more
+  // granularity and should be shown to the user so they can see that the
+  // calculation is progressing
+  int32 currentStep = 3;
+
+  // The total num,ber of steps within the STATUS_INPROGRESS status
+  int32 totalSteps = 4;
+
+
+  // The risks that are related to this change
+  repeated Risk risks = 5;
+
+  // The number of low risks in this change
+  int32 numLowRisk = 6;
+
+  // The number of medium risks in this change
+  int32 numMediumRisk = 7;
+
+  // The number of high risks in this change
+  int32 numHighRisk = 8;
+
+  // A list of references to the items that taken into account when calculating
+  // risks. Due to inherent limitations in the way we calculate risks, for large
+  // changes we might need to consider only a subset of the blast radius. This
+  // means that risks might be missed if they relate to items that weren't
+  // considered. This list is used to show the user which items were considered,
+  // and which were not.
+  // TODO: this is currently not implemented
+  //repeated Reference sampledItemsForRiskCalculation = 9;
 }
 
 // update an existing change
