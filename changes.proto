@@ -717,11 +717,17 @@ message GetChangeRisksResponse {
   // The status of the risk calculation
   RiskCalculationStatus riskCalculationStatus = 1;
 
-    // progress of the risk calculation - only filled when riskCalculationStatus
-    // is `STATUS_INPROGRESS`
-    string stepDescription = 2;
-    int32 currentStep = 3;
-    int32 totalSteps = 4;
+  // The description of the current step within the STATUS_INPROGRESS status.
+  // This will only be populated when the status is STATUS_INPROGRESS
+  string stepDescription = 2;
+
+  // The current step within the STATUS_INPROGRESS status. These give more
+  // granularity and should be shown to the user so they can see that the
+  // calculation is progressing
+  int32 currentStep = 3;
+
+  // The total num,ber of steps within the STATUS_INPROGRESS status
+  int32 totalSteps = 4;
 
 
   // The risks that are related to this change
