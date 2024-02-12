@@ -713,7 +713,7 @@ message GetChangeRisksRequest {
   bytes UUID = 1;
 }
 
-message GetChangeRisksResponse {
+message ChangeRiskMetadata {
   // The status of the risk calculation
   RiskCalculationStatus riskCalculationStatus = 1;
 
@@ -737,6 +737,10 @@ message GetChangeRisksResponse {
   // and which were not.
   // TODO: this is currently not implemented
   //repeated Reference sampledItemsForRiskCalculation = 9;
+}
+
+message GetChangeRisksResponse {
+  ChangeRiskMetadata changeRiskMetadata = 1;
 }
 
 // update an existing change
@@ -982,6 +986,7 @@ message ChangeArchive {
   optional snapshots.Snapshot systemAfterSnapshot = 5;
   repeated App affectedApps = 6;
   repeated ChangeTimelineEntry timeline = 7;
+  ChangeRiskMetadata changeRiskMetadata = 8;
 }
 
 message GetChangeArchiveRequest {
