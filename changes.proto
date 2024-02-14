@@ -963,15 +963,49 @@ message RiskCalculationStatus {
   // shown when the status is `STATUS_DONE` since nothing went wrong. But other
   // status could show this message e.g. if a calculation was skipped because
   // the user opted out or didn't have enough credits
-  string message = 2;
+  //
+  // This is deprecated in favour of the `progressMilestones` field
+  string message = 2 [deprecated = true];
 
   // The total number of steps within the STATUS_INPROGRESS status
-  int32 numSteps = 3;
+  //
+  // This is deprecated in favour of the `progressMilestones` field
+  int32 numSteps = 3 [deprecated = true];
 
   // The current step within the STATUS_INPROGRESS status. These give more
   // granularity and should be shown to the user so they can see that the
   // calculation is progressing
-  int32 currentStep = 4;
+  //
+  // This is deprecated in favour of the `progressMilestones` field
+  int32 currentStep = 4 [deprecated = true];
+
+  message ProgressMilestone {
+    enum Status {
+      // The milestone hasn't been reached yet
+      STATUS_PENDING = 0;
+      // The milestone is currently being worked on
+      STATUS_INPROGRESS = 1;
+      // The milestone has been completed
+      STATUS_DONE = 2;
+      // The milestone failed
+      STATUS_ERROR = 3;
+      // The milestone was skipped. This will happen to future milestones if
+      // there is an error. For example at error at step 1 will mean the others
+      // were skipped
+      STATUS_SKIPPED = 4;
+    }
+
+    // The description of this milestone
+    string description = 1;
+
+    // The status of this milestone
+    Status status = 2;
+  }
+
+  // Milestones within the risk calculation process. They will be populated when
+  // the status is `STATUS_INPROGRESS` and show a more detailed breakdown of the
+  // progress
+  repeated ProgressMilestone progressMilestones = 5;
 }
 
 ////////////////
