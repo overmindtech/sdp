@@ -990,7 +990,7 @@ message RiskCalculationStatus {
       // The milestone failed
       STATUS_ERROR = 3;
       // The milestone was skipped. This will happen to future milestones if
-      // there is an error. For example at error at step 1 will mean the others
+      // there is an error. For example an error at step 1 will mean the others
       // were skipped
       STATUS_SKIPPED = 4;
     }
