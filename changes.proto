@@ -793,13 +793,10 @@ message CalculateBlastRadiusResponse {
   uint32 numItems = 2;
   uint32 numEdges = 3;
 
-  // If we wanted to display the graph as it loads (which would be pretty cool)
-  // we could do something like the below. For now it's out of scope for AWS
-  // summit as we're not going to get the time
-  // oneof response_type {
-  //   Item newItem = 2; // A new item that has been discovered
-  //   Edge newEdge = 3; // A new edge between two items
-  // }
+  // A list of errors that were encountered as part of calculating the blast
+  // radius. These should only be populated if the state is `STATE_DONE` to
+  // avoid sending them repeatedly
+  repeated string errors = 4;
 }
 
 message StartChangeRequest {
