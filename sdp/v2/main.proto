@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package sdp.v2;
+
+import "google/protobuf/duration.proto";
+
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
+//         ___\///////////_____\////////////_____\///______________
+option go_package = "github.com/overmindtech/sdp-go/sdp/v2;sdp";
+
+// The primary frame that gets sent over SDP connections. This allows for a
+// variety of commands to be sent and received with easy multiplexing and
+// re-assembling of responses b using the `uuid` field to link requests and
+// responses.
+message SdpRequest {
+    // UUID of the request
+    string uuid = 1;
+    // The deadline for how long the sender is willing to wait for responses
+    google.protobuf.Duration deadline = 2;
+
+    // oneof request {
+    //     // Adds a new query for items to the session, starting it immediately
+    //     Query query = 3;
+    //     // Cancel a running query
+    //     CancelQuery cancelQuery =4;
+    //     // Undo the specified query, if it was the last query received by the gateway. This removes it and all of its effects from the session
+    //     UndoQuery undoQuery = 5;
+
+    //     // TODO: implement
+    //     // // Exclude an item from the results
+    //     // Reference excludeItem = 6;
+    //     // // Remove an item from the list of exclusions
+    //     // Reference includeItem = 7;
+
+    //     // Expand all linked items for the given item
+    //     Expand expand = 8;
+    //     // Undo the specified item expansion
+    //     UndoExpand undoExpand = 9;
+    //     // TODO: CancelExpand?
+
+    //     // store the current session state as snapshot
+    //     StoreSnapshot storeSnapshot = 11;
+    //     // load a snapshot into the current state
+    //     LoadSnapshot loadSnapshot = 12;
+    //     // TODO: implement?
+    //     // // cancel the loading of a snapshot
+    //     // CancelLoadSnapshot cancelLoadSnapshot = 13;
+    //     // // undo the loading of a snapshot
+    //     // UndoLoadSnapshot undoLoadSnapshot = 14;
+
+    //     // store the current set of queries as bookmarks
+    //     StoreBookmark storeBookmark = 15;
+    //     // load and execute a bookmark into the current state
+    //     LoadBookmark loadBookmark = 16;
+
+    //     // // cancel the loading of a Bookmark
+    //     // CancelLoadBookmark cancelLoadBookmark = 17;
+    //     // // undo the loading of a Bookmark
+    //     // UndoLoadBookmark undoLoadBookmark = 18;
+    // }
+}
+
+message SdpResponse {
+    // UUID of the request
+    string uuid = 1;
+
+    // oneof response {
+    //     Item newItem = 2; // A new item that has been discovered
+    //     Edge newEdge = 3; // A new edge between two items
+
+    //     GatewayRequestStatus status = 4; // Status of the overall request
+    //     string error = 5; // An error that means the request couldn't be executed
+
+    //     QueryError queryError = 6; // A new error that was encountered as part of a query
+
+    //     Reference deleteItem = 7; // An item that should be deleted from local state
+    //     Edge deleteEdge = 8; // An edge that should be deleted form local state
+
+    //     Item updateItem = 9; // An item that has already been sent, but contains new data, it should be updated to reflect this version
+
+    //     SnapshotStoreResult snapshotStoreResult = 11;
+    //     SnapshotLoadResult snapshotLoadResult = 12;
+
+    //     BookmarkStoreResult bookmarkStoreResult = 15;
+    //     BookmarkLoadResult bookmarkLoadResult = 16;
+
+    //     QueryStatus queryStatus = 17; // Status of requested queries
+
+    // }
+}

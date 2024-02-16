@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package sdp.v2;
+
+import "google/protobuf/timestamp.proto";
+
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
+//         ___\///////////_____\////////////_____\///______________
+option go_package = "github.com/overmindtech/sdp-go/sdp/v2;sdp";
+
+// QueryMethod represents the available query methods. The details of these
+// methods are:
+//
+// GET: This takes a single unique query and should only return a single item.
+//      If an item matching the parameter passed doesn't exist the server should
+//      fail
+//
+// LIST: This takes no query (or ignores it) and should return all items that it
+//       can find
+//
+// SEARCH: This takes a non-unique query which is designed to be used as a
+//         search term. It should return some number of items (or zero) which
+//         match the query
+enum QueryMethod {
+  QUERY_METHOD_UNSPECIFIED = 0;
+  QUERY_METHOD_GET = 1;
+  QUERY_METHOD_LIST = 2;
+  QUERY_METHOD_SEARCH = 3;
+}
+
+// Query represents a query for an item or a list of items.
+message Query {
+  // A UUID to uniquely identify the query. This should be stored by the
+  // requester as it will be needed later if the requester wants to cancel a
+  // query. It should be stored as 128 bytes, as opposed to the textual
+  // representation
+  string uuid = 1;
+
+  // The deadline for this query. When the deadline elapses, results become
+  // irrelevant for the sender and any processing can stop. The deadline gets
+  // propagated to all related queries (e.g. for linked items) and processes.
+  // Note: there is currently a migration going on from timeouts to durations,
+  // so depending on which service is hit, either one is evaluated.
+  google.protobuf.Timestamp deadline = 2;
+
+  // Which method to use when looking for it
+  QueryMethod method = 3;
+
+  // The scope for which we are requesting. To query all scopes use the the
+  // wildcard '*'
+  string scope = 4;
+
+  // The type of item to search for. "*" means all types
+  string type = 5;
+
+  // What query should be passed to that method
+  string query = 6;
+
+  // Defines how this query should behave when finding new items
+  message RecursionBehaviour {
+    // How deeply to link items. A value of 0 will mean that items are not linked.
+    // To resolve linked items "infinitely" simply set this to a high number, with
+    // the highest being 4,294,967,295. While this isn't truly *infinite*, chances
+    // are that it is effectively the same, think six degrees of separation etc.
+    uint32 link_depth = 1;
+
+    // set to true to only follow links that propagate configuration change impact
+    bool follow_only_blast_propagation = 2;
+  }
+
+  // Defines how this query should behave when finding new items
+  RecursionBehaviour recursion_behaviour = 7;
+
+  // Whether to ignore the cache and execute the query regardless.
+  //
+  // By default sources will implement some level of caching, this is
+  // particularly important for linked items as a single query with a large link
+  // depth may result in the same item being queried many times as links are
+  // resolved and more and more items link to each other. However if required
+  // this caching can be turned off using this parameter
+  bool ignore_cache = 8;
+}
+
+// QueryError is sent back when an item query fails
+message QueryError {
+  // The error type. Any types in here will be gracefully handled unless the
+  // type os "OTHER"
+  enum ErrorType {
+    // This should be used of all other failure modes, such as timeouts,
+    // unexpected failures when querying state, permissions errors etc. Errors
+    // that return this type should not be cached as the error may be transient.
+    ERROR_TYPE_UNSPECIFIED = 0;
+
+    // the query was semantically correct, but the source could not execute it due to a setup isse, like invalid credentials or missing permissions or a runtime issue, like a network error or a service being down. The query can be retried after the issue has been resolved.
+    ERROR_TYPE_TEMPORARY_ERROR = 1;
+
+    // there was a permanent error when executing the query, like a syntax error in the query. The query will not succeed if retried.
+    ERROR_TYPE_PERMANENT_ERROR = 2;
+
+    // there was an implementation issue in the source that caused the query to fail. The query can be retried after the issue has been resolved.
+    ERROR_TYPE_IMPLEMENTATION_ERROR = 3;
+  }
+  ErrorType error_type = 1;
+
+  // A user-friendly textual representation of the error
+  string error_string = 2;
+}

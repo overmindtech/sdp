@@ -1,0 +1,147 @@
+syntax = "proto3";
+
+package sdp.v2;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "sdp/v2/query.proto";
+
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
+//         ___\///////////_____\////////////_____\///______________
+option go_package = "github.com/overmindtech/sdp-go/sdp/v2;sdp";
+
+// Represents the health of something, the meaning of each state may depend on
+// the context in which it is used but should be reasonably obvious
+enum Health {
+  HEALTH_UNSPECIFIED = 0; // The health could not be determined
+  HEALTH_OK = 1; // Functioning normally
+  HEALTH_WARNING = 2; // Functioning, but degraded
+  HEALTH_ERROR = 3; // Not functioning
+  HEALTH_PENDING = 4; // Health state is transitioning, such as when something is first provisioned
+}
+
+// This is the same as Item within the package with a couple of exceptions, no
+// real reason why this whole thing couldn't be modelled in protobuf though if
+// required. Just need to decide what if anything should remain private
+message Item {
+  // The scope within which the item is unique. Item uniqueness is determined
+  // by the combination of type and unique_attribute value. However it is
+  // possible for the same item to exist in many scopes. There is not formal
+  // definition for what a scope should be other than the fact that it should
+  // be somewhat descriptive and should ensure item uniqueness
+  string scope = 1;
+
+  // The sdp type of this Item. Determines what the item is and what its attributes mean.
+  string type = 2;
+
+  // The name of the attribute that is the primary key for this item.
+  string unique_attribute = 3;
+
+  // The disccovered attributes of this item.
+  google.protobuf.Struct attributes =4;
+
+  // Metadata about the item. Where it came from, how long it took to discover, etc.
+  Metadata metadata = 5;
+
+  // (optional) Represents the health of the item. Only items that have a
+  // clearly relevant health attribute should return a value for health
+  optional Health health = 6;
+
+  // Arbitrary key-value pairs that can be used to store additional information.
+  // These tags are retrieved from the source and map to the target's definition
+  // of a tag (e.g. AWS tags, Kubernetes labels, etc.)
+  map<string, string> tags = 7;
+}
+
+// Metadata about the item. Where it came from, how long it took to discover, etc.
+message Metadata {
+  // This is the name of the source that was used to find the item.
+  string source_name = 1;
+
+  // The time that the item was found
+  google.protobuf.Timestamp timestamp = 2;
+
+  // Whether the item should be hidden/ignored by user-facing things such as
+  // GUIs and databases.
+  //
+  // Some types of items are only relevant in calculating higher-layer
+  // abstractions and are therefore always hidden. A good example of this would
+  // be the output of a command. This could be used by a remote source to gather
+  // information, but we don't actually want to show the user all the commands
+  // that were run, just the final item returned by the source
+  bool hidden = 3;
+
+  // The UUID of the QUERY that caused this item to be found
+  string source_query_uuid = 4;
+}
+
+// This is a list of items, like a List() would return
+message Items {
+  repeated Item items = 1;
+}
+
+// This message stores additional information on Edges (and edge-like constructs) to determine how configuration changes can impact
+// the linked items.
+//
+//  Blast Propagation options:
+// |-------|-------|----------------------
+// |   in  |  out  | result
+// |-------|-------|----------------------
+// | false | false | no change in any item can affect the other
+// | false | true  | a change to this item can affect its linked items
+// |       |       | example: a change to an EC2 instance can affect its DNS name (in the sense that other items depending on that DNS name will see the impact)
+// | true  | false | a change to linked items can affect this item
+// |       |       | example: changing the KMS key used by a DynamoDB table can impact the table, but no change to the table can impact the key
+// | true  | true  | changes on boths sides of the link can affect the other
+// |       |       | example: changes to both EC2 Instances and their volumes can affect the other side of the relation.
+message BlastPropagation {
+  // is true if changes on linked items can affect this item
+  bool in = 1;
+  // is true if changes on this item can affect linked items
+  bool out = 2;
+}
+
+// Reference to an item
+//
+// The uniqueness of an item is determined by the combination of:
+//
+//   * Scope
+//   * Type
+//   * unique_attribute_value
+//
+message Reference {
+  string scope = 1;
+  string type = 2;
+  string unique_attribute_value = 3;
+}
+
+// Edge represents a link between two items. The order of the from and to values
+// determines semantic interpretation of what this edge means. The
+// blast_propagation field stores additional information on how configuration
+// changes can impact the linked items.
+//
+// Depending of the progress of processing, this can be two queries, an item and
+// a query or two items. As results propagate through the system, the various
+// processors along the way are responsible for holding back edges with queries
+// that they can resolve, and replacing them with the resolved items before
+// passing them on, conditional on the requirements of link depth and blast
+// propagation query settings.
+message Edge {
+  oneof from {
+    Reference from_item_ref = 1;
+    Query from_query = 2;
+  }
+  oneof to {
+    Reference to_item_ref = 3;
+    Query to_query = 4;
+  }
+
+  BlastPropagation blast_propagation = 5;
+}

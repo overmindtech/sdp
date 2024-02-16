@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package sdp.v2;
+import "sdp/v2/item.proto";
+import "sdp/v2/query.proto";
+
+// _____/\\\\\\\\\\\____/\\\\\\\\\\\\_____/\\\\\\\\\\\\\___
+//  ___/\\\/////////\\\_\/\\\////////\\\__\/\\\/////////\\\_
+//   __\//\\\______\///__\/\\\______\//\\\_\/\\\_______\/\\\_
+//    ___\////\\\_________\/\\\_______\/\\\_\/\\\\\\\\\\\\\/__
+//     ______\////\\\______\/\\\_______\/\\\_\/\\\/////////____
+//      _________\////\\\___\/\\\_______\/\\\_\/\\\_____________
+//       __/\\\______\//\\\__\/\\\_______/\\\__\/\\\_____________
+//        _\///\\\\\\\\\\\/___\/\\\\\\\\\\\\/___\/\\\_____________
+//         ___\///////////_____\////////////_____\///______________
+option go_package = "github.com/overmindtech/sdp-go/sdp/v2;sdp";
+
+// This describes the internal APIs for sources. We only use the generated
+// interfaces for the internal structure of the discovery library.
+
+service SourceService {
+    // execute a query against the source. The source will return a stream of Items, Edges and Errors.
+    rpc Query(QueryRequest) returns (stream QueryResponse);
+}
+
+message QueryRequest {
+    // the query to execute
+    Query query = 1;
+}
+
+message QueryResponse {
+    oneof response {
+        // the items returned by the source
+        Item item = 1;
+        // the edges returned by the source
+        Edge edge = 2;
+        // an error encountered by the source
+        QueryError error = 3;
+    }
+}
