@@ -537,6 +537,10 @@ message ChangeSummary {
 
   // The number of high risks in this change
   int32 numHighRisk = 13;
+
+  // Quick description of the change.
+  // Example: "upgrade of the database to get access to the new contoso management processor"
+  string description = 14;
 }
 
 // a complete Change with machine-supplied and user-supplied values
