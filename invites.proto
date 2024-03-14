@@ -27,6 +27,7 @@ service InviteService {
     rpc CreateInvite(CreateInviteRequest) returns (CreateInviteResponse);
     rpc ListInvites(ListInvitesRequest) returns (ListInvitesResponse);
     rpc RevokeInvite(RevokeInviteRequest) returns (RevokeInviteResponse);
+    rpc ResendInvite(ResendInviteRequest) returns (ResendInviteResponse);
 }
 
 message CreateInviteRequest {
@@ -58,4 +59,10 @@ message RevokeInviteRequest {
     string email = 1;
 }
 message RevokeInviteResponse {
+}
+
+message ResendInviteRequest {
+    string email = 1;
+}
+message ResendInviteResponse {
 }
