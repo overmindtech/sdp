@@ -112,7 +112,7 @@ message AdminCreateTokenRequest {
     CreateTokenRequest request = 2;
 }
 
-// RPCS to manage the user's account, sources etc. All requests to this API are
+// RPCs to manage the user's account, sources etc. All requests to this API are
 // scoped to that user's account via the
 // `https://api.overmind.tech/account-name` claim in the suppplied token
 service ManagementService {
@@ -156,9 +156,9 @@ message Source {
 }
 
 message SourceMetadata {
-    bytes UUID = 1; // TOOD: Chnage to ID along with everything else
+    bytes UUID = 1; // TOOD: Change to ID along with everything else
 
-    // The name of the nats JWT that has been generated for this source
+    // The name of the NATS JWT that has been generated for this source
     string TokenName = 2;
 
     // When the NATS JWT expires (unix time)
