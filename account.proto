@@ -208,6 +208,8 @@ message AccountMetadata {
 message AccountProperties {
     // The name of the account
     string Name = 1;
+    // The Customer ID within Stripe
+    string CustomerID = 2;
 }
 
 message GetAccountRequest {}
