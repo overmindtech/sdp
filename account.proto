@@ -209,7 +209,7 @@ message AccountProperties {
     // The name of the account
     string Name = 1;
     // The Customer ID within Stripe
-    string CustomerID = 2;
+    string StripeCustomerID = 2;
 }
 
 message GetAccountRequest {}
