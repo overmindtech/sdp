@@ -34,6 +34,10 @@ service AdminService {
     rpc GetAccount(AdminGetAccountRequest) returns (GetAccountResponse);
     // Deletes an account
     rpc DeleteAccount(AdminDeleteAccountRequest) returns (AdminDeleteAccountResponse);
+    // Deletes a user from Auth0, this does not delete the Overmind account that
+    // they are attached to ad should be used in conjunction with DeleteAccount
+    // if the user is intending to delete everything Overmind has on them
+    rpc DeleteUser(AdminDeleteUserRequest) returns (AdminDeleteUserResponse);
 
     // Lists all sources within the closen account
     rpc ListSources(AdminListSourcesRequest) returns (ListSourcesResponse);
@@ -83,6 +87,12 @@ message AdminDeleteAccountRequest {
 }
 message AdminDeleteAccountResponse {}
 
+message AdminDeleteUserRequest {
+    // The email of the user to delete
+    string email = 1;
+}
+message AdminDeleteUserResponse {}
+
 message AdminListSourcesRequest {
     string account = 1;
     ListSourcesRequest request = 2;
@@ -118,8 +128,17 @@ message AdminCreateTokenRequest {
 service ManagementService {
     // Get the details of the account that this user belongs to
     rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
-    // Deletes the user's account
+    
+    // Deletes the user's account. If a user calls this and logs in again, they
+    // will get a completely new account provisioned for them
     rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+
+    // Deletes the user's account. This will remove the user from Auth0 entirely
+    // and they will need to sign up again. If a user is intending to delete
+    // everything Overmind has on them, they should use DeleteAccount to delete
+    // their Overmind account and all the data it contains, then call this to
+    // remove themselves from Auth0
+    rpc DeleteOwnUser(DeleteOwnUserRequest) returns (DeleteOwnUserResponse);
 
     // Lists all sources within the user's account
     rpc ListSources(ListSourcesRequest) returns (ListSourcesResponse);
@@ -223,6 +242,13 @@ message DeleteAccountRequest {
     bool iAmSure = 1;
 }
 message DeleteAccountResponse {}
+
+message DeleteOwnUserRequest {
+    // Set to true to confirm that the user is sure they want to delete their
+    // user. This is to prevent accidental deletions
+    bool iAmSure = 1;
+}
+message DeleteOwnUserResponse {}
 
 message ListSourcesRequest {}
 message ListSourcesResponse {
