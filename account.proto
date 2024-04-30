@@ -33,7 +33,7 @@ service AdminService {
     // Get the details of a given account
     rpc GetAccount(AdminGetAccountRequest) returns (GetAccountResponse);
     // Deletes an account
-    rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+    rpc DeleteAccount(AdminDeleteAccountRequest) returns (AdminDeleteAccountResponse);
 
     // Lists all sources within the closen account
     rpc ListSources(AdminListSourcesRequest) returns (ListSourcesResponse);
@@ -77,11 +77,11 @@ message AdminGetAccountRequest {
     string name = 1;
 }
 
-message DeleteAccountRequest {
+message AdminDeleteAccountRequest {
     // The name of the account to delete
     string name = 1;
 }
-message DeleteAccountResponse {}
+message AdminDeleteAccountResponse {}
 
 message AdminListSourcesRequest {
     string account = 1;
@@ -118,6 +118,8 @@ message AdminCreateTokenRequest {
 service ManagementService {
     // Get the details of the account that this user belongs to
     rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
+    // Deletes the user's account
+    rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
 
     // Lists all sources within the user's account
     rpc ListSources(ListSourcesRequest) returns (ListSourcesResponse);
@@ -214,6 +216,13 @@ message GetAccountRequest {}
 message GetAccountResponse {
    Account account = 1;
 }
+
+message DeleteAccountRequest {
+    // Set to true to confirm that the user is sure they want to delete their
+    // account. This is to prevent accidental deletions
+    bool iAmSure = 1;
+}
+message DeleteAccountResponse {}
 
 message ListSourcesRequest {}
 message ListSourcesResponse {
