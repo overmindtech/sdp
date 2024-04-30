@@ -32,7 +32,8 @@ service AdminService {
     rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse);
     // Get the details of a given account
     rpc GetAccount(AdminGetAccountRequest) returns (GetAccountResponse);
-    // Deletes an account
+    // Deletes an account from Overmind. If a user logs in again, they will get
+    // a completely new account provisioned for them
     rpc DeleteAccount(AdminDeleteAccountRequest) returns (AdminDeleteAccountResponse);
     // Deletes a user from Auth0, this does not delete the Overmind account that
     // they are attached to ad should be used in conjunction with DeleteAccount
