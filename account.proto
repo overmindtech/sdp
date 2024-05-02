@@ -32,18 +32,20 @@ service AdminService {
     rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse);
     // Get the details of a given account
     rpc GetAccount(AdminGetAccountRequest) returns (GetAccountResponse);
-    // Deletes an account
-    rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+    // Completely deletes an account. This includes all of the data in that
+    // account, bookmarks, changes etc. It also deletes all users from Auth0
+    // that are associated with this account
+    rpc DeleteAccount(AdminDeleteAccountRequest) returns (AdminDeleteAccountResponse);
 
-    // Lists all sources within the closen account
+    // Lists all sources within the chosen account
     rpc ListSources(AdminListSourcesRequest) returns (ListSourcesResponse);
-    // Creates a new source within the closen account
+    // Creates a new source within the chosen account
     rpc CreateSource(AdminCreateSourceRequest) returns (CreateSourceResponse);
-    // Get the details of a source within the closen account
+    // Get the details of a source within the chosen account
     rpc GetSource(AdminGetSourceRequest) returns (GetSourceResponse);
-    // Update the details of a source within the closen account
+    // Update the details of a source within the chosen account
     rpc UpdateSource(AdminUpdateSourceRequest) returns (UpdateSourceResponse);
-    // Deletes a source from a closen account
+    // Deletes a source from a chosen account
     rpc DeleteSource(AdminDeleteSourceRequest) returns (DeleteSourceResponse);
 
     // Updates sources to keep them running in the background. This can be used
@@ -77,11 +79,11 @@ message AdminGetAccountRequest {
     string name = 1;
 }
 
-message DeleteAccountRequest {
+message AdminDeleteAccountRequest {
     // The name of the account to delete
     string name = 1;
 }
-message DeleteAccountResponse {}
+message AdminDeleteAccountResponse {}
 
 message AdminListSourcesRequest {
     string account = 1;
@@ -118,6 +120,10 @@ message AdminCreateTokenRequest {
 service ManagementService {
     // Get the details of the account that this user belongs to
     rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
+    // Completely deletes the user's account. This includes all of the data in
+    // that account, bookmarks, changes etc. It also deletes the current user,
+    // and all other users in that account from Auth0
+    rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
 
     // Lists all sources within the user's account
     rpc ListSources(ListSourcesRequest) returns (ListSourcesResponse);
@@ -216,6 +222,13 @@ message GetAccountRequest {}
 message GetAccountResponse {
    Account account = 1;
 }
+
+message DeleteAccountRequest {
+    // Set to true to confirm that the user is sure they want to delete their
+    // account. This is to prevent accidental deletions
+    bool iAmSure = 1;
+}
+message DeleteAccountResponse {}
 
 message ListSourcesRequest {}
 message ListSourcesResponse {
