@@ -960,26 +960,6 @@ message RiskCalculationStatus {
 
   Status status = 1;
 
-  // A message that should be rendered along with the status. This won't be
-  // shown when the status is `STATUS_DONE` since nothing went wrong. But other
-  // status could show this message e.g. if a calculation was skipped because
-  // the user opted out or didn't have enough credits
-  //
-  // This is deprecated in favour of the `progressMilestones` field
-  string message = 2 [deprecated = true];
-
-  // The total number of steps within the STATUS_INPROGRESS status
-  //
-  // This is deprecated in favour of the `progressMilestones` field
-  int32 numSteps = 3 [deprecated = true];
-
-  // The current step within the STATUS_INPROGRESS status. These give more
-  // granularity and should be shown to the user so they can see that the
-  // calculation is progressing
-  //
-  // This is deprecated in favour of the `progressMilestones` field
-  int32 currentStep = 4 [deprecated = true];
-
   message ProgressMilestone {
     enum Status {
       // The milestone hasn't been reached yet
