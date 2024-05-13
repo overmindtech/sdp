@@ -144,6 +144,10 @@ service ManagementService {
     // control the associated private key also in order to connect to NATS as
     // the token is not enough on its own
     rpc CreateToken(CreateTokenRequest) returns (CreateTokenResponse);
+
+    // Ensure that all reverse links are populated. This does internal debouncing
+    // so the actual logic does only run when required.
+    rpc RevlinkWarmup(RevlinkWarmupRequest) returns (stream RevlinkWarmupResponse);
 }
 
 enum SourceStatus {
@@ -287,4 +291,12 @@ message CreateTokenRequest {
 message CreateTokenResponse {
     // The JWT as a raw string
     string token = 1;
+}
+
+message RevlinkWarmupRequest {}
+
+message RevlinkWarmupResponse {
+    string status = 1;
+    int32 items = 2;
+    int32 edges = 3;
 }
