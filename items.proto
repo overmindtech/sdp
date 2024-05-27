@@ -371,6 +371,10 @@ message Reference {
   string type = 1;
   string uniqueAttributeValue = 2;
   string scope = 3;
+
+  bool isQuery = 4;
+  string query = 5;
+  QueryMethod method = 6;
 }
 
 // Edge Represents a link between two items, it is not used in regular SDP
