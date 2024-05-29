@@ -50,4 +50,9 @@ message Response {
   // UUID of the item query that this response is in relation to (in binary
   // format)
   bytes UUID = 4;
+
+  // The ID of the responder that is working on a response. This is used for
+  // internal bookkeeping and should remain constant for the duration of a
+  // request, preferably over the lifetime of the source process.
+  bytes responderUUID = 5;
 }
