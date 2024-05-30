@@ -82,6 +82,11 @@ message UpdateAccountRequest {
 message UpdateAccountResponse {
     Account account = 1;
 }
+message AdminUpdateAccountRequest {
+    // The name of the account to update
+    string name = 1;
+    UpdateAccountRequest request = 2;
+}
 
 message AdminGetAccountRequest {
     // The name of the account to get
