@@ -163,7 +163,7 @@ service ManagementService {
     // so the actual logic does only run when required.
     rpc RevlinkWarmup(RevlinkWarmupRequest) returns (stream RevlinkWarmupResponse);
 
-    rpc GetTrialRemainingDays(GetTrialRemainingDaysRequest) returns (GetTrialRemainingDaysResponse);
+    rpc GetTrialEnd(GetTrialEndRequest) returns (GetTrialEndResponse);
 }
 
 enum SourceStatus {
@@ -317,8 +317,8 @@ message RevlinkWarmupResponse {
     int32 edges = 3;
 }
 
-message GetTrialRemainingDaysRequest {}
+message GetTrialEndRequest {}
 
-message GetTrialRemainingDaysResponse {
-    int32 daysRemaining = 1;
+message GetTrialEndResponse {
+    google.protobuf.Timestamp endsAt = 1;
 }
