@@ -162,6 +162,8 @@ service ManagementService {
     // Ensure that all reverse links are populated. This does internal debouncing
     // so the actual logic does only run when required.
     rpc RevlinkWarmup(RevlinkWarmupRequest) returns (stream RevlinkWarmupResponse);
+
+    rpc GetTrialRemainingDays(GetTrialRemainingDaysRequest) returns (GetTrialRemainingDaysResponse);
 }
 
 enum SourceStatus {
@@ -313,4 +315,11 @@ message RevlinkWarmupResponse {
     string status = 1;
     int32 items = 2;
     int32 edges = 3;
+}
+
+message GetTrialRemainingDaysRequest {}
+
+message GetTrialRemainingDaysResponse {
+    int32 daysRemaining = 1;
+    google.protobuf.Timestamp expiryDate = 2;
 }
