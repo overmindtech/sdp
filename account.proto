@@ -321,5 +321,4 @@ message GetTrialRemainingDaysRequest {}
 
 message GetTrialRemainingDaysResponse {
     int32 daysRemaining = 1;
-    google.protobuf.Timestamp expiryDate = 2;
 }
