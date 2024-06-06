@@ -29,9 +29,6 @@ service SnapshotsService {
     rpc GetSnapshot(GetSnapshotRequest) returns (GetSnapshotResponse);
     rpc UpdateSnapshot(UpdateSnapshotRequest) returns (UpdateSnapshotResponse);
     rpc DeleteSnapshot(DeleteSnapshotRequest) returns (DeleteSnapshotResponse);
-
-    // retrieve the initial data for the example change
-    rpc GetInitialData(GetInitialDataRequest) returns (GetInitialDataResponse);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
