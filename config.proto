@@ -1,24 +1,45 @@
 syntax = "proto3";
 
-package cli;
+package config;
 option go_package = "github.com/overmindtech/sdp-go;sdp";
 
-// a simple key-value store to store the config for the CLI
+// a simple key-value store to store configuration data for accounts and users (TODO)
 service ConfigService {
-    rpc GetConfig(GetConfigRequest) returns (GetConfigResponse) {}
-    rpc SetConfig(SetConfigRequest) returns (SetConfigResponse) {}
+    // Get the account config for the user's account
+    rpc GetAccountConfig(GetAccountConfigRequest) returns (GetAccountConfigResponse);
+    // Update the account config for the user's account
+    rpc UpdateAccountConfig(UpdateAccountConfigRequest) returns (UpdateAccountConfigResponse);
 }
 
-message GetConfigRequest {
-    string key = 1;
-}
-message GetConfigResponse {
-    string value = 1;
+// The config that is used when calculating the blast radius for a change, this
+// does not affect manually requested blast radii vie the "Explore" view or the
+// API
+message BlastRadiusConfig {
+    // The maximum number of items that can be returned in a single blast radius
+    // request. Once a request has hit this limit, all currently running
+    // requests will be cancelled and the blast radius returned as-is
+    int32 maxItems = 1;
+
+    // How deeply to link when calculating the blast radius for a change
+    int32 linkDepth = 2;
 }
 
-message SetConfigRequest {
-    string key = 1;
-    string value = 2;
+message AccountConfig {
+    // The blast radius config for this account
+    BlastRadiusConfig blastRadius = 1;
 }
-message SetConfigResponse {
+
+message GetAccountConfigRequest {}
+
+message GetAccountConfigResponse {
+    AccountConfig config = 1;
+}
+
+// Updates the account config for the user's account.
+message UpdateAccountConfigRequest {
+    AccountConfig config = 1;
+}
+
+message UpdateAccountConfigResponse {
+    AccountConfig config = 1;
 }
