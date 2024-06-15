@@ -164,6 +164,11 @@ service ManagementService {
     rpc RevlinkWarmup(RevlinkWarmupRequest) returns (stream RevlinkWarmupResponse);
 
     rpc GetTrialEnd(GetTrialEndRequest) returns (GetTrialEndResponse);
+
+    // Get the account config for the user's account
+    rpc GetAccountConfig(GetAccountConfigRequest) returns (GetAccountConfigResponse);
+    // Update the account config for the user's account
+    rpc UpdateAccountConfig(UpdateAccountConfigRequest) returns (UpdateAccountConfigResponse);
 }
 
 enum SourceStatus {
@@ -321,4 +326,38 @@ message GetTrialEndRequest {}
 
 message GetTrialEndResponse {
     google.protobuf.Timestamp endsAt = 1;
+}
+
+// The config that is used when calculating the blast radius for a change, this
+// does not affect manually requested blast radii vie the "Explore" view or the
+// API
+message BlastRadiusConfig {
+    // The maximum number of items that can be returned in a single blast radius
+    // request. Once a request has hit this limit, all currently running
+    // requests will be cancelled and the blast radius returned as-is
+    int32 maxItems = 1;
+
+    // How deeply to link when calculating the blast radius for a change 
+    int32 linkDepth = 2;
+}
+
+message AccountConfig {
+    // The blast radius config for this account
+    BlastRadiusConfig blastRadius = 1;
+}
+
+message GetAccountConfigRequest {}
+
+message GetAccountConfigResponse {
+    AccountConfig config = 1;
+}
+
+// Updates the account config for the user's account. All fields are optional
+// and only ones that are supplied will actually be updated
+message UpdateAccountConfigRequest {
+    optional BlastRadiusConfig blastRadius = 1; 
+}
+
+message UpdateAccountConfigResponse {
+    AccountConfig config = 1;
 }
