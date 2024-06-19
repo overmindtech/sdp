@@ -352,10 +352,9 @@ message GetAccountConfigResponse {
     AccountConfig config = 1;
 }
 
-// Updates the account config for the user's account. All fields are optional
-// and only ones that are supplied will actually be updated
+// Updates the account config for the user's account.
 message UpdateAccountConfigRequest {
-    optional BlastRadiusConfig blastRadius = 1; 
+    AccountConfig config = 1;
 }
 
 message UpdateAccountConfigResponse {
