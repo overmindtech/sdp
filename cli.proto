@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package cli;
+option go_package = "github.com/overmindtech/sdp-go;sdp";
+
+// a simple key-value store to store the config for the CLI
+service ConfigService {
+    rpc GetConfig(GetConfigRequest) returns (GetConfigResponse) {}
+    rpc SetConfig(SetConfigRequest) returns (SetConfigResponse) {}
+}
+
+message GetConfigRequest {
+    string key = 1;
+}
+message GetConfigResponse {
+    string value = 1;
+}
+
+message SetConfigRequest {
+    string key = 1;
+    string value = 2;
+}
+message SetConfigResponse {
+}
