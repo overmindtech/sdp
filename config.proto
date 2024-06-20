@@ -4,7 +4,7 @@ package config;
 option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 // a simple key-value store to store configuration data for accounts and users (TODO)
-service ConfigService {
+service ConfigurationService {
     // Get the account config for the user's account
     rpc GetAccountConfig(GetAccountConfigRequest) returns (GetAccountConfigResponse);
     // Update the account config for the user's account
