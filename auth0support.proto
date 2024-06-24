@@ -37,8 +37,13 @@ message Auth0CreateUserRequest {
     string user_id = 1;
     // The user's email address
     string email = 2;
-    // The user's full name
-    string name = 3 [deprecated=true];
+
+    // The user's full name. This will be split and stored as first_name and
+    // last_name internally. It is provided for convenience since some social
+    // providers do not provide first_name and last_name fields. If `first_name`
+    // and `last_name` are provided, this field will be ignored.
+    string name = 3;
+    
     // Whether the user's email address has been verified
     bool email_verified = 4;
     // The user's first name
