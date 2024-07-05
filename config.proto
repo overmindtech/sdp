@@ -38,7 +38,8 @@ message AccountConfig {
         CUSTOM = 3;
     }
 
-    // The blast radius config for this account
+    // The blast radius config for this account, this is only required if the
+    // preset is "CUSTOM"
     optional BlastRadiusConfig blastRadius = 1;
 }
 
