@@ -8,6 +8,7 @@ import "bookmarks.proto";
 import "items.proto";
 import "snapshots.proto";
 import "config.proto";
+import "util.proto";
 
 //              ______
 //           ,'"       "-._
@@ -261,9 +262,13 @@ message GetAppSummariesResponse {
   repeated changes.AppSummary apps = 1;
 }
 
-message ListHomeChangesRequest {}
+message ListHomeChangesRequest {
+  PaginationRequest pagination = 1;
+}
+
 message ListHomeChangesResponse {
   repeated ChangeSummary changes = 1;
+  PaginationResponse pagination = 2;
 }
 
 message ListHomeAppsRequest {}
