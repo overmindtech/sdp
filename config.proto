@@ -25,8 +25,21 @@ message BlastRadiusConfig {
 }
 
 message AccountConfig {
+    enum BlastRadiusPreset {
+        // Runs a shallow scan for dependencies. Reduces time takes to calculate
+        // blast radius, but might mean some dependencies are missed
+        QUICK = 0;
+        // An optimised balance between time taken and discovery.
+        DETAILED = 1;
+        // Discovers all possible dependencies, might take a long time and
+        // discover items that are less likely to be relevant to a change.
+        FULL = 2;
+        // Customise advanced limits.
+        CUSTOM = 3;
+    }
+
     // The blast radius config for this account
-    BlastRadiusConfig blastRadius = 1;
+    optional BlastRadiusConfig blastRadius = 1;
 }
 
 message GetAccountConfigRequest {}
