@@ -38,6 +38,11 @@ message AccountConfig {
         CUSTOM = 3;
     }
 
+    // The preset that we should use when calculating the blast radius for a
+    // change. If this is set to "CUSTOM" then the `blastRadius` config should be
+    // set
+    BlastRadiusPreset blastRadiusPreset = 2;
+    
     // The blast radius config for this account, this is only required if the
     // preset is "CUSTOM"
     optional BlastRadiusConfig blastRadius = 1;
