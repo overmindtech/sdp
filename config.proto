@@ -24,6 +24,11 @@ message BlastRadiusConfig {
     int32 linkDepth = 2;
 }
 
+// This account config is stored in the `kv.Store` protobuf key-value store in
+// the api-server database. This means that as long as we don't have any
+// *breaking* changes to the protobuf, we shouldn't need to do a migration. If
+// however we do need to change this message in a breaking way, we will need to
+// do some kind of a migration (depending on the change)
 message AccountConfig {
     enum BlastRadiusPreset {
         // Customise advanced limits.
