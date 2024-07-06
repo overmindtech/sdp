@@ -26,23 +26,23 @@ message BlastRadiusConfig {
 
 message AccountConfig {
     enum BlastRadiusPreset {
+        // Customise advanced limits.
+        CUSTOM = 0;
         // Runs a shallow scan for dependencies. Reduces time takes to calculate
         // blast radius, but might mean some dependencies are missed
-        QUICK = 0;
+        QUICK = 1;
         // An optimised balance between time taken and discovery.
-        DETAILED = 1;
+        DETAILED = 2;
         // Discovers all possible dependencies, might take a long time and
         // discover items that are less likely to be relevant to a change.
-        FULL = 2;
-        // Customise advanced limits.
-        CUSTOM = 3;
+        FULL = 3;
     }
 
     // The preset that we should use when calculating the blast radius for a
     // change. If this is set to "CUSTOM" then the `blastRadius` config should be
     // set
     BlastRadiusPreset blastRadiusPreset = 2;
-    
+
     // The blast radius config for this account, this is only required if the
     // preset is "CUSTOM"
     optional BlastRadiusConfig blastRadius = 1;
