@@ -29,6 +29,7 @@ service SnapshotsService {
     rpc GetSnapshot(GetSnapshotRequest) returns (GetSnapshotResponse);
     rpc UpdateSnapshot(UpdateSnapshotRequest) returns (UpdateSnapshotResponse);
     rpc DeleteSnapshot(DeleteSnapshotRequest) returns (DeleteSnapshotResponse);
+    rpc ListSnapshotByGUN(ListSnapshotsByGUNRequest) returns (ListSnapshotsByGUNResponse);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -120,4 +121,12 @@ message GetInitialDataRequest {
 message GetInitialDataResponse {
     Snapshot blastRadiusSnapshot = 1;
     bookmarks.Bookmark changingItemsBookmark = 2;
+}
+
+message ListSnapshotsByGUNRequest {
+   string globallyUniqueName = 1;
+}
+
+message ListSnapshotsByGUNResponse {
+    repeated bytes UUIDs = 1;
 }
