@@ -60,6 +60,7 @@ message GatewayRequest {
         // CancelLoadBookmark cancelLoadBookmark = ??;
         // // undo the loading of a Bookmark
         // UndoLoadBookmark undoLoadBookmark = ??;
+        ChatMessage chatMessage = 16;
     }
 
     optional google.protobuf.Duration minStatusInterval = 2; // Minimum time between status updates. Setting this value too low can result in too many status messages
@@ -90,6 +91,8 @@ message GatewayResponse {
         BookmarkLoadResult bookmarkLoadResult = 16;
 
         QueryStatus queryStatus = 17; // Status of requested queries
+
+        ChatMessageResult chatMessageResult = 18;
     }
 }
 
@@ -204,4 +207,16 @@ message SnapshotLoadResult {
     string errorMessage = 2;
     // a correlation ID to match up requests and responses. this field returns the contents of the request's msgID
     bytes msgID = 4;
+}
+
+message ChatMessage {
+    // The message to create
+    string message = 1;
+}
+
+message ChatMessageResult {
+    oneof response_type {
+        string error = 1;
+        string message = 2;
+    }
 }
