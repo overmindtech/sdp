@@ -525,6 +525,9 @@ message ChangeSummary {
   // The name of the user that created the change
   string creatorName = 6;
 
+  // The email of the user that created the change
+  string creatorEmail = 15;
+
   // I'm going to omit the creatorLink for now, since it's not clear what it
   // should be
   // string creatorLink = 7;
@@ -578,6 +581,9 @@ message ChangeMetadata {
 
   // The name of the user that created the change
   string creatorName = 5;
+
+  // The email of the user that created the change
+  string creatorEmail = 19;
 
   // The number of apps that will be affected by this change
   int32 numAffectedApps = 6;
