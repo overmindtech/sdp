@@ -71,6 +71,8 @@ service ChangesService {
   rpc UpdateChange(UpdateChangeRequest) returns (UpdateChangeResponse);
   // Deletes a change
   rpc DeleteChange(DeleteChangeRequest) returns (DeleteChangeResponse);
+  // Lists all changes for a snapshot UUID
+  rpc ListChangesBySnapshotUUID(ListChangesBySnapshotUUIDRequest) returns (ListChangesBySnapshotUUIDResponse);
 
   // Get the timeline of changes for a given change
   rpc GetChangeTimeline(GetChangeTimelineRequest) returns (GetChangeTimelineResponse);
@@ -775,6 +777,15 @@ message UpdateChangeResponse {
 // delete a change
 message DeleteChangeRequest {
   bytes UUID = 1;
+}
+
+// list changes for a snapshot UUID
+message ListChangesBySnapshotUUIDRequest {
+  bytes UUID = 1;
+}
+
+message ListChangesBySnapshotUUIDResponse {
+  repeated changes.Change changes = 1;
 }
 
 message DeleteChangeResponse {}
