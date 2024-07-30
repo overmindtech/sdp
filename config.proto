@@ -1,6 +1,9 @@
 syntax = "proto3";
 
 package config;
+
+import "apikeys.proto";
+
 option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 // a simple key-value store to store configuration data for accounts and users (TODO)
@@ -9,6 +12,15 @@ service ConfigurationService {
     rpc GetAccountConfig(GetAccountConfigRequest) returns (GetAccountConfigResponse);
     // Update the account config for the user's account
     rpc UpdateAccountConfig(UpdateAccountConfigRequest) returns (UpdateAccountConfigResponse);
+
+    // Create a new HCP Terraform config for the user's account. This follows
+    // the same flow as CreateAPIKey, to create a new API key that is then used
+    // for the HCP Terraform endpoint URL.
+    rpc CreateHcpConfig(CreateHcpConfigRequest) returns (CreateHcpConfigResponse);
+    // Get the existing HCP Terraform config for the user's account.
+    rpc GetHcpConfig(GetHcpConfigRequest) returns (GetHcpConfigResponse);
+    // Remove the existing HCP Terraform config from the user's account.
+    rpc DeleteHcpConfig(DeleteHcpConfigRequest) returns (DeleteHcpConfigResponse);
 }
 
 // The config that is used when calculating the blast radius for a change, this
@@ -67,3 +79,32 @@ message UpdateAccountConfigRequest {
 message UpdateAccountConfigResponse {
     AccountConfig config = 1;
 }
+
+message CreateHcpConfigRequest {
+    // The URL that the user should be redirected to after the whole process is
+    // over. This should be a page in the frontend, probably the HCP Terraform
+    // Integration page.
+    string finalFrontendRedirect = 1;
+}
+
+message CreateHcpConfigResponse {
+    HcpConfig config = 1;
+    apikeys.CreateAPIKeyResponse apiKey = 2;
+}
+
+message HcpConfig {
+    // the Endpoint URL for the HCP Run Task configuration
+    string endpoint = 1;
+    // the HMAC secret for the HCP Run Task configuration
+    string secret = 2;
+}
+
+message GetHcpConfigRequest {}
+
+message GetHcpConfigResponse {
+    HcpConfig config = 1;
+}
+
+message DeleteHcpConfigRequest {}
+
+message DeleteHcpConfigResponse {}
