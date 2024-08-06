@@ -15,12 +15,12 @@ message PaginationRequest {
   // The number of items to return in a single page. The minimum is 10 and the maximum is 100.
   int32 pageSize = 1;
 
-  // The page number to return. the first page is 0. 
+  // The page number to return. the first page is 1.
   // if the page number is larger than the total number of pages, the last page is returned.
-  // if the page number is negative, the first page 0 is returned.
+  // if the page number is negative, the first page 1 is returned.
   int32 page = 2;
 }
-  
+
 message PaginationResponse {
   // The number of items in the current page
   int32 pageSize = 1;
@@ -29,7 +29,7 @@ message PaginationResponse {
   // this is done as a separate query
   int32 totalItems = 2;
 
-  // The current page number
+  // The current page number, NB if the user provided a negative page number, this will be 1, if the user provided a page number larger than the total number of pages, this will be the last page.
   int32 page = 3;
 
   // The total number of pages available. based on the totalItems and pageSize.

@@ -76,9 +76,9 @@ Returns an SDP reference for the item
 GloballyUniqueName Returns a string that defines the Item globally. This a
 combination of the following values:
 
- * scope
- * type
- * uniqueAttributeValue
+* scope
+* type
+* uniqueAttributeValue
 
 They are concatenated with dots (.)
 
@@ -209,7 +209,7 @@ Sources that encountered errors will send errors on the `query.{uuid}` subject o
 
 First install the dependencies:
 
-```
+```shell
 npm i
 
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
