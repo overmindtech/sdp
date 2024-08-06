@@ -26,6 +26,10 @@ service ApiKeyService {
     // cannot be used until the user has been redirected to the given URL which
     // allows Auth0 to actually generate an access token
     rpc CreateAPIKey(CreateAPIKeyRequest) returns (CreateAPIKeyResponse);
+    // Refreshes an API key, returning a new one with the same metadata and
+    // properties. The response will be the same as CreateAPIKey, and requires
+    // the same redirect handling to authenticate the new key.
+    rpc RefreshAPIKey(RefreshAPIKeyRequest) returns (RefreshAPIKeyResponse);
     rpc GetAPIKey(GetAPIKeyRequest) returns (GetAPIKeyResponse);
     rpc UpdateAPIKey(UpdateAPIKeyRequest) returns (UpdateAPIKeyResponse);
     rpc ListAPIKeys(ListAPIKeysRequest) returns (ListAPIKeysResponse);
@@ -139,6 +143,18 @@ message CreateAPIKeyResponse {
     // can be used to look up the API key in the database once the callback is
     // received
     string authorizeURL = 2;
+}
+
+message RefreshAPIKeyRequest {
+    // The UUID of the API key to refresh
+    bytes uuid = 1;
+}
+
+message RefreshAPIKeyResponse {
+    // Refreshing the API key will return the same response as CreateAPIKey, as
+    // it is basically the a new Key, just under the same UUID and reusing the
+    // old info.
+    CreateAPIKeyResponse response = 1;
 }
 
 message GetAPIKeyRequest {
