@@ -92,7 +92,9 @@ message GatewayResponse {
 
         QueryStatus queryStatus = 17; // Status of requested queries
 
-        ChatMessageResult chatMessageResult = 18;
+        ChatResponse chatResponse = 18;
+        ToolStart toolStart = 19;
+        ToolFinish toolFinish = 20;
     }
 }
 
@@ -211,12 +213,78 @@ message SnapshotLoadResult {
 
 message ChatMessage {
     // The message to create
-    string message = 1;
+    oneof request_type {
+        string text = 1;
+        // Cancel the last message sent to openAI, includes the message and tools that were started
+        bool cancel = 2;
+    }
+    // attachments can be added here
 }
 
-message ChatMessageResult {
-    oneof response_type {
-        string error = 1;
-        string message = 2;
+message ToolMetadata {
+    // The toolID from openAI
+    string id = 1;
+}
+
+message QueryToolStart {
+    string type = 1;
+    string method = 2;
+    string uniqueAttributeValue = 3;
+    string scope = 4;
+}
+
+message QueryToolFinish {
+   int32 numItems = 1;
+}
+
+message RelationshipToolStart {
+    string type = 1;
+    string uniqueAttributeValue = 2;
+    string scope = 3;
+}
+
+message RelationshipToolFinish {
+    int32 numItems = 1;
+}
+
+message ChangesByReferenceToolStart {
+    string type = 1;
+    string uniqueAttributeValue = 2;
+    string scope = 3;
+}
+
+message ChangeByReferenceSummary {
+    string title = 1; // from ChangeProperties
+    bytes UUID = 2; // from ChangeMetadata
+    google.protobuf.Timestamp createdAt = 3; // From ChangeMetadata
+    string owner = 4; // From ChangeProperties
+    int32 numAffectedItems = 5; // From ChangeMetadata
+}
+
+message ChangesByReferenceToolFinish {
+    repeated ChangeByReferenceSummary changeSummaries = 1;
+}
+
+message ToolStart {
+    ToolMetadata metadata = 1;
+    oneof tool_type {
+        QueryToolStart query = 2;
+        RelationshipToolStart relationship = 3;
+        ChangesByReferenceToolStart changesByReference = 4;
     }
+}
+
+message ToolFinish {
+    ToolMetadata metadata = 1;
+    string error = 2;
+    oneof tool_type {
+        QueryToolFinish query = 3;
+        RelationshipToolFinish relationship = 4;
+        ChangesByReferenceToolFinish changesByReference = 5;
+    }
+}
+
+message ChatResponse {
+    string text = 1;
+    string error = 2;
 }
