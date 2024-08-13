@@ -5,6 +5,7 @@ package snapshots;
 import "google/protobuf/timestamp.proto";
 import "bookmarks.proto";
 import "items.proto";
+import "util.proto";
 
 //          ___        .---------.._
 //   ______!fsc!_....-' .g8888888p. '-------....._
@@ -125,8 +126,10 @@ message GetInitialDataResponse {
 
 message ListSnapshotsByGUNRequest {
    string globallyUniqueName = 1;
+   PaginationRequest pagination = 2;
 }
 
 message ListSnapshotsByGUNResponse {
     repeated bytes UUIDs = 1;
+    PaginationResponse pagination = 2;
 }
