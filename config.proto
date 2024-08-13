@@ -63,6 +63,13 @@ message AccountConfig {
     // The blast radius config for this account, this is only required if the
     // preset is "CUSTOM"
     optional BlastRadiusConfig blastRadius = 1;
+
+    // If this is set to true, changes that weren't able to be mapped to real
+    // infrastructure won't be considered for risk calculations. This usually
+    // reduces the number low-quality and low-severity risks, and focuses more
+    // on risks that we have additional context for. If you find that Overmind's
+    // risks are "too obvious" then this might be a good setting to enable.
+    bool skipUnmappedChangesForRisks = 3;
 }
 
 message GetAccountConfigRequest {}
