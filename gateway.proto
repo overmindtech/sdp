@@ -228,8 +228,8 @@ message ToolMetadata {
 
 message QueryToolStart {
     string type = 1;
-    string method = 2;
-    string uniqueAttributeValue = 3;
+    QueryMethod method = 2;
+    string query = 3;
     string scope = 4;
 }
 
