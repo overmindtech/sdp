@@ -174,6 +174,9 @@ enum SourceStatus {
     STATUS_HEALTHY = 2;
     // The source is unhealthy
     STATUS_UNHEALTHY = 3;
+    // The source is sleeping due to inactivity. It will be woken up before it
+    // is needed
+    STATUS_SLEEPING = 4;
 }
 
 message Source {
