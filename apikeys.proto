@@ -148,6 +148,11 @@ message CreateAPIKeyResponse {
 message RefreshAPIKeyRequest {
     // The UUID of the API key to refresh
     bytes uuid = 1;
+
+    // The URL that the user should be redirected to after the whole process is
+    // over. This should be a page in the frontend, probably the one they
+    // started from, but could also be a detail page for this particular API key
+    string finalFrontendRedirect = 2;
 }
 
 message RefreshAPIKeyResponse {
