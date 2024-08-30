@@ -292,11 +292,24 @@ message DeleteSourceRequest {
 
 message DeleteSourceResponse {}
 
+message SourceKeepaliveResult {
+    // The UUID of the source that was kept alive
+    bytes UUID = 1;
+    // The status of the source
+    SourceStatus Status = 2;
+    // The error message if the source is unhealthy
+    string Error = 3;
+}
+
 message KeepaliveSourcesRequest {
     // Set to true to have the API call wait until the source is up and healthy
     bool waitForHealthy = 1;
 }
 message KeepaliveSourcesResponse {
+    // If the user requested to wait for the sources to be healthy, this will
+    // contain information about the sources that came up. If the user did not
+    // request to wait, this will be empty
+    repeated SourceKeepaliveResult sources = 1;
 }
 
 message CreateTokenRequest {
