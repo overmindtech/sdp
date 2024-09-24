@@ -318,8 +318,8 @@ enum ActiveSourceStatus {
 
 // Whether the source is managed by srcman or was created by the user locally
 enum SourceManaged {
-    MANAGED = 0;
-    LOCAL = 1;
+    LOCAL = 0; // Local is the default
+    MANAGED = 1;
 }
 
 message SourceHealth {
