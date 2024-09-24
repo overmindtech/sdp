@@ -363,8 +363,8 @@ message SubmitSourceHeartbeatRequest {
     string name = 3;
     // The error message if the source is unhealthy
     optional string error = 4;
-    // The interval until the source will send the next heartbeat, e.g. 10s
-    google.protobuf.Duration nextHeartbeat = 5;
+    // The maximum time between heartbeats that the source can send to the api-server. Otherwise, the source will be marked as unhealthy. eg 30s
+    google.protobuf.Duration nextHeartbeatMax = 5;
     // The type of the source, AWS or Stdlib or Kubernetes
     string type = 6;
     // Whether the source is managed, or local
