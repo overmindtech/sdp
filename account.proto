@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+import "google/protobuf/duration.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -23,7 +24,7 @@ option go_package = "github.com/overmindtech/sdp-go;sdp";
 
 // The admin service allows users with Admin privileges to any account. Many of
 // the RPCs in this service mirror RPCs in the ManagementService, but allow the
-// user to specfy an account to operate on, rather than using the account that
+// user to specify an account to operate on, rather than using the account that
 // the user belongs to.
 service AdminService {
     // Lists the details of all NATS Accounts
@@ -61,7 +62,7 @@ service AdminService {
 
 }
 
-// TOOD: Decide if I should have the admin requests return the exact same
+// TODO: Decide if I should have the admin requests return the exact same
 // responses as the non-admin ones or should I change it?
 
 message ListAccountsRequest {}
@@ -130,7 +131,7 @@ message AdminCreateTokenRequest {
 
 // RPCs to manage the user's account, sources etc. All requests to this API are
 // scoped to that user's account via the
-// `https://api.overmind.tech/account-name` claim in the suppplied token
+// `https://api.overmind.tech/account-name` claim in the supplied token
 service ManagementService {
     // Get the details of the account that this user belongs to
     rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
@@ -149,6 +150,12 @@ service ManagementService {
     rpc UpdateSource(UpdateSourceRequest) returns (UpdateSourceResponse);
     // Deletes a source from a user's account
     rpc DeleteSource(DeleteSourceRequest) returns (DeleteSourceResponse);
+
+    // Sources heartbeat and health
+    // List of all recently active sources and their health, includes managed and local sources
+    rpc ListAllSourcesStatus(ListAllSourcesStatusRequest) returns (ListAllSourcesStatusResponse);
+    // Heartbeat from a source to keep it registered and healthy
+    rpc SubmitSourceHeartbeat(SubmitSourceHeartbeatRequest) returns (SubmitSourceHeartbeatResponse);
 
     // Updates sources to keep them running in the background. This can be used
     // to add explicit action, when the built-in keepalives are not sufficient.
@@ -185,7 +192,7 @@ message Source {
 }
 
 message SourceMetadata {
-    bytes UUID = 1; // TOOD: Change to ID along with everything else
+    bytes UUID = 1; // TODO: Change to ID along with everything else
 
     // The name of the NATS JWT that has been generated for this source
     string TokenName = 2;
@@ -300,6 +307,75 @@ message SourceKeepaliveResult {
     // The error message if the source is unhealthy
     string Error = 3;
 }
+
+message ListAllSourcesStatusRequest {}
+
+enum ActiveSourceStatus {
+    ACTIVE_SOURCE_STATUS_HEALTHY = 0;
+    ACTIVE_SOURCE_STATUS_UNHEALTHY = 1;
+    ACTIVE_SOURCE_STATUS_DISCONNECTED = 2;
+}
+
+// Whether the source is managed by srcman or was created by the user locally
+enum SourceManaged {
+    LOCAL = 0; // Local is the default
+    MANAGED = 1;
+}
+
+message SourceHealth {
+    // The UUID of the source
+    bytes UUID = 1;
+    // The version of the source
+    string version  = 2;
+    // The name of the source
+    string name = 3;
+    // The error message if the source is unhealthy
+    optional string error = 4;
+    // The status of the source, this is calculated based on the last heartbeat received and if there is an error
+    ActiveSourceStatus status = 5;
+    // Created at time
+    google.protobuf.Timestamp createdAt = 6;
+    // The last time we received a heartbeat from the source
+    google.protobuf.Timestamp lastHeartbeat = 7;
+    // The next time we expect to receive a heartbeat from the source
+    google.protobuf.Timestamp nextHeartbeat = 8;
+    // The type of the source, AWS or Stdlib or Kubernetes
+    string type = 9;
+    // Whether the source is managed, or local
+    SourceManaged managed = 10;
+    // The types of sources that this source can discover
+    repeated string availableTypes = 11;
+    // The scopes that this source can discover
+    repeated string availableScopes = 12;
+}
+
+message ListAllSourcesStatusResponse {
+    repeated SourceHealth sources = 1;
+}
+
+// The source sends a heartbeat to the API to let it know that it is still alive, note it does not give a status.
+message SubmitSourceHeartbeatRequest {
+    // The UUID of the source that is sending the heartbeat
+    bytes UUID = 1;
+    // The version of the source
+    string version = 2;
+    // The name of the source
+    string name = 3;
+    // The error message if the source is unhealthy
+    optional string error = 4;
+    // The maximum time between heartbeats that the source can send to the api-server. Otherwise, the source will be marked as unhealthy. eg 30s
+    google.protobuf.Duration nextHeartbeatMax = 5;
+    // The type of the source, AWS or Stdlib or Kubernetes
+    string type = 6;
+    // Whether the source is managed, or local
+    SourceManaged managed = 7;
+    // The types of sources that this source can discover
+    repeated string availableTypes = 8;
+    // The scopes that this source can discover
+    repeated string availableScopes = 9;
+}
+
+message SubmitSourceHeartbeatResponse {}
 
 message KeepaliveSourcesRequest {
     // Set to true to have the API call wait until the source is up and healthy
