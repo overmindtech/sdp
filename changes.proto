@@ -723,6 +723,14 @@ message CreateChangeResponse {
 // get the details of a specific change
 message GetChangeRequest {
   bytes UUID = 1;
+
+  // Return a slimmed down version of the change. This will exclude the
+  // following data:
+  // * `rawPlan`: The entire Terraform plan output
+  // * `codeChanges`: The code changes that created this change
+  // * `plannedChanges.before`: The item before the change
+  // * `plannedChanges.after`: The item after the change
+  bool slim = 2;
 }
 
 message GetChangeResponse {
