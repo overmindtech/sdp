@@ -63,6 +63,10 @@ service ChangesService {
   rpc CreateChange(CreateChangeRequest) returns (CreateChangeResponse);
   // Gets the details of an existing change
   rpc GetChange(GetChangeRequest) returns (GetChangeResponse);
+  // Gets a summary of information related to a change, this results in a
+  // smaller response, but could be missing some information relative to
+  // `GetChange`
+  rpc GetChangeSummary(GetChangeSummaryRequest) returns (GetChangeSummaryResponse);
   // Gets the risks and risk calculation status of an existing change
   rpc GetChangeRisks(GetChangeRisksRequest) returns (GetChangeRisksResponse);
   // Gets the all data of an existing change for archival
@@ -723,6 +727,14 @@ message CreateChangeResponse {
 // get the details of a specific change
 message GetChangeRequest {
   bytes UUID = 1;
+
+  // Return a slimmed down version of the change. This will exclude the
+  // following data:
+  // * `rawPlan`: The entire Terraform plan output
+  // * `codeChanges`: The code changes that created this change
+  // * `plannedChanges.before`: The item before the change
+  // * `plannedChanges.after`: The item after the change
+  bool slim = 2;
 }
 
 message GetChangeResponse {
