@@ -3,6 +3,7 @@ syntax = "proto3";
 import "google/protobuf/duration.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
+import "items.proto";
 
 package account;
 
@@ -347,6 +348,8 @@ message SourceHealth {
     repeated string availableTypes = 11;
     // The scopes that this source can discover
     repeated string availableScopes = 12;
+    // AdapterMetadata is a map of metadata that the source can send to the API
+    repeated AdapterMetadata adapterMetadata = 13;
 }
 
 message ListAllSourcesStatusResponse {
@@ -369,10 +372,47 @@ message SubmitSourceHeartbeatRequest {
     string type = 6;
     // Whether the source is managed, or local
     SourceManaged managed = 7;
-    // The types of sources that this source can discover
-    repeated string availableTypes = 8;
     // The scopes that this source can discover
-    repeated string availableScopes = 9;
+    repeated string availableScopes = 8;
+    // AdapterMetadata is a map of metadata that the source can send to the API
+    repeated AdapterMetadata adapterMetadata = 9;
+}
+
+message AdapterMetadata {
+    string type = 1; // rdap-domain // computer readable
+    AdapterCategory category = 2; // compute / storage / network / database / k8s / other
+    repeated string potentialLinks = 3; // The list of other types that this can be linked to, eg aws_eks_node_group -> aws_eks_cluster
+    string descriptiveName = 4; // RDAP Domain // human readable
+    string adapterDescription = 5; // full description of this item EG; "Uses RDAP to get the details of an Autonomous System Number (ASN) by number",
+    AdapterSupportedQueryMethods supportedQueryMethods = 6; // The supported query methods for this adapter
+    repeated TerraformMapping terraformMappings = 7; // The terraform mappings for this adapter
+}
+
+enum AdapterCategory {
+    ADAPTER_CATEGORY_OTHER = 0;
+    ADAPTER_CATEGORY_COMPUTE_APPLICATION = 1;
+    ADAPTER_CATEGORY_STORAGE = 2;
+    ADAPTER_CATEGORY_NETWORK = 3;
+    ADAPTER_CATEGORY_SECURITY = 4;
+    ADAPTER_CATEGORY_OBSERVABILITY = 5;
+    ADAPTER_CATEGORY_DATABASE = 6;
+    ADAPTER_CATEGORY_CONFIGURATION = 7;
+    ADAPTER_CATEGORY_AI = 8;
+}
+
+message AdapterSupportedQueryMethods{
+    bool get = 1; // description of the Get method
+    string getDescription = 2;
+    bool list = 3; // description of the List method
+    string listDescription = 4;
+    bool search = 5; // description of the Search method
+    string searchDescription = 6;
+}
+
+message TerraformMapping {
+    QueryMethod terraformMethod = 1; // eg get
+    string terraformQueryMap = 2; // eg ap aws_eks_node_group.arn
+    string terraformScope = 3; // eg ${provider_mapping.cluster_name}.${values.metadata[0].namespace}
 }
 
 message SubmitSourceHeartbeatResponse {}
