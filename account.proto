@@ -373,7 +373,8 @@ message SubmitSourceHeartbeatRequest {
     // Whether the source is managed, or local
     SourceManaged managed = 7;
     // The scopes that this source can discover
-    repeated string availableScopes = 8;
+    reserved 8;
+    repeated string availableScopes = 9;
     // AdapterMetadata is a map of metadata that the source can send to the API
     repeated AdapterMetadata adapterMetadata = 9;
 }
