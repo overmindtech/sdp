@@ -379,13 +379,20 @@ message SubmitSourceHeartbeatRequest {
 }
 
 message AdapterMetadata {
-    string type = 1; // rdap-domain // computer readable
-    AdapterCategory category = 2; // compute / storage / network / database / k8s / other
-    repeated string potentialLinks = 3; // The list of other types that this can be linked to, eg aws_eks_node_group -> aws_eks_cluster
-    string descriptiveName = 4; // RDAP Domain // human readable
-    string adapterDescription = 5; // full description of this item EG; "Uses RDAP to get the details of an Autonomous System Number (ASN) by number",
-    AdapterSupportedQueryMethods supportedQueryMethods = 6; // The supported query methods for this adapter
-    repeated TerraformMapping terraformMappings = 7; // The terraform mappings for this adapter
+    // The type of item that this adapter returns e.g. eks-cluster
+    string type = 1;
+    // The category that these items fall under
+    AdapterCategory category = 2;
+    // The list of other types that this can be linked to, eg eks-cluster ->
+    // eks-node-group 
+    repeated string potentialLinks = 3;
+    // A descriptive name of the types of items that are returned by this
+    // adapter e.g. "EKS Cluster"
+    string descriptiveName = 4;
+    // The supported query methods for this adapter
+    AdapterSupportedQueryMethods supportedQueryMethods = 5;
+    // The terraform mappings for this adapter, this is optional
+    repeated TerraformMapping terraformMappings = 6;
 }
 
 enum AdapterCategory {
