@@ -3,6 +3,7 @@ syntax = "proto3";
 import "google/protobuf/duration.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
+import "items.proto";
 
 package account;
 
@@ -347,6 +348,8 @@ message SourceHealth {
     repeated string availableTypes = 11;
     // The scopes that this source can discover
     repeated string availableScopes = 12;
+    // AdapterMetadata is a map of metadata that the source can send to the API
+    repeated AdapterMetadata adapterMetadata = 13;
 }
 
 message ListAllSourcesStatusResponse {
@@ -369,10 +372,105 @@ message SubmitSourceHeartbeatRequest {
     string type = 6;
     // Whether the source is managed, or local
     SourceManaged managed = 7;
-    // The types of sources that this source can discover
-    repeated string availableTypes = 8;
+    // 8 is no longer used
+    reserved 8;
     // The scopes that this source can discover
     repeated string availableScopes = 9;
+    // AdapterMetadata is a map of metadata that the source can send to the API
+    repeated AdapterMetadata adapterMetadata = 10;
+}
+
+message AdapterMetadata {
+    // The type of item that this adapter returns e.g. eks-cluster
+    string type = 1;
+    // The category that these items fall under
+    AdapterCategory category = 2;
+    // The list of other types that this can be linked to, eg eks-cluster ->
+    // eks-node-group 
+    repeated string potentialLinks = 3;
+    // A descriptive name of the types of items that are returned by this
+    // adapter e.g. "EKS Cluster"
+    string descriptiveName = 4;
+    // The supported query methods for this adapter
+    AdapterSupportedQueryMethods supportedQueryMethods = 5;
+    // The terraform mappings for this adapter, this is optional
+    repeated TerraformMapping terraformMappings = 6;
+}
+
+enum AdapterCategory {
+    // Fall-back category for resources that do not fit into any other category
+    ADAPTER_CATEGORY_OTHER = 0;
+
+    // This category includes resources that provide processing power and host
+    // applications or services. Examples are virtual machines, containers,
+    // serverless functions, and application hosting platforms. If the primary
+    // purpose of a resource is to execute workloads, run code, or host
+    // applications, it should belong here.
+    ADAPTER_CATEGORY_COMPUTE_APPLICATION = 1;
+
+    // Encompassing resources designed to store, archive, and manage data, this
+    // category includes object storage, block storage, file storage, and data
+    // backup solutions. Select this category when the core function of a
+    // resource is persistent data storage or management
+    ADAPTER_CATEGORY_STORAGE = 2;
+
+    // This category covers resources that facilitate connectivity and
+    // communication within cloud environments. Typical resources include
+    // virtual networks, load balancers, VPNs, and DNS services. Assign
+    // resources here if their primary role is related to communication,
+    // connectivity, or traffic management
+    ADAPTER_CATEGORY_NETWORK = 3;
+
+    // Resources in this category focus on safeguarding data, applications, and
+    // cloud infrastructure. Examples include firewalls, identity and access
+    // management, encryption services, and security monitoring tools. Choose
+    // this category if a resource's main function is security, access control,
+    // or compliance
+    ADAPTER_CATEGORY_SECURITY = 4;
+
+    // This category includes resources aimed at monitoring, tracing, and
+    // logging applications and cloud infrastructure. Examples are monitoring
+    // tools, logging services, and performance management solutions. Use this
+    // category for resources that provide insights into system performance and
+    // health
+    ADAPTER_CATEGORY_OBSERVABILITY = 5;
+
+    // Focused on structured data storage and management, this category includes
+    // relational, NoSQL, and in-memory databases, along with data warehousing
+    // solutions. Choose this category for resources specifically designed for
+    // data querying, transaction processing, or complex data operations. This
+    // differs from "storage" in that "databases" have compute associated with
+    // them rather than just storing data.
+    ADAPTER_CATEGORY_DATABASE = 6;
+
+    // This category includes resources designed for managing configurations and
+    // deployments. Examples are infrastructure as code tools, configuration
+    // management services, and deployment orchestration solutions. Classify
+    // resources here if they primarily handle configuration, environment
+    // management, or automated deployment
+    ADAPTER_CATEGORY_CONFIGURATION = 7;
+
+    // This category is dedicated to resources for developing, training, and
+    // deploying artificial intelligence models and machine learning
+    // applications. Include machine learning platforms, AI services, and data
+    // labeling tools here. Select this category if a resource's principal
+    // function involves AI or machine learning processes
+    ADAPTER_CATEGORY_AI = 8;
+}
+
+message AdapterSupportedQueryMethods{
+    bool get = 1; // description of the Get method
+    string getDescription = 2;
+    bool list = 3; // description of the List method
+    string listDescription = 4;
+    bool search = 5; // description of the Search method
+    string searchDescription = 6;
+}
+
+message TerraformMapping {
+    QueryMethod terraformMethod = 1; // eg get
+    string terraformQueryMap = 2; // eg ap aws_eks_node_group.arn
+    string terraformScope = 3; // eg ${provider_mapping.cluster_name}.${values.metadata[0].namespace}
 }
 
 message SubmitSourceHeartbeatResponse {}
