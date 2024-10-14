@@ -498,6 +498,8 @@ message TerraformMapping {
     // such as `aws_instance.id` or `aws_iam_role.arn`. You can also index into
     // arrays e.g. `kubernetes_replication_controller.metadata[0].name`
     string terraformQueryMap = 2;
+
+    reserved 3;
 }
 
 message SubmitSourceHeartbeatResponse {}
