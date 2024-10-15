@@ -61,6 +61,8 @@ service AdminService {
     // the token is not enough on its own
     rpc CreateToken(AdminCreateTokenRequest) returns (CreateTokenResponse);
 
+    // Lists all the available item types that can be discovered by sources
+    rpc ListAvailableItemTypes(ListAvailableItemTypesRequest) returns (ListAvailableItemTypesResponse);
 }
 
 // TODO: Decide if I should have the admin requests return the exact same
@@ -540,4 +542,20 @@ message GetTrialEndRequest {}
 
 message GetTrialEndResponse {
     google.protobuf.Timestamp endsAt = 1;
+}
+
+message AvailableItemType {
+    // The type of item that this adapter returns e.g. eks-cluster
+    string type = 1;
+    // The category that these items fall under
+    AdapterCategory category = 2;
+    // A descriptive name of the types of items that are returned by this
+    // adapter e.g. "EKS Cluster"
+    string descriptiveName = 3;
+}
+
+message ListAvailableItemTypesRequest {}
+
+message ListAvailableItemTypesResponse {
+    repeated AvailableItemType types = 1;
 }
