@@ -550,7 +550,6 @@ message ItemType {
     // A descriptive name of the types of items that are returned by this
     // adapter e.g. "EKS Cluster"
     string descriptiveName = 3;
-    SourceProperties source = 4; // is it possible to "pick" properties from another message? only "name" and "type" are needed here
 }
 
 message AvailableItemTypesRequest {}
