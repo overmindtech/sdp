@@ -541,3 +541,20 @@ message GetTrialEndRequest {}
 message GetTrialEndResponse {
     google.protobuf.Timestamp endsAt = 1;
 }
+
+message ItemType {
+    // The type of item that this adapter returns e.g. eks-cluster
+    string type = 1;
+    // The category that these items fall under
+    AdapterCategory category = 2;
+    // A descriptive name of the types of items that are returned by this
+    // adapter e.g. "EKS Cluster"
+    string descriptiveName = 3;
+    SourceProperties source = 4; // is it possible to "pick" properties from another message? only "name" and "type" are needed here
+}
+
+message AvailableItemTypesRequest {}
+
+message AvailableItemTypesResponse {
+    repeated ItemType types = 1;
+}
