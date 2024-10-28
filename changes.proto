@@ -285,7 +285,7 @@ message ChangeFiltersRequest {
   SortOrder sortOrder = 6;
 }
 
-message StringWithCount
+message StringWithCount {
   string name = 1;
   int32 count = 2;
 }
