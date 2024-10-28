@@ -154,6 +154,13 @@ service ChangesService {
   // Gets the full diff of everything that changed as part of this "change".
   // This includes all items and also edges between them
   rpc GetDiff(GetDiffRequest) returns (GetDiffResponse);
+
+  // List all the available repos for all changes
+  rpc ListChangeRepos(ListChangeReposRequest) returns (ListChangeReposResponse);
+  // List all the available authors for all changes
+  rpc ListChangeAuthors(ListChangeAuthorsRequest) returns (ListChangeAuthorsResponse);
+  // List all the available statuses for all changes
+  rpc ListChangeStatuses(ListChangeStatusesRequest) returns (ListChangeStatusesResponse);
 }
 
 message GetChangeTimelineRequest {
@@ -266,10 +273,10 @@ message GetAppSummariesResponse {
 
 message ListHomeChangesRequest {
   PaginationRequest pagination = 1;
-  ChangeFilters filters = 2;
+  ChangeFiltersRequest filters = 2;
 }
 
-message ChangeFilters {
+message ChangeFiltersRequest {
   repeated string tags = 1;
   repeated string repos = 2;
   repeated Risk.Severity risks = 3;
@@ -278,10 +285,49 @@ message ChangeFilters {
   SortOrder sortOrder = 6;
 }
 
+message StringWithCount
+  string name = 1;
+  int32 count = 2;
+}
+
+message SeverityWithCount {
+  Risk.Severity severity = 1;
+  int32 count = 2;
+}
+message StatusWithCount {
+  ChangeStatus status = 1;
+  int32 count = 2;
+}
+
+message ChangeFiltersResponse {
+  repeated StringWithCount tags = 1;
+  repeated StringWithCount repos = 2;
+  repeated SeverityWithCount risks = 3;
+  repeated StringWithCount authors = 4;
+  repeated StatusWithCount statuses = 5;
+  SortOrder sortOrder = 6; // not sure is this needed in the response?
+}
+
 message ListHomeChangesResponse {
   repeated ChangeSummary changes = 1;
   PaginationResponse pagination = 2;
-  ChangeFilters filters = 3;
+  ChangeFiltersResponse filters = 3;
+}
+
+
+message ListChangeReposRequest {}
+message ListChangeReposResponse { 
+  repeated StringWithCount repos = 1;
+}
+
+message ListChangeAuthorsRequest {}
+message ListChangeAuthorsResponse {
+  repeated StringWithCount authors = 1;
+}
+
+message ListChangeStatusesRequest {}
+message ListChangeStatusesResponse {
+  repeated StatusWithCount statuses = 1;
 }
 
 message ListHomeAppsRequest {}
