@@ -285,7 +285,7 @@ message ChangeFiltersRequest {
   SortOrder sortOrder = 6;
 }
 
-message StringWithCount {
+message NameWithCount {
   string name = 1;
   int32 count = 2;
 }
@@ -300,10 +300,10 @@ message StatusWithCount {
 }
 
 message ChangeFiltersResponse {
-  repeated StringWithCount tags = 1;
-  repeated StringWithCount repos = 2;
+  repeated NameWithCount tags = 1;
+  repeated NameWithCount repos = 2;
   repeated SeverityWithCount risks = 3;
-  repeated StringWithCount authors = 4;
+  repeated NameWithCount authors = 4;
   repeated StatusWithCount statuses = 5;
   SortOrder sortOrder = 6; // not sure is this needed in the response?
 }
@@ -317,12 +317,12 @@ message ListHomeChangesResponse {
 
 message ListChangeReposRequest {}
 message ListChangeReposResponse { 
-  repeated StringWithCount repos = 1;
+  repeated NameWithCount repos = 1;
 }
 
 message ListChangeAuthorsRequest {}
 message ListChangeAuthorsResponse {
-  repeated StringWithCount authors = 1;
+  repeated NameWithCount authors = 1;
 }
 
 message ListChangeStatusesRequest {}
