@@ -266,11 +266,22 @@ message GetAppSummariesResponse {
 
 message ListHomeChangesRequest {
   PaginationRequest pagination = 1;
+  ChangeFilters filters = 2;
+}
+
+message ChangeFilters {
+  repeated string tags = 1;
+  repeated string repos = 2;
+  repeated Risk.Severity risks = 3;
+  repeated string authors = 4;
+  repeated ChangeStatus statuses = 5;
+  SortOrder sortOrder = 6;
 }
 
 message ListHomeChangesResponse {
   repeated ChangeSummary changes = 1;
   PaginationResponse pagination = 2;
+  ChangeFilters filters = 3;
 }
 
 message ListHomeAppsRequest {}
