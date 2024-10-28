@@ -41,3 +41,10 @@ message PaginationResponse {
   // If there are no results this will be zero.
   int32 totalPages = 4;
 }
+
+enum SortOrder {
+  ALPHABETICAL_ASCENDING = 0; // A-Z
+  ALPHABETICAL_DESCENDING = 1; // Z-A
+  DATE_ASCENDING = 2; // Oldest first
+  DATE_DESCENDING = 3; // Newest first
+}
