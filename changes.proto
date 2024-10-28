@@ -155,12 +155,8 @@ service ChangesService {
   // This includes all items and also edges between them
   rpc GetDiff(GetDiffRequest) returns (GetDiffResponse);
 
-  // List all the available repos for all changes
-  rpc ListChangeRepos(ListChangeReposRequest) returns (ListChangeReposResponse);
-  // List all the available authors for all changes
-  rpc ListChangeAuthors(ListChangeAuthorsRequest) returns (ListChangeAuthorsResponse);
-  // List all the available statuses for all changes
-  rpc ListChangeStatuses(ListChangeStatusesRequest) returns (ListChangeStatusesResponse);
+  // List all the available repos, authors and statuses that can be used to populate the dropdown filters
+  rpc PopulateChangeFilters(PopulateChangeFiltersRequest) returns (PopulateChangeFiltersResponse);
 }
 
 message GetChangeTimelineRequest {
@@ -277,57 +273,24 @@ message ListHomeChangesRequest {
 }
 
 message ChangeFiltersRequest {
-  repeated string tags = 1;
-  repeated string repos = 2;
+  repeated string repos = 1;
+  repeated string tags = 2;
   repeated Risk.Severity risks = 3;
   repeated string authors = 4;
   repeated ChangeStatus statuses = 5;
   SortOrder sortOrder = 6;
 }
 
-message NameWithCount {
-  string name = 1;
-  int32 count = 2;
-}
-
-message SeverityWithCount {
-  Risk.Severity severity = 1;
-  int32 count = 2;
-}
-message StatusWithCount {
-  ChangeStatus status = 1;
-  int32 count = 2;
-}
-
-message ChangeFiltersResponse {
-  repeated NameWithCount tags = 1;
-  repeated NameWithCount repos = 2;
-  repeated SeverityWithCount risks = 3;
-  repeated NameWithCount authors = 4;
-  repeated StatusWithCount statuses = 5;
-  SortOrder sortOrder = 6; // not sure is this needed in the response?
-}
-
 message ListHomeChangesResponse {
   repeated ChangeSummary changes = 1;
   PaginationResponse pagination = 2;
-  ChangeFiltersResponse filters = 3;
 }
 
-
-message ListChangeReposRequest {}
-message ListChangeReposResponse { 
-  repeated NameWithCount repos = 1;
-}
-
-message ListChangeAuthorsRequest {}
-message ListChangeAuthorsResponse {
-  repeated NameWithCount authors = 1;
-}
-
-message ListChangeStatusesRequest {}
-message ListChangeStatusesResponse {
-  repeated StatusWithCount statuses = 1;
+message PopulateChangeFiltersRequest {}
+message PopulateChangeFiltersResponse {
+  repeated string repos = 1;
+  repeated string authors = 2;
+  repeated ChangeStatus statuses = 3;
 }
 
 message ListHomeAppsRequest {}
