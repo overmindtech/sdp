@@ -154,6 +154,9 @@ service ChangesService {
   // Gets the full diff of everything that changed as part of this "change".
   // This includes all items and also edges between them
   rpc GetDiff(GetDiffRequest) returns (GetDiffResponse);
+
+  // List all the available repos, authors and statuses that can be used to populate the dropdown filters
+  rpc PopulateChangeFilters(PopulateChangeFiltersRequest) returns (PopulateChangeFiltersResponse);
 }
 
 message GetChangeTimelineRequest {
@@ -266,11 +269,28 @@ message GetAppSummariesResponse {
 
 message ListHomeChangesRequest {
   PaginationRequest pagination = 1;
+  ChangeFiltersRequest filters = 2;
+}
+
+message ChangeFiltersRequest {
+  repeated string repos = 1;
+  map<string, string> tags = 2;
+  repeated Risk.Severity risks = 3;
+  repeated string authors = 4;
+  repeated ChangeStatus statuses = 5;
+  SortOrder sortOrder = 6;
 }
 
 message ListHomeChangesResponse {
   repeated ChangeSummary changes = 1;
   PaginationResponse pagination = 2;
+}
+
+message PopulateChangeFiltersRequest {}
+message PopulateChangeFiltersResponse {
+  repeated string repos = 1;
+  repeated string authors = 2;
+  repeated ChangeStatus statuses = 3;
 }
 
 message ListHomeAppsRequest {}
