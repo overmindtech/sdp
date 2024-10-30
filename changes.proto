@@ -575,6 +575,9 @@ message ChangeSummary {
   // Quick description of the change.
   // Example: "upgrade of the database to get access to the new contoso management processor"
   string description = 14;
+
+  // Repo information; can be an empty string. CLI attempts auto-population, but users can override. Not necessarily a URL. The UI will be responsible for any formatting/shortnening/sprucing up should it be required.
+  string repo = 16;
 }
 
 // a complete Change with machine-supplied and user-supplied values
@@ -709,6 +712,9 @@ message ChangeProperties {
 
   // The code changes of this change for calculating the change's risks.
   string codeChanges = 14;
+
+  // Repo information; can be an empty string. CLI attempts auto-population, but users can override. Not necessarily a URL. The UI will be responsible for any formatting/shortnening/sprucing up should it be required.
+  string repo = 15;
 }
 
 ////////////////////////////
