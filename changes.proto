@@ -278,7 +278,7 @@ message ChangeFiltersRequest {
   repeated Risk.Severity risks = 3;
   repeated string authors = 4;
   repeated ChangeStatus statuses = 5;
-  optional SortOrder sortOrder = 6;
+  optional SortOrder sortOrder = 6; // the default is SortOrder.DATE_DESCENDING (newest first)
 }
 
 message ListHomeChangesResponse {
