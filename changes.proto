@@ -269,7 +269,7 @@ message GetAppSummariesResponse {
 
 message ListHomeChangesRequest {
   PaginationRequest pagination = 1;
-  ChangeFiltersRequest filters = 2;
+  optional ChangeFiltersRequest filters = 2;
 }
 
 message ChangeFiltersRequest {
@@ -278,7 +278,7 @@ message ChangeFiltersRequest {
   repeated Risk.Severity risks = 3;
   repeated string authors = 4;
   repeated ChangeStatus statuses = 5;
-  SortOrder sortOrder = 6;
+  optional SortOrder sortOrder = 6; // the default is SortOrder.DATE_DESCENDING (newest first)
 }
 
 message ListHomeChangesResponse {
