@@ -714,6 +714,9 @@ message ChangeProperties {
 
   // Repo information; can be an empty string. CLI attempts auto-population, but users can override. Not necessarily a URL. The UI will be responsible for any formatting/shortnening/sprucing up should it be required.
   string repo = 15;
+  
+  // User-defined tags associated with this change, will be populated via the CLI and not the UI.
+  map<string, string> tags = 16;
 }
 
 ////////////////////////////
