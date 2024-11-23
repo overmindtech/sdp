@@ -224,7 +224,7 @@ message ChatMessage {
 }
 
 message ToolMetadata {
-    // The toolID from openAI
+    // A unique ID that tracks this tool call and can be used to correlate messages
     string id = 1;
 }
 
