@@ -155,8 +155,11 @@ service ManagementService {
     rpc DeleteSource(DeleteSourceRequest) returns (DeleteSourceResponse);
 
     // Sources heartbeat and health
-    // List of all recently active sources and their health, includes managed and local sources
+    // List of all recently active sources and their health, includes information from srcman
+    // this will be used on the sources page
     rpc ListAllSourcesStatus(ListAllSourcesStatusRequest) returns (ListAllSourcesStatusResponse);
+    // For the explore page, list active sources and their health, it does not include information from srcman
+    rpc ListActiveSourcesStatus(ListAllSourcesStatusRequest) returns (ListAllSourcesStatusResponse);
     // Heartbeat from a source to keep it registered and healthy
     rpc SubmitSourceHeartbeat(SubmitSourceHeartbeatRequest) returns (SubmitSourceHeartbeatResponse);
 
