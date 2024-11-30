@@ -61,7 +61,7 @@ service AdminService {
     // the token is not enough on its own
     rpc CreateToken(AdminCreateTokenRequest) returns (CreateTokenResponse);
 
-    // Lists all the available item types that can be discovered by sources
+    // Lists all the available item types that can be discovered by sources that are running and healthy
     rpc ListAvailableItemTypes(ListAvailableItemTypesRequest) returns (ListAvailableItemTypesResponse);
 }
 
