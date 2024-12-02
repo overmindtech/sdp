@@ -178,15 +178,22 @@ service ManagementService {
 
 enum SourceStatus {
     STATUS_UNSPECIFIED = 0;
-    // The source is starting or updating
+    // The source is starting or updating. This is only applicable to managed
+    // sources where Overmind manages the source's lifecycle
     STATUS_PROGRESSING = 1;
     // The source is healthy
     STATUS_HEALTHY = 2;
     // The source is unhealthy
     STATUS_UNHEALTHY = 3;
     // The source is sleeping due to inactivity. It will be woken up before it
-    // is needed
+    // is needed. This is only applicable to managed sources where Overmind
+    // manages the source's lifecycle
     STATUS_SLEEPING = 4;
+    // The source is disconnected and therefore not able to handle requests.
+    // This will only be returned for non-managed sources that have recently
+    // stopped sending heartbeats such as a user running the CLI that has
+    // recently disconnected
+    STATUS_DISCONNECTED = 5;
 }
 
 message Source {
@@ -313,12 +320,6 @@ message SourceKeepaliveResult {
 
 message ListAllSourcesStatusRequest {}
 
-enum ActiveSourceStatus {
-    ACTIVE_SOURCE_STATUS_HEALTHY = 0;
-    ACTIVE_SOURCE_STATUS_UNHEALTHY = 1;
-    ACTIVE_SOURCE_STATUS_DISCONNECTED = 2;
-}
-
 // Whether the source is managed by srcman or was created by the user locally
 enum SourceManaged {
     LOCAL = 0; // Local is the default
@@ -335,7 +336,7 @@ message SourceHealth {
     // The error message if the source is unhealthy
     optional string error = 4;
     // The status of the source, this is calculated based on the last heartbeat received and if there is an error
-    ActiveSourceStatus status = 5;
+    SourceStatus status = 5;
     // Created at time
     google.protobuf.Timestamp createdAt = 6;
     // The last time we received a heartbeat from the source
