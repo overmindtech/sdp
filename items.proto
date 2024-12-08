@@ -117,13 +117,17 @@ message Metadata {
   // The time that the item was found
   google.protobuf.Timestamp timestamp = 4;
 
-  // How long the source took to execute in total when processing the
-  // Query
-  google.protobuf.Duration sourceDuration = 5;
+  // How long the source took to execute in total when processing the Query.
+  //
+  // (deprecated) This is no longer sent as streaming responses make this metric
+  // impossible to calculate on a per-item basis
+  google.protobuf.Duration sourceDuration = 5 [deprecated = true];
 
   // How long the source took to execute per item when processing the
   // Query
-  google.protobuf.Duration sourceDurationPerItem = 6;
+  //
+  // (deprecated) This is no longer sent
+  google.protobuf.Duration sourceDurationPerItem = 6 [deprecated = true];
 
   // Whether the item should be hidden/ignored by user-facing things such as
   // GUIs and databases.
@@ -134,9 +138,6 @@ message Metadata {
   // information, but we don't actually want to show the user all the commands
   // that were run, just the final item returned by the source
   bool hidden = 7;
-
-  // The UUID of the QUERY that caused this item to be found
-  bytes sourceQueryUUID = 8 [deprecated = true];
 }
 
 // This is a list of items, like a List() would return
