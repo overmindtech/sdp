@@ -159,6 +159,170 @@ service ChangesService {
   rpc PopulateChangeFilters(PopulateChangeFiltersRequest) returns (PopulateChangeFiltersResponse);
 }
 
+service RuleService {
+  // Used on the auto-tagging page to list all rules for an account
+  // Returns a list of rules
+  rpc ListRules(ListRulesRequest) returns (ListRulesResponse);
+  // Creates a new rule, user provides properties
+  // It will check for the uniqueness of the tag key
+  // Returns the created rule, or the submitted rule and an error
+  rpc CreateRule(CreateRuleRequest) returns (CreateRuleResponse);
+  // Given a rule UUID
+  // Returns the rule metadata and properties
+  rpc GetRule(GetRuleRequest) returns (GetRuleResponse);
+  // Given a rule UUID, updates the rule properties.
+  // Note the key can be updated, but it only applies to new changes. We still check for uniqueness.
+  // Returns the updated rule, or the old rule and an error
+  rpc UpdateRule(UpdateRuleRequest) returns (UpdateRuleResponse);
+  // Given a rule UUID permanently delete that rule, existing changes will not be affected
+  // Returns nothing
+  rpc DeleteRule(DeleteRuleRequest) returns (DeleteRuleResponse);
+  // Given a rule UUID, Rule applied to all future changes
+  // Returns the rule
+  rpc EnableRule(EnableRuleRequest) returns (EnableRuleResponse);
+  // Given a rule UUID, Rule no longer applied to future changes
+  // Returns the rule
+  rpc DisableRule(DisableRuleRequest) returns (DisableRuleResponse);
+  // Given a rule UUID Exports a rule
+  // returns the metadata so it can be saved locally
+  rpc ExportRule(ExportRuleRequest) returns (ExportRuleResponse);
+  // Given a rule uuid, and a list of changes uuids
+  // The response will contain the rule uuid and a list of changes and what tags they would have if the rule was applied
+  rpc TestRule(TestRuleRequest) returns (TestRuleResponse);
+  // Given a list of rule uuids, and a single change uuid
+  // The response will contain a list of rule uuids and the tags to be applied
+  rpc TestRules(TestRulesRequest) returns (TestRulesResponse);
+}
+
+message RuleMetadata {
+  // The unique identifier for this rule
+  bytes UUID = 1;
+
+  // The time that this rule was created
+  google.protobuf.Timestamp createdAt = 2;
+
+  // The time that this rule was last run
+  google.protobuf.Timestamp lastRunAt = 3;
+
+  // The time that this rule added a tag to a change
+  google.protobuf.Timestamp lastActivated = 4;
+}
+
+message RuleProperties {
+  // The name of the rule, friendly for users
+  string name = 1;
+
+  // The key that will be set in a change's tags if this rule is applied
+  string tagKey = 2;
+
+  // whether the rule is enabled or not
+  bool enabled = 3;
+
+  // The query that will be run to find items that this rule applies to
+  string query = 4;
+}
+
+message Rule {
+  // The auto-generated metadata for this rule
+  RuleMetadata metadata = 1;
+  // The user provided properties for this rule
+  RuleProperties properties = 2;
+}
+
+message ListRulesRequest {}
+message ListRulesResponse {
+  repeated Rule rules = 1;
+}
+
+message CreateRuleRequest {
+  RuleProperties properties = 1;
+}
+message CreateRuleResponse {
+  Rule rule = 1;
+  string error = 2;
+}
+
+message GetRuleRequest {
+  bytes UUID = 1;
+}
+message GetRuleResponse {
+  Rule rule = 1;
+}
+
+message UpdateRuleRequest {
+  bytes UUID = 1;
+  RuleProperties properties = 2;
+}
+message UpdateRuleResponse {
+  Rule rule = 1;
+  string error = 2;
+}
+
+message DeleteRuleRequest {
+  bytes UUID = 1;
+}
+message DeleteRuleResponse {}
+
+message EnableRuleRequest {
+  bytes UUID = 1;
+}
+message EnableRuleResponse {
+  Rule rule = 1;
+}
+
+message DisableRuleRequest {
+  bytes UUID = 1;
+}
+message DisableRuleResponse {
+  Rule rule = 1;
+}
+
+message ExportRuleRequest {
+  bytes UUID = 1;
+}
+message ExportRuleResponse {
+  // metadata for the rule
+  RuleMetadata metadata = 1;
+}
+
+message TestRuleRequest {
+  // the uuid of the rule to test
+  bytes ruleUUID = 1;
+  repeated bytes changeUUID = 2;
+}
+
+message RuleTestResult {
+  // the uuid of the item that was tested
+  bytes itemUUID = 1;
+  // the tag that would be set if the rule was applied, or an empty string if it would not be applied
+  string tag = 2;
+}
+
+message TestRuleResponse {
+  // the uuid of the rule that was tested
+  bytes ruleUUID = 1;
+  // list of changes and what tags they would have if the rule was applied
+  repeated RuleTestResult results = 2;
+}
+
+message TestRulesRequest {
+  // the uuid of the rule to test
+  repeated bytes ruleUUID = 1;
+  bytes changeUUID = 2;
+}
+
+message RulesTestResult {
+  // the uuid of the item that was tested
+  bytes itemUUID = 1;
+  // the tag that would be set if the rule was applied, or an empty string if it would not be applied
+  string tag = 2;
+}
+
+message TestRulesResponse {
+  // list of changes and what tags they would have if the rule was applied
+  repeated RulesTestResult results = 1;
+}
+
 message GetChangeTimelineRequest {
   bytes changeUUID = 1;
 }
@@ -583,6 +747,9 @@ message ChangeSummary {
 
   // User-defined tags associated with this change, will be populated via the CLI and not the UI.
   map<string, string> tags = 17;
+
+  // Description of the auto tagging rules that were applied to this change
+  string autoTaggingDescription = 18;
 }
 
 // a complete Change with machine-supplied and user-supplied values
@@ -723,6 +890,9 @@ message ChangeProperties {
 
   // User-defined tags associated with this change, will be populated via the CLI and not the UI.
   map<string, string> tags = 16;
+
+  // Description of the auto tagging rules that were applied to this change
+  string autoTaggingDescription = 17;
 }
 
 ////////////////////////////
