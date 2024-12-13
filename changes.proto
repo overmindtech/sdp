@@ -949,7 +949,7 @@ message GetChangeRisksRequest {
 
 message ChangeRiskMetadata {
   // The status of the risk calculation
-  RiskCalculationStatus riskCalculationStatus = 1;
+  ChangeAnalysisStatus changeAnalysisStatus = 1;
 
   // The risks that are related to this change
   repeated Risk risks = 5;
@@ -1188,7 +1188,7 @@ message Risk {
   repeated Reference relatedItems = 4;
 }
 
-message RiskCalculationStatus {
+message ChangeAnalysisStatus {
   enum Status {
     STATUS_UNSPECIFIED = 0;
     STATUS_INPROGRESS = 1;
