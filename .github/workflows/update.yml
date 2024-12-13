@@ -42,15 +42,15 @@ jobs:
           set -x
 
           # remove the symlinks
-          rm -f gen/sdp-go gen/sdp-js
+          rm -Rf gen/sdp-go gen/sdp-js
 
           # replace them with full checkouts
-          git clone https://${GIT_USER}@github.com/overmindtech/sdp-go.git gen/sdp-go
-          git clone https://${GIT_USER}@github.com/overmindtech/sdp-js.git gen/sdp-js
+          git clone https://${GIT_USER}@github.com/overmindtech/sdp-go.git gen/sdp-go.git
+          git clone https://${GIT_USER}@github.com/overmindtech/sdp-js.git gen/sdp-js.git
 
           # remove previously generated files
-          rm -Rf gen/sdp-go/*.pb.go gen/sdp-go/sdpconnect/*.connect.go
-          rm -Rf gen/sdp-js/src/__generated__/
+          rm -Rf gen/sdp-go.git/*.pb.go gen/sdp-go/sdpconnect/*.connect.go
+          rm -Rf gen/sdp-js.git/src/__generated__/
 
           # generate the code
           npx buf generate
@@ -60,8 +60,9 @@ jobs:
           # add and commit the results
           for i in sdp-go sdp-js; do
           (
-            cd gen/$i
+            cd gen/$i.git
             git pull
+            cp -av ../$i/* .
             git add -A
             git commit -m "Updated to SDP ${SDP_DESCRIBE}" || exit 0
 
