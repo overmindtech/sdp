@@ -188,10 +188,7 @@ service RuleService {
   rpc ExportRule(ExportRuleRequest) returns (ExportRuleResponse);
   // Given a rule uuid, and a list of changes uuids
   // The response will contain the rule uuid and a list of changes and what tags they would have if the rule was applied
-  rpc TestRule(TestRuleRequest) returns (TestRuleResponse);
-  // Given a list of rule uuids, and a single change uuid
-  // The response will contain a list of rule uuids and the tags to be applied
-  rpc TestRules(TestRulesRequest) returns (TestRulesResponse);
+  rpc TestRule(TestRuleRequest) returns (stream TestRuleResponse);
 }
 
 message RuleMetadata {
@@ -218,8 +215,13 @@ message RuleProperties {
   // whether the rule is enabled or not
   bool enabled = 3;
 
-  // The query that will be run to find items that this rule applies to
-  string query = 4;
+  // The instructions that will be run by the llm to determine if the tag should be applied and what its value should be
+  string instructions = 4;
+
+  // list of strings to validate the values calculated by the instructions
+  // eg an enum of high, medium, low
+  // or it could be empty if the instruction returns a calculated value
+  repeated string validation = 5;
 }
 
 message Rule {
@@ -286,41 +288,25 @@ message ExportRuleResponse {
 }
 
 message TestRuleRequest {
-  // the uuid of the rule to test
-  bytes ruleUUID = 1;
+  // the entire rule to test, so they don't have to save it first
+  RuleProperties properties = 1;
+  // list of changes to test the rule on
   repeated bytes changeUUID = 2;
 }
-
-message RuleTestResult {
-  // the uuid of the item that was tested
-  bytes itemUUID = 1;
-  // the tag that would be set if the rule was applied, or an empty string if it would not be applied
-  string tag = 2;
-}
-
 message TestRuleResponse {
-  // the uuid of the rule that was tested
-  bytes ruleUUID = 1;
-  // list of changes and what tags they would have if the rule was applied
-  repeated RuleTestResult results = 2;
-}
-
-message TestRulesRequest {
-  // the uuid of the rule to test
-  repeated bytes ruleUUID = 1;
-  bytes changeUUID = 2;
-}
-
-message RulesTestResult {
-  // the uuid of the item that was tested
-  bytes itemUUID = 1;
+  // the uuid of the change that was tested
+  bytes changeUUID = 1;
   // the tag that would be set if the rule was applied, or an empty string if it would not be applied
-  string tag = 2;
+  // key=value, eg "risk=high" or "author=jimmy"
+  map<string, TagValue> tag = 2;
 }
 
-message TestRulesResponse {
-  // list of changes and what tags they would have if the rule was applied
-  repeated RulesTestResult results = 1;
+message TagValue {
+  // the tag that would be set if the rule was applied, or an empty string if it would not be applied
+  // key=value, eg "risk=high" or "author=jimmy"
+  string value = 1;
+  // reasoning for the tag, returned by the llm
+  string reasoning = 2;
 }
 
 message GetChangeTimelineRequest {
@@ -745,11 +731,11 @@ message ChangeSummary {
   // Repo information; can be an empty string. CLI attempts auto-population, but users can override. Not necessarily a URL. The UI will be responsible for any formatting/shortnening/sprucing up should it be required.
   string repo = 16;
 
-  // User-defined tags associated with this change, will be populated via the CLI and not the UI.
-  map<string, string> tags = 17;
+  // tags associated with this change, user defined in the cli, and successful auto-tagging rules
+  map<string, TagValue> tags = 17;
 
-  // Description of the auto tagging rules that were applied to this change
-  string autoTaggingDescription = 18;
+  // tags that were skipped by auto-tagging rules
+  map<string, TagValue> skippedAutoTags = 17;
 }
 
 // a complete Change with machine-supplied and user-supplied values
