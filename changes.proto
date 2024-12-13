@@ -159,32 +159,24 @@ service ChangesService {
   rpc PopulateChangeFilters(PopulateChangeFiltersRequest) returns (PopulateChangeFiltersResponse);
 }
 
-service RuleService {
+service AutoTaggingService {
   // Used on the auto-tagging page to list all rules for an account
   // Returns a list of rules
   rpc ListRules(ListRulesRequest) returns (ListRulesResponse);
-  // Creates a new rule, user provides properties
-  // It will check for the uniqueness of the tag key
-  // Returns the created rule, or the submitted rule and an error
+  // Creates a new rule, with the provided properties. This will return a
+  // CodeAlreadyExists error if the `tagKey` is not unique
   rpc CreateRule(CreateRuleRequest) returns (CreateRuleResponse);
-  // Given a rule UUID
-  // Returns the rule metadata and properties
+  // Get the details of a rule
   rpc GetRule(GetRuleRequest) returns (GetRuleResponse);
-  // Given a rule UUID, updates the rule properties.
-  // Note the key can be updated, but it only applies to new changes. We still check for uniqueness.
-  // Returns the updated rule, or the old rule and an error
+  // Given a rule UUID, updates the rule properties. Note the key can be
+  // updated, but it only applies to new changes. This will return a
+  // CodeAlreadyExists error if the  new `tagKey` is not unique
   rpc UpdateRule(UpdateRuleRequest) returns (UpdateRuleResponse);
-  // Given a rule UUID permanently delete that rule, existing changes will not be affected
-  // Returns nothing
+  // Given a rule UUID permanently delete that rule, existing changes will not
+  // be affected
   rpc DeleteRule(DeleteRuleRequest) returns (DeleteRuleResponse);
-  // Given a rule UUID, Rule applied to all future changes
-  // Returns the rule
-  rpc EnableRule(EnableRuleRequest) returns (EnableRuleResponse);
-  // Given a rule UUID, Rule no longer applied to future changes
-  // Returns the rule
-  rpc DisableRule(DisableRuleRequest) returns (DisableRuleResponse);
-  // Given a rule UUID Exports a rule
-  // returns the metadata so it can be saved locally
+  // Convert a rule's properties to a string that can be used in the rules
+  // config file
   rpc ExportRule(ExportRuleRequest) returns (ExportRuleResponse);
   // Given a rule uuid, and a list of changes uuids
   // The response will contain the rule uuid and a list of changes and what tags they would have if the rule was applied
@@ -212,16 +204,17 @@ message RuleProperties {
   // The key that will be set in a change's tags if this rule is applied
   string tagKey = 2;
 
-  // whether the rule is enabled or not
+  // Whether the rule is enabled or not
   bool enabled = 3;
 
-  // The instructions that will be run by the llm to determine if the tag should be applied and what its value should be
+  // The instructions that will be run by the llm to determine if the tag should
+  // be applied and what its value should be
   string instructions = 4;
 
-  // list of strings to validate the values calculated by the instructions
-  // eg an enum of high, medium, low
-  // or it could be empty if the instruction returns a calculated value
-  repeated string validation = 5;
+  // A list of valid tag values. If the instructions produce a value that is not
+  // in this list, the rule will be retried, however if we cannot converge on a
+  // valid value after some number of tries, the rule will not be applied
+  repeated string validValues = 5;
 }
 
 message Rule {
@@ -241,7 +234,6 @@ message CreateRuleRequest {
 }
 message CreateRuleResponse {
   Rule rule = 1;
-  string error = 2;
 }
 
 message GetRuleRequest {
@@ -257,7 +249,6 @@ message UpdateRuleRequest {
 }
 message UpdateRuleResponse {
   Rule rule = 1;
-  string error = 2;
 }
 
 message DeleteRuleRequest {
@@ -265,48 +256,30 @@ message DeleteRuleRequest {
 }
 message DeleteRuleResponse {}
 
-message EnableRuleRequest {
-  bytes UUID = 1;
-}
-message EnableRuleResponse {
-  Rule rule = 1;
-}
-
-message DisableRuleRequest {
-  bytes UUID = 1;
-}
-message DisableRuleResponse {
-  Rule rule = 1;
-}
-
 message ExportRuleRequest {
   bytes UUID = 1;
 }
 message ExportRuleResponse {
-  // metadata for the rule
-  RuleMetadata metadata = 1;
+  // Content that should be added to auto-tagging config file to represent this
+  // rule it is in the format that the cli expects
+  string rule = 1;
 }
 
 message TestRuleRequest {
-  // the entire rule to test, so they don't have to save it first
+  // The entire rule to test, so they don't have to save it first
   RuleProperties properties = 1;
-  // list of changes to test the rule on
+  // List of changes to test the rule on
   repeated bytes changeUUID = 2;
 }
 message TestRuleResponse {
-  // the uuid of the change that was tested
+  // The change UUID that the rule was tested against
   bytes changeUUID = 1;
-  // the tag that would be set if the rule was applied, or an empty string if it would not be applied
-  // key=value, eg "risk=high" or "author=jimmy"
-  map<string, TagValue> tag = 2;
-}
 
-message TagValue {
-  // the tag that would be set if the rule was applied, or an empty string if it would not be applied
-  // key=value, eg "risk=high" or "author=jimmy"
-  string value = 1;
-  // reasoning for the tag, returned by the llm
-  string reasoning = 2;
+  // Whether or not the tag was applied to this change
+  bool applied = 2;
+
+  // The value of the tag and the reasoning for it
+  AutoTagValue value = 3;
 }
 
 message GetChangeTimelineRequest {
@@ -386,11 +359,16 @@ message UpdatePlannedChangesRequest {
   // The change to update
   bytes changeUUID = 1;
 
-  // the changing items
+  // The changing items
   repeated MappedItemDiff changingItems = 2;
 
   // Overrides the stored blast radius config for this change
   optional config.BlastRadiusConfig blastRadiusConfigOverride = 3;
+
+  // Overrides the auto-tagging rules with rules that have been read from the
+  // local config file. If this is empty the rules that have been configured in
+  // the UI will be used
+  repeated RuleProperties autoTaggingRulesOverride = 4;
 }
 
 message ListAppChangesSummaryRequest {
@@ -659,6 +637,26 @@ message ListAppChangesResponse {
 // Changes //
 /////////////
 
+message TagValue {
+  // The value of the tag, this can be user-defined or auto-generated
+  oneof value {
+    UserTagValue userTagValue = 1;
+    AutoTagValue autoTagValue = 2;
+  }
+}
+
+message UserTagValue {
+  // The value of the tag that was set by the user
+  string value = 1;
+}
+
+message AutoTagValue {
+  // The value of the tag
+  string value = 1;
+  // Reasoning for this decision
+  string reasoning = 2;
+}
+
 enum ChangeStatus {
   // The change has been created, but the blast radius has not yet been
   // calculated. The blast radius can be calculated using the
@@ -728,14 +726,19 @@ message ChangeSummary {
   // Example: "upgrade of the database to get access to the new contoso management processor"
   string description = 14;
 
-  // Repo information; can be an empty string. CLI attempts auto-population, but users can override. Not necessarily a URL. The UI will be responsible for any formatting/shortnening/sprucing up should it be required.
+  // Repo information; can be an empty string. CLI attempts auto-population, but
+  // users can override. Not necessarily a URL. The UI will be responsible for
+  // any formatting/shortening/sprucing up should it be required.
   string repo = 16;
 
-  // tags associated with this change, user defined in the cli, and successful auto-tagging rules
-  map<string, TagValue> tags = 17;
+  // Tags that were set bu the user when the tag was created
+  //
+  // Deprecated: Use enrichedTags instead
+  map<string, string> tags = 17 [deprecated = true];
 
-  // tags that were skipped by auto-tagging rules
-  map<string, TagValue> skippedAutoTags = 17;
+  // Tags associated with this change
+  map<string, TagValue> enrichedTags = 18;
+
 }
 
 // a complete Change with machine-supplied and user-supplied values
@@ -874,11 +877,25 @@ message ChangeProperties {
   // Repo information; can be an empty string. CLI attempts auto-population, but users can override. Not necessarily a URL. The UI will be responsible for any formatting/shortnening/sprucing up should it be required.
   string repo = 15;
 
-  // User-defined tags associated with this change, will be populated via the CLI and not the UI.
-  map<string, string> tags = 16;
+  // Tags that were set bu the user when the tag was created
+  //
+  // Deprecated: Use enrichedTags instead
+  map<string, string> tags = 16 [deprecated = true];
 
-  // Description of the auto tagging rules that were applied to this change
-  string autoTaggingDescription = 17;
+  // Tags associated with this change
+  map<string, TagValue> enrichedTags = 18;
+
+  // Tags that were skipped by auto-tagging rules
+  map<string, AutoTagValue> skippedAutoTags = 19;
+
+  // origin of auto-tagging rules
+  // this is an enum of file or ui provided rules
+  enum AutoTaggingRuleSource {
+    AUTO_TAGGING_RULE_SOURCE_UNSPECIFIED = 0;
+    AUTO_TAGGING_RULE_SOURCE_FILE = 1;
+    AUTO_TAGGING_RULE_SOURCE_UI = 2;
+  }
+  AutoTaggingRuleSource autoTaggingRuleSource = 20;
 }
 
 ////////////////////////////
