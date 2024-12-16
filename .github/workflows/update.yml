@@ -79,7 +79,7 @@ jobs:
           set -x
           for i in sdp-go sdp-js; do
           (
-            cd gen/$i
+            cd gen/$i.git
             git push
           )
           done
