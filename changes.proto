@@ -178,7 +178,7 @@ service AutoTaggingService {
   // Convert a rule's properties to a string that can be used in the rules
   // config file
   rpc ExportRule(ExportRuleRequest) returns (ExportRuleResponse);
-  // Given a rule uuid, and a list of changes uuids
+  // Given a rule, and a list of changes uuids
   // The response will contain the rule uuid and a list of changes and what tags they would have if the rule was applied
   rpc TestRule(TestRuleRequest) returns (stream TestRuleResponse);
 }
