@@ -207,4 +207,21 @@ Sources that encountered errors will send errors on the `query.{uuid}` subject o
 
 ## Building
 
-See `sdp/.github/workflows/update.yml` for details. Previously this was easily done locally, but recent changes to buf broke the symlink method.
+Install the Go dependencies:
+
+```shell
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install connectrpc.com/connect/cmd/protoc-gen-connect-go@latest
+```
+
+Install the Node dependencies:
+
+```shell
+npm i
+```
+
+Run `buf` through `npx` to generate the stubs:
+
+```shell
+npx buf generate
+```

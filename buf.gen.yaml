@@ -1,16 +1,16 @@
 version: v2
-clean: true
+clean: false
 plugins:
   - local: protoc-gen-go
-    out: gen/sdp-go
+    out: ../sdp-go
     opt: paths=source_relative
   - local: protoc-gen-connect-go
-    out: gen/sdp-go
+    out: ../sdp-go
     opt: paths=source_relative
   - local: protoc-gen-es
-    out: gen/sdp-js/src/__generated__/
+    out: ../sdp-js/src/__generated__/
     opt: target=ts
     include_imports: true
   - local: protoc-gen-connect-query
-    out: gen/sdp-js/src/__generated__/
+    out: ../sdp-js/src/__generated__/
     opt: target=ts
