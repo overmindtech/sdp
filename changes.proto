@@ -437,7 +437,7 @@ message ListHomeAppsResponse {
 
 message ItemDiffSummary {
   // Editor's node: I'm using references here rather than just directly
-  // embedding the name, uniqueAttributeValue and scope becuase the reference
+  // embedding the name, uniqueAttributeValue and scope because the reference
   // structs have some methods on them which it might be useful to use (like
   // `String()`), and that some methods will accept a reference as a parameter
   // and it doesn't make sense to have to re-construct one if you already have
@@ -446,7 +446,7 @@ message ItemDiffSummary {
   // A reference to the item that this diff is related to
   Reference item = 1;
 
-  // The staus of the item
+  // The status of the item
   ItemDiffStatus status = 4;
 
   // The health of the item currently (as opposed to before the change)
@@ -466,7 +466,7 @@ message ItemDiff {
   // A reference to the item that this diff is related to
   Reference item = 1;
 
-  // The staus of the item
+  // The status of the item
   ItemDiffStatus status = 2;
 
   Item before = 3;
@@ -612,7 +612,7 @@ message GetAppResponse {
   changes.App app = 1;
 }
 
-// update an expsting app
+// update an existing app
 message UpdateAppRequest {
   bytes UUID = 1;
   changes.AppProperties properties = 2;
@@ -881,7 +881,7 @@ message ChangeProperties {
   // The code changes of this change for calculating the change's risks.
   string codeChanges = 14;
 
-  // Repo information; can be an empty string. CLI attempts auto-population, but users can override. Not necessarily a URL. The UI will be responsible for any formatting/shortnening/sprucing up should it be required.
+  // Repo information; can be an empty string. CLI attempts auto-population, but users can override. Not necessarily a URL. The UI will be responsible for any formatting/shortening/sprucing up should it be required.
   string repo = 15;
 
   // Tags that were set bu the user when the tag was created
@@ -1171,7 +1171,7 @@ message SimulateChangeResponse {
   bool done = 1;
 
   // How far through the simulation process we are. This will be pretty
-  // apprioximate as it's not expected to take very long and is more to give the
+  // approximate as it's not expected to take very long and is more to give the
   // sense of progress than to be an accurate measure
   uint32 percentComplete = 2;
 }
